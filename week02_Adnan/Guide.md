@@ -27,30 +27,15 @@ This pipeline is built on two published papers:
 
 ```mermaid
 flowchart TD
-    A[📝 Math Question] --> B
-
-    subgraph SGFT ["🗺️ Stage 1 — SGFT: Plan First"]
-        B[Qwen2.5-3B\nGuide Model] --> C[📋 Step-by-Step Plan\nNO calculations]
-    end
-
-    C --> D
-
-    subgraph RESPONSE ["📊 Stage 2 — Execute the Plan"]
-        D[Gemma 3 7B\nResponse Model] --> E[Initial Answer]
-    end
-
-    E --> F
-
-    subgraph SCORE ["🔍 Stage 3 — SCORE: Self-Correct"]
-        F{Is answer\ncorrect?}
-        F -- ✅ Confident --> G[✅ Final Answer]
-        F -- ❌ Uncertain --> H[SCORE Refiner\nFinds the mistake]
-        H --> I[✅ Corrected Answer]
-    end
-
-    style SGFT fill:#dbeafe,stroke:#3b82f6
-    style RESPONSE fill:#dcfce7,stroke:#16a34a
-    style SCORE fill:#fef9c3,stroke:#ca8a04
+    A(["📝 Math Question"]) --> B
+    B["🗺️ Qwen2.5-3B\nGuide Model"] --> C
+    C(["📋 Step-by-Step Plan\nNo calculations"]) --> D
+    D["📊 Gemma 3 7B\nResponse Model"] --> E
+    E(["Initial Answer"]) --> F
+    F{"Is answer\nconfident?"}
+    F -- Yes --> G(["✅ Final Answer"])
+    F -- No --> H["🔍 SCORE Refiner\nFinds the mistake"]
+    H --> I(["✅ Corrected Answer"])
 ```
 
 ---
@@ -61,13 +46,10 @@ A key discovery during implementation was that **not all small models follow ins
 
 ```mermaid
 flowchart LR
-    A[❌ Phi-4-mini-instruct\n3.8B — Microsoft] -->|Failed| B[Ignored Step format\nValid rate: 0%\nGenerated free-form text\nnot structured plans]
-    C[✅ Qwen2.5-3B-Instruct\n3B — Alibaba] -->|Passed| D[Followed Step 1... 2... format\nValid rate: 70–85%\nClean concise plans\nStrict instruction following]
-
-    style A fill:#fee2e2,stroke:#ef4444
-    style B fill:#fee2e2,stroke:#ef4444
-    style C fill:#dcfce7,stroke:#16a34a
-    style D fill:#dcfce7,stroke:#16a34a
+    A(["❌ Phi-4-mini\n3.8B · Microsoft"]) -->|Failed| B
+    B["Ignored Step format\nValid rate: 0%\nFree-form rambling"]
+    C(["✅ Qwen2.5-3B\n3B · Alibaba"]) -->|Passed| D
+    D["Follows Step format\nValid rate: 96%\nClean concise plans"]
 ```
 
 **Why Phi-4-mini failed:** It is a *reasoning* model — trained to think deeply and verbosely. When asked to write short structured plans, it ignored the format entirely and generated rambling paragraphs.
@@ -82,14 +64,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A[GSM8K Dataset\n7,473 math problems] --> B[Sample 3,000 questions]
-    B --> C[Qwen2.5-3B generates\nstep-by-step plans]
-    C --> D{Quality Filter}
-    D -- Pass\n~70% --> E[✅ 2,100+ clean plans\nReady for fine-tuning]
-    D -- Fail\n~30% --> F[❌ Rejected\nToo long / has calculations\nWrong format]
-
-    style E fill:#dcfce7,stroke:#16a34a
-    style F fill:#fee2e2,stroke:#ef4444
+    A(["GSM8K Dataset\n7,473 math problems"]) --> B
+    B["Sample\n3,000 questions"] --> C
+    C["Qwen2.5-3B\ngenerates plans"] --> D
+    D{"Quality\nFilter"}
+    D -- Pass 96% --> E(["✅ ~2,880 clean plans\nReady for fine-tuning"])
+    D -- Fail 4% --> F(["❌ Rejected\nToo long · has calculations\nWrong format"])
 ```
 
 **Why this matters:** The original SGFT paper used GPT-4o (a paid API) to generate plans. Our approach replaces this entirely with a free open-source model — making the full pipeline **zero cost**.
@@ -102,11 +82,9 @@ Neither paper combined these two methods. We are the first to propose:
 
 ```mermaid
 flowchart LR
-    A[SGFT\n2025] -->|Plan better| B[Combined Pipeline]
-    C[SCORE\n2024] -->|Correct mistakes| B
-    B --> D[🎯 Smarter + Self-correcting\nFully free pipeline\nNo GPT-4 dependency]
-
-    style D fill:#f3e8ff,stroke:#9333ea
+    A(["SGFT · 2025\nPlan better"]) -->|Plan first| B
+    C(["SCORE · 2024\nCorrect mistakes"]) -->|Fix errors| B
+    B(["🎯 GUIDE Pipeline\nSmarter + Self-correcting\nFully free · No GPT-4"])
 ```
 
 **What's novel:**
