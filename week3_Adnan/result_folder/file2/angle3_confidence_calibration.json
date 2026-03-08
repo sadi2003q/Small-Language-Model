@@ -1,0 +1,65 @@
+{
+  "guided_ece": 0.432,
+  "baseline_ece": 0.6651,
+  "ece_improvement_pct": 35.1,
+  "guided_calibration": [
+    {
+      "bucket": "Very High (\u22650.8)",
+      "count": 51,
+      "accuracy": 50.98,
+      "expected": 90.0,
+      "gap": 0.39
+    },
+    {
+      "bucket": "High (0.6\u20130.8)",
+      "count": 37,
+      "accuracy": 16.22,
+      "expected": 70.0,
+      "gap": 0.538
+    },
+    {
+      "bucket": "Medium (0.4\u20130.6)",
+      "count": 10,
+      "accuracy": 20.0,
+      "expected": 50.0,
+      "gap": 0.3
+    },
+    {
+      "bucket": "Low (<0.4)",
+      "count": 2,
+      "accuracy": 0.0,
+      "expected": 20.0,
+      "gap": 0.2
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High (\u22650.8)",
+      "count": 68,
+      "accuracy": 10.29,
+      "expected": 90.0,
+      "gap": 0.797
+    },
+    {
+      "bucket": "High (0.6\u20130.8)",
+      "count": 28,
+      "accuracy": 32.14,
+      "expected": 70.0,
+      "gap": 0.379
+    },
+    {
+      "bucket": "Medium (0.4\u20130.6)",
+      "count": 3,
+      "accuracy": 0.0,
+      "expected": 50.0,
+      "gap": 0.5
+    },
+    {
+      "bucket": "Low (<0.4)",
+      "count": 1,
+      "accuracy": 0.0,
+      "expected": 20.0,
+      "gap": 0.2
+    }
+  ]
+}

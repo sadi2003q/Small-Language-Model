@@ -1,0 +1,9 @@
+{
+  "guided_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "upper_compute_B": 15.0,
+  "guided_accuracy": 34.0,
+  "baseline_accuracy": 16.0,
+  "accuracy_gain": 18.0,
+  "compute_savings_pct": 30.0
+}
