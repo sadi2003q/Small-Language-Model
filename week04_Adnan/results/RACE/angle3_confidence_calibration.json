@@ -1,0 +1,51 @@
+{
+  "dataset": "RACE-High",
+  "guided_ece": 0.246,
+  "baseline_ece": 0.32,
+  "ece_improvement_pct": 23.1,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 98,
+      "accuracy": 0.6531,
+      "expected": 0.9,
+      "gap": 0.2469
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 2,
+      "accuracy": 0.5,
+      "expected": 0.7,
+      "gap": 0.2
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 91,
+      "accuracy": 0.5714,
+      "expected": 0.9,
+      "gap": 0.3286
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 8,
+      "accuracy": 0.5,
+      "expected": 0.7,
+      "gap": 0.2
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 1,
+      "accuracy": 0.0,
+      "expected": 0.5,
+      "gap": 0.5
+    }
+  ],
+  "guided_false_confidence": 34,
+  "baseline_false_confidence": 39,
+  "guided_high_conf_accuracy": 65.3,
+  "baseline_high_conf_accuracy": 57.1,
+  "guided_high_conf_n": 98,
+  "baseline_high_conf_n": 91
+}
