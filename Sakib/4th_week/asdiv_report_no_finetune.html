@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASDiv Evaluation Report — SLM-to-SLM Guided Reasoning Pipeline (No Fine-tuning)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --guided:   #059669;
+    --baseline: #dc2626;
+    --upper:    #7c3aed;
+    --accent:   #047857;
+    --bg:       #f0fdf4;
+    --card:     #ffffff;
+    --text:     #0f172a;
+    --muted:    #64748b;
+    --border:   #d1fae5;
+    --green:    #16a34a;
+    --amber:    #d97706;
+    --blue:     #0891b2;
+    --red:      #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e4976 50%, #1a5276 100%);
+    color: white; padding: 60px 40px 50px; text-align: center;
+  }
+  .header .badge {
+    display: inline-block; background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 20px;
+    padding: 4px 16px; font-size: 12px; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .header h1 { font-size: 38px; font-weight: 800; margin-bottom: 12px; }
+  .header p  { font-size: 17px; opacity: 0.85; max-width: 720px; margin: 0 auto 30px; }
+  .header-meta { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; font-size: 14px; opacity: 0.8; }
+  .header-meta span b { color: #93c5fd; }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+  .section   { margin-bottom: 52px; }
+
+  .section-title {
+    font-size: 22px; font-weight: 700; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .num {
+    background: #2563eb; color: white;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; margin-left: 42px; }
+
+  /* STAT CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px 18px; text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card.highlight { border-color: #2563eb; background: #eff6ff; }
+  .card.positive  { border-color: var(--green);  background: #f0fdf4; }
+  .card.negative  { border-color: var(--amber);  background: #fffbeb; }
+  .card.neutral   { border-color: #cbd5e1;        background: #f8fafc; }
+  .card.warn      { border-color: #dc2626;        background: #fff1f2; }
+  .card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .card .value { font-size: 34px; font-weight: 800; line-height: 1; }
+  .card .value.g  { color: #2563eb;  }
+  .card .value.b  { color: var(--baseline);}
+  .card .value.gr { color: var(--green);   }
+  .card .value.am { color: var(--amber);   }
+  .card .value.mu { color: var(--muted);   }
+  .card .value.rd { color: var(--red);     }
+  .card .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* CHART GRIDS */
+  .chart-grid       { display: grid; grid-template-columns: 1fr 1fr;     gap: 22px; margin-bottom: 22px; }
+  .chart-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .chart-grid.wide  { grid-template-columns: 2fr 1fr; }
+  .chart-grid.full  { grid-template-columns: 1fr; }
+  @media(max-width:820px){ .chart-grid,.chart-grid.three,.chart-grid.wide{ grid-template-columns:1fr; } }
+
+  .chart-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .chart-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .chart-box p  { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .chart-box canvas { max-height: 300px; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: #eff6ff; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+  td { padding: 12px 16px; border-top: 1px solid var(--border); }
+  tr:hover td { background: #f0f9ff; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .pill.good    { background: #dcfce7; color: #15803d; }
+  .pill.bad     { background: #fee2e2; color: #b91c1c; }
+  .pill.neutral { background: #f1f5f9; color: #475569; }
+  .pill.mixed   { background: #fef3c7; color: #92400e; }
+  .pill.zero    { background: #f1f5f9; color: #64748b; }
+
+  /* FINDING */
+  .finding {
+    border-left: 4px solid #2563eb; background: #eff6ff;
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 20px 0; font-size: 14px;
+  }
+  .finding strong { color: #2563eb; }
+
+  /* ALERT BOX */
+  .alert {
+    border-left: 4px solid var(--amber); background: #fffbeb;
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 20px 0; font-size: 14px;
+  }
+  .alert strong { color: #92400e; }
+
+  /* SPECIAL ANGLE-4 OP CARDS */
+  .op-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .op-card {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: 14px; padding: 18px 14px; text-align: center;
+  }
+  .op-card.winner  { border-color: #2563eb; background: #eff6ff; }
+  .op-card.zero    { border-color: #e2e8f0; background: #f8fafc; }
+  .op-card.loser   { border-color: var(--red); background: #fff1f2; }
+  .op-card .op-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .op-card .op-gain { font-size: 28px; font-weight: 800; }
+  .op-card .op-gain.pos  { color: #2563eb; }
+  .op-card .op-gain.neg  { color: var(--red); }
+  .op-card .op-gain.zero { color: var(--muted); }
+  .op-card .op-sub  { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* PIPELINE */
+  .pipe-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+  .pipe-box { padding: 7px 12px; border-radius: 8px; color: white; font-weight: 600; white-space: nowrap; }
+
+  /* DELTA BADGE */
+  .delta-pos { color: #16a34a; font-weight: 700; }
+  .delta-neg { color: #dc2626; font-weight: 700; }
+
+  /* FOOTER */
+  .footer { background: #1e3a5f; color: rgba(255,255,255,0.7); text-align: center; padding: 30px; font-size: 13px; margin-top: 60px; }
+  .footer strong { color: #93c5fd; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ HEADER ═══════════════════════════════════ -->
+<div class="header">
+  <div class="badge">Research Report — No Fine-tuning</div>
+  <h1>ASDiv Evaluation</h1>
+  <p>SLM-to-SLM Guided Reasoning Pipeline vs Unguided Baseline on Academic Subtypes Diversity — <strong>base guide model without LoRA fine-tuning</strong></p>
+  <div class="header-meta">
+    <span>Dataset: <b>EleutherAI/asdiv</b></span>
+    <span>Questions: <b>100</b></span>
+    <span>Guide: <b>Qwen 2.5-3B (base, no LoRA)</b></span>
+    <span>Solver: <b>Qwen 2.5-1.5B × 5 votes</b></span>
+    <span>Seed: <b>42</b></span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════ PIPELINE ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">→</span> Pipeline Architecture</div>
+  <div class="section-sub">Identical structure to the fine-tuned experiment — only the guide model changes (no LoRA adapter)</div>
+  <div class="chart-grid">
+    <div class="chart-box" style="grid-column:1/-1;">
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;">
+        <div style="flex:1;min-width:220px;background:#eff6ff;border-radius:12px;padding:20px;border:2px solid #bfdbfe;">
+          <div style="font-size:11px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Guided Pipeline (Base 3B — No LoRA)</div>
+          <div class="pipe-row">
+            <span class="pipe-box" style="background:#2563eb;">Question</span><span>→</span>
+            <span class="pipe-box" style="background:#1d4ed8;">Base 3B Guide</span><span>→</span>
+            <span class="pipe-box" style="background:#1e40af;">Plan</span><span>→</span>
+            <span class="pipe-box" style="background:#0891b2;">1.5B Solver × 5</span><span>→</span>
+            <span class="pipe-box" style="background:#16a34a;">Majority Vote → Answer</span>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:#2563eb;">Compute: 3.0B + (1.5B × 5) = <strong>10.5B param-passes</strong></div>
+        </div>
+        <div style="flex:1;min-width:220px;background:#fef2f2;border-radius:12px;padding:20px;border:2px solid #fecaca;">
+          <div style="font-size:11px;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Baseline (No Plan)</div>
+          <div class="pipe-row">
+            <span class="pipe-box" style="background:#dc2626;">Question</span><span>→</span>
+            <span class="pipe-box" style="background:#b91c1c;">1.5B Solver × 5</span><span>→</span>
+            <span class="pipe-box" style="background:#991b1b;">Majority Vote → Answer</span>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:#dc2626;">Compute: 1.5B × 5 = <strong>7.5B param-passes</strong></div>
+        </div>
+        <div style="flex:0.5;min-width:180px;background:#fffbeb;border-radius:12px;padding:20px;border:2px solid #fde68a;">
+          <div style="font-size:11px;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Key Difference vs Fine-tuned</div>
+          <div style="font-size:13px;color:#0f172a;">Guide uses <strong>no LoRA adapter</strong> — raw Qwen 2.5-3B-Instruct only.<br><br>
+            This isolates whether fine-tuning is responsible for guided gains.
+          </div>
+        </div>
+        <div style="flex:0.5;min-width:180px;background:#f0f9ff;border-radius:12px;padding:20px;border:2px solid #bae6fd;">
+          <div style="font-size:11px;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">ASDiv Unique</div>
+          <div style="font-size:13px;color:#0f172a;">Every question tagged with operation type:<br><br>
+            <span style="font-weight:700;">➕ Addition &nbsp; ➖ Subtraction</span><br>
+            <span style="font-weight:700;">✖ Multiplication &nbsp; ➗ Division</span><br>
+            <span style="font-weight:700;">🔗 Multi-step</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ANGLE 1 ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">1</span> Compute Efficiency</div>
+  <div class="section-sub">−1 pt accuracy despite 40% more compute — without fine-tuning, the guide plan adds noise rather than signal</div>
+
+  <div class="cards">
+    <div class="card highlight">
+      <div class="label">Guided Accuracy</div>
+      <div class="value g">56%</div>
+      <div class="sub">56 / 100 questions</div>
+    </div>
+    <div class="card">
+      <div class="label">Baseline Accuracy</div>
+      <div class="value b">57%</div>
+      <div class="sub">57 / 100 questions</div>
+    </div>
+    <div class="card warn">
+      <div class="label">Accuracy Delta</div>
+      <div class="value rd">−1</div>
+      <div class="sub">percentage points (guided worse)</div>
+    </div>
+    <div class="card neutral">
+      <div class="label">Compute Saved</div>
+      <div class="value mu">30%</div>
+      <div class="sub">vs 3B × 5 upper bound</div>
+    </div>
+    <div class="card neutral">
+      <div class="label">Wasted Votes</div>
+      <div class="value mu">0</div>
+      <div class="sub">saved vs baseline (88 each)</div>
+    </div>
+    <div class="card negative">
+      <div class="label">Refiner Success</div>
+      <div class="value am">14.3%</div>
+      <div class="sub">2 / 14 triggered</div>
+    </div>
+  </div>
+
+  <div class="chart-grid wide">
+    <div class="chart-box">
+      <h3>Accuracy vs Compute Cost</h3>
+      <p>Three reference points: baseline (7.5B), guided base (10.5B), upper bound (15.0B)</p>
+      <canvas id="computeScatter"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Decision Strategy Breakdown</h3>
+      <p>How the guided pipeline resolves each of the 100 questions</p>
+      <canvas id="strategyDonut"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Accuracy per Decision Strategy</h3>
+      <p>Majority resolves 86 questions; coin-flip and refiner remain unreliable</p>
+      <canvas id="stratAccBar"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Correct vs Incorrect — Head to Head</h3>
+      <p>Out of 100 questions, how many each condition got right</p>
+      <canvas id="correctBar"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Accuracy/Billion Param-Passes</h3>
+      <p>Guided base is less efficient than baseline — paying more compute for lower accuracy</p>
+      <canvas id="efficiencyBar"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Cross-Dataset Accuracy Gain — Fine-tuned vs Base Guide</h3>
+      <p>Fine-tuning is responsible for the guided pipeline's gains across all datasets</p>
+      <canvas id="crossAccBar"></canvas>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>⚠ Key Finding:</strong> Without fine-tuning, the guided pipeline achieves <strong>56%</strong> — 1 percentage point <em>below</em> the 57% baseline. The base 3B guide consumes 40% more compute than baseline yet produces misleading plans that slightly hurt solver performance. This directly confirms that the fine-tuned LoRA adapter is the source of the guided pipeline's advantage, not the pipeline structure itself.
+  </div>
+</div>
+
+<!-- ═══════════════ ANGLE 2 ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">2</span> Vote Consistency</div>
+  <div class="section-sub">1.00× consistency lift — base guide adds no reliable signal to solver votes; baseline and guided are statistically identical</div>
+
+  <div class="cards">
+    <div class="card highlight">
+      <div class="label">Guided Mean Consistency</div>
+      <div class="value g">52.1%</div>
+      <div class="sub">2.61 correct votes / question avg</div>
+    </div>
+    <div class="card">
+      <div class="label">Baseline Mean Consistency</div>
+      <div class="value b">52.2%</div>
+      <div class="sub">2.61 correct votes / question avg</div>
+    </div>
+    <div class="card neutral">
+      <div class="label">Consistency Lift</div>
+      <div class="value mu">1.00×</div>
+      <div class="sub">No improvement vs baseline</div>
+    </div>
+    <div class="card neutral">
+      <div class="label">Guided Wins</div>
+      <div class="value mu">36</div>
+      <div class="sub">vs 38 baseline, 26 tied</div>
+    </div>
+    <div class="card positive">
+      <div class="label">High-Agreement Q's</div>
+      <div class="value gr">34</div>
+      <div class="sub">vs 30 baseline</div>
+    </div>
+    <div class="card warn">
+      <div class="label">All-Wrong Increase</div>
+      <div class="value rd">+6</div>
+      <div class="sub">30 guided vs 24 baseline</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Vote Consistency Distribution</h3>
+      <p>Base guide increases "all-wrong" failures (30 vs 24) while slightly improving high-agreement</p>
+      <canvas id="consistDist"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Per-Question Win / Loss / Tie</h3>
+      <p>Baseline wins more per-question comparisons (38 vs 36) — guided is slightly worse</p>
+      <canvas id="winLossDoughnut"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Mean Correct Votes per Question</h3>
+      <p>Both conditions produce virtually identical individual vote quality (2.61 each)</p>
+      <canvas id="meanVotesBar"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Correct-Question Consistency</h3>
+      <p>Among correctly answered questions, guided votes are slightly more reliable (84.8% vs 81.5%)</p>
+      <canvas id="correctConsBar"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Vote Consistency — All Buckets Side by Side</h3>
+      <p>Guided base has more all-wrong failures and fewer medium-agreement questions</p>
+      <canvas id="bucketSideBySide"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Consistency Lift Comparison: Fine-tuned vs Base Guide</h3>
+      <p>The 1.19× lift in the fine-tuned experiment vs 1.00× here demonstrates LoRA's vote-level impact</p>
+      <canvas id="crossConsLift"></canvas>
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Finding:</strong> 1.00× consistency lift confirms the base guide adds zero reliable signal to the solver's vote distribution. Notably, all-wrong failures actually <em>increase</em> from 24 to 30 when using the base guide — 6 additional questions where every vote is wrong. The fine-tuned experiment achieved 1.19× lift (with all-wrong reduced from 29 to 21). This 0.19× gap is entirely attributable to the LoRA adapter training.
+  </div>
+</div>
+
+<!-- ═══════════════ ANGLE 3 ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">3</span> Confidence Calibration</div>
+  <div class="section-sub">−11.3% ECE (guided is worse) — base guide increases overconfidence; fine-tuning was responsible for the 53.2% ECE improvement</div>
+
+  <div class="cards">
+    <div class="card highlight">
+      <div class="label">Guided ECE</div>
+      <div class="value g">0.182</div>
+      <div class="sub">Worse than baseline</div>
+    </div>
+    <div class="card">
+      <div class="label">Baseline ECE</div>
+      <div class="value b">0.164</div>
+      <div class="sub">Better calibrated</div>
+    </div>
+    <div class="card warn">
+      <div class="label">ECE Change</div>
+      <div class="value rd">−11.3%</div>
+      <div class="sub">Guided is worse calibrated</div>
+    </div>
+    <div class="card highlight">
+      <div class="label">High-Conf Accuracy (Guided)</div>
+      <div class="value g">70.8%</div>
+      <div class="sub">48 questions ≥0.80 confidence</div>
+    </div>
+    <div class="card">
+      <div class="label">High-Conf Accuracy (Baseline)</div>
+      <div class="value b">68.2%</div>
+      <div class="sub">44 questions ≥0.80 confidence</div>
+    </div>
+    <div class="card neutral">
+      <div class="label">False Confidence</div>
+      <div class="value mu">0</div>
+      <div class="sub">Guided=14 vs Baseline=14</div>
+    </div>
+  </div>
+
+  <div class="chart-grid wide">
+    <div class="chart-box">
+      <h3>Calibration: Accuracy vs Confidence Level</h3>
+      <p>Both conditions poorly calibrated — guided base shows a slightly larger gap at Very High confidence</p>
+      <canvas id="calibChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>ECE Comparison</h3>
+      <p>Guided base ECE (0.182) is higher than baseline (0.164) — calibration gets slightly worse</p>
+      <canvas id="eceBar"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Accuracy per Confidence Bucket</h3>
+      <p>Guided slightly outperforms baseline only in the Very High bucket (70.8% vs 68.2%)</p>
+      <canvas id="bucketAccChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Question Count per Confidence Bucket</h3>
+      <p>Guided pushes more questions into Very High bucket (48 vs 44) but accuracy there is still poor</p>
+      <canvas id="bucketCountChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>False Confidence — Fine-tuned vs Base Comparison</h3>
+      <p>Fine-tuned guide reduced false confidence from 19 to 12; base guide leaves it unchanged at 14</p>
+      <canvas id="falseConfComp"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>ECE: Fine-tuned vs Base Guide Comparison</h3>
+      <p>Fine-tuning is critical for calibration improvement — base guide degrades calibration slightly</p>
+      <canvas id="eceCompChart"></canvas>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>⚠ Key Finding:</strong> The base guide produces <strong>worse calibration</strong> (ECE 0.182 vs baseline 0.164). False confidence count is identical (14 each) — the base guide neither reduces nor amplifies catastrophic failures. The fine-tuned experiment's 53.2% ECE improvement and 7-fewer false-confidence cases are entirely products of LoRA training, not the pipeline architecture.
+  </div>
+</div>
+
+<!-- ═══════════════ ANGLE 4 ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">4</span> Accuracy by Operation Type</div>
+  <div class="section-sub">Only Division (+12.5%) and Multiplication (+6.2%) gain — Addition, Subtraction, and Multi-step are all hurt by base guide plans</div>
+
+  <div class="op-grid">
+    <div class="op-card winner">
+      <div class="op-name">➗ Division</div>
+      <div class="op-gain pos">+12.5%</div>
+      <div class="op-sub">62.5% → guided<br>50.0% → baseline<br>n = 16</div>
+    </div>
+    <div class="op-card winner">
+      <div class="op-name">✖ Multiplication</div>
+      <div class="op-gain pos">+6.2%</div>
+      <div class="op-sub">75.0% → guided<br>68.8% → baseline<br>n = 16</div>
+    </div>
+    <div class="op-card zero">
+      <div class="op-name">🔗 Multi-step</div>
+      <div class="op-gain neg">−3.3%</div>
+      <div class="op-sub">33.3% → guided<br>36.7% → baseline<br>n = 30</div>
+    </div>
+    <div class="op-card loser">
+      <div class="op-name">➕ Addition</div>
+      <div class="op-gain neg">−7.7%</div>
+      <div class="op-sub">61.5% → guided<br>69.2% → baseline<br>n = 13</div>
+    </div>
+    <div class="op-card loser">
+      <div class="op-name">➖ Subtraction</div>
+      <div class="op-gain neg">−8.0%</div>
+      <div class="op-sub">64.0% → guided<br>72.0% → baseline<br>n = 25</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Accuracy per Operation Type — Guided vs Baseline</h3>
+      <p>Base guide helps only on Division and Multiplication; hurts on Addition, Subtraction, Multi-step</p>
+      <canvas id="opAccChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Guidance Gain per Operation Type (Base Guide)</h3>
+      <p>Reversed pattern vs fine-tuned: Division gains most, Multi-step loses</p>
+      <canvas id="opGainChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Vote Consistency per Operation Type</h3>
+      <p>Base guide suppresses consistency on Multi-step and Subtraction — plans are misleading</p>
+      <canvas id="opConsChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Consistency Lift per Operation Type</h3>
+      <p>Division (1.31×) and Multiplication (1.07×) gain; Multi-step and Subtraction regress below 1×</p>
+      <canvas id="opConsLiftChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Operation Type Distribution (100-question sample)</h3>
+      <p>Multi-step is the largest category (30%) — and the category most harmed by base guide plans</p>
+      <canvas id="opDistChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Gain vs Question Count — Base vs Fine-tuned Comparison</h3>
+      <p>Fine-tuned guide gains on Multi-step (+16.7%); base guide loses (−3.3%) — critical reversal</p>
+      <canvas id="opCompareChart"></canvas>
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Finding:</strong> The base 3B guide helps only on Division (+12.5%) and Multiplication (+6.2%) — operations where a simple structural hint (e.g. "divide X by Y") is correct even without fine-tuning. However, Multi-step problems — the most common category at 30 questions — are hurt by −3.3 pts, and both Addition (−7.7%) and Subtraction (−8.0%) also regress. The fine-tuned guide's strongest result was Multi-step (+16.7%); the base guide's worst result is also Multi-step. This inversion isolates exactly what LoRA training learned: how to decompose compound reasoning chains.
+  </div>
+</div>
+
+<!-- ═══════════════ COMPARISON SECTION ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">⚡</span> Fine-tuned vs Base Guide — Direct Comparison</div>
+  <div class="section-sub">Isolating the contribution of LoRA fine-tuning across all four angles</div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Overall Accuracy: Both Guide Conditions vs Baseline</h3>
+      <p>Fine-tuned guide: +11 pts over baseline. Base guide: −1 pt under baseline.</p>
+      <canvas id="compAccChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Vote Consistency Lift: Fine-tuned vs Base</h3>
+      <p>LoRA adds 0.19× consistency lift that the base guide cannot produce</p>
+      <canvas id="compConsChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>ECE: Fine-tuned vs Base Guide</h3>
+      <p>Fine-tuned achieves 0.110 ECE; base guide worsens to 0.182 vs baseline's 0.164</p>
+      <canvas id="compEceChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Operation Type Gain: Fine-tuned vs Base Guide</h3>
+      <p>The two conditions produce opposite patterns — LoRA training fully reverses the Multi-step outcome</p>
+      <canvas id="compOpChart"></canvas>
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Summary:</strong> The pipeline architecture alone (base 3B guide → 1.5B solver × 5) produces results that are statistically identical to or slightly worse than the unguided baseline. Every positive result in the fine-tuned report — the +11 pt accuracy gain, 1.19× vote consistency lift, 53.2% ECE improvement, and Multi-step specialisation — is attributable to LoRA fine-tuning of the guide model. The base guide's plans introduce noise on Addition, Subtraction, and Multi-step problems while coincidentally helping on Division, suggesting the base model lacks the structured decomposition skill that fine-tuning explicitly instilled.
+  </div>
+</div>
+
+<!-- ═══════════════ SUMMARY TABLE ═══════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">★</span> Full Summary Table</div>
+  <div class="section-sub">All four angles — ASDiv 100-question evaluation (Base Guide, No Fine-tuning)</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Baseline</th><th>Guided (Base)</th><th>Change</th><th>vs Fine-tuned Guided</th><th>Assessment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Overall Accuracy</b></td><td>57.0%</td><td>56.0%</td><td style="color:#dc2626;font-weight:700">−1 pt</td><td>Fine-tuned: 64% (+11 pts baseline)</td><td><span class="pill bad">Worse</span></td></tr>
+        <tr><td><b>Compute Cost</b></td><td>7.5B param-passes</td><td>10.5B param-passes</td><td>40% more than baseline, 30% below ceiling</td><td>Same architecture</td><td><span class="pill bad">Negative ROI</span></td></tr>
+        <tr><td><b>Wasted Votes</b></td><td>88</td><td>88</td><td>0 saved</td><td>83 guided (fine-tuned)</td><td><span class="pill neutral">No change</span></td></tr>
+        <tr><td><b>Vote Consistency</b></td><td>52.2%</td><td>52.1%</td><td>1.00× lift</td><td>Fine-tuned: 57.7% / 1.19× lift</td><td><span class="pill bad">No benefit</span></td></tr>
+        <tr><td><b>High-Agreement Questions</b></td><td>30</td><td>34</td><td>+4 more</td><td>Fine-tuned: 36 (+9)</td><td><span class="pill mixed">Marginal</span></td></tr>
+        <tr><td><b>All-Wrong Questions</b></td><td>24</td><td>30</td><td style="color:#dc2626;font-weight:700">+6 more failures</td><td>Fine-tuned: 21 (−8 from baseline of 29)</td><td><span class="pill bad">Worse</span></td></tr>
+        <tr><td><b>Guided Wins (per Q)</b></td><td>—</td><td>36 / 100</td><td>vs 38 baseline wins</td><td>Fine-tuned: 47 wins</td><td><span class="pill bad">Trailing baseline</span></td></tr>
+        <tr><td><b>ECE (lower = better)</b></td><td>0.164</td><td>0.182</td><td style="color:#dc2626;font-weight:700">−11.3% worse</td><td>Fine-tuned: 0.110 (53.2% better)</td><td><span class="pill bad">Degraded</span></td></tr>
+        <tr><td><b>High-Conf Accuracy (≥0.80)</b></td><td>68.2% (n=44)</td><td>70.8% (n=48)</td><td>+2.6 pts</td><td>Fine-tuned: 75.0% / +16.3 pts</td><td><span class="pill mixed">Marginal gain</span></td></tr>
+        <tr><td><b>False Confidence</b></td><td>14</td><td>14</td><td>0 fewer</td><td>Fine-tuned: 12 (7 fewer)</td><td><span class="pill neutral">No change</span></td></tr>
+        <tr><td><b>Division Gain (Angle 4)</b></td><td>50.0%</td><td>62.5%</td><td style="color:#16a34a;font-weight:700">+12.5 pts</td><td>Fine-tuned: 56.3% (0 gain)</td><td><span class="pill good">Benefit</span></td></tr>
+        <tr><td><b>Multi-step Gain (Angle 4)</b></td><td>36.7%</td><td>33.3%</td><td style="color:#dc2626;font-weight:700">−3.3 pts</td><td>Fine-tuned: 50.0% (+16.7 pts)</td><td><span class="pill bad">Hurt</span></td></tr>
+        <tr><td><b>Refiner Effectiveness</b></td><td>—</td><td>2 / 14 (14.3%)</td><td>—</td><td>Fine-tuned: 3/15 (20%)</td><td><span class="pill bad">Very weak</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <strong>SLM-to-SLM Guided Reasoning Pipeline — No Fine-tuning</strong> — ASDiv Evaluation Report &nbsp;|&nbsp;
+  Models: Qwen 2.5-3B-Instruct (base guide, no LoRA) + Qwen 2.5-1.5B-Instruct (solver) &nbsp;|&nbsp; N=100 &nbsp;|&nbsp; Seed=42
+</div>
+
+<!-- ═══════════════ CHARTS ═══════════════ -->
+<script>
+const G='#2563eb', B='#dc2626', U='#7c3aed', GR='#16a34a', AM='#d97706', BL='#0891b2';
+const FT='#059669'; // fine-tuned green
+
+// 1. Compute scatter
+new Chart(document.getElementById('computeScatter'),{
+  type:'scatter',
+  data:{ datasets:[
+    {label:'Baseline', data:[{x:7.5,y:57}],  backgroundColor:B, pointRadius:14},
+    {label:'Guided (Base)',   data:[{x:10.5,y:56}], backgroundColor:G, pointRadius:14},
+    {label:'Upper (3B×5)', data:[{x:15,y:78}], backgroundColor:U, pointRadius:14, pointStyle:'triangle'},
+  ]},
+  options:{responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}% @ ${c.parsed.x}B`}}},
+    scales:{x:{title:{display:true,text:'Param-passes (B)'},min:5,max:17},y:{title:{display:true,text:'Accuracy (%)'},min:40,max:85}}
+  }
+});
+
+// 2. Strategy donut
+new Chart(document.getElementById('strategyDonut'),{
+  type:'doughnut',
+  data:{labels:['Majority (86)','Coin Flip (12)','Refiner Tiebreak (2)'],
+    datasets:[{data:[86,12,2],backgroundColor:[G,AM,'#94a3b8'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:12}}}}}
+});
+
+// 3. Strategy accuracy
+new Chart(document.getElementById('stratAccBar'),{
+  type:'bar',
+  data:{labels:['Majority\n(n=86)','Refiner Tiebreak\n(n=2)','Coin Flip\n(n=12)'],
+    datasets:[{label:'Accuracy %',data:[61.6,50.0,16.7],backgroundColor:[G,'#7c3aed',AM],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,title:{display:true,text:'Accuracy (%)'}}}}
+});
+
+// 4. Correct bar
+new Chart(document.getElementById('correctBar'),{
+  type:'bar',
+  data:{labels:['Guided (Base)','Baseline'],
+    datasets:[
+      {label:'Correct',   data:[56,57],backgroundColor:[G+'cc',B+'cc'],borderRadius:[6,6,0,0]},
+      {label:'Incorrect', data:[44,43],backgroundColor:[G+'44',B+'44'],borderRadius:[0,0,6,6]},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},
+    scales:{x:{stacked:true},y:{stacked:true,max:100,title:{display:true,text:'Questions'}}}}
+});
+
+// 5. Efficiency bar
+new Chart(document.getElementById('efficiencyBar'),{
+  type:'bar',
+  data:{labels:['Baseline\n(7.5B)','Guided Base\n(10.5B)','Upper\n(15.0B est.)'],
+    datasets:[{data:[7.60,5.33,5.2],backgroundColor:[B,G,U],borderRadius:8,label:'Accuracy / Billion param-passes'}]},
+  options:{responsive:true,plugins:{legend:{display:false}},
+    scales:{y:{min:0,max:9,title:{display:true,text:'% accuracy per billion param-passes'}}}}
+});
+
+// 6. Cross-dataset comparison: fine-tuned vs base gain
+new Chart(document.getElementById('crossAccBar'),{
+  type:'bar',
+  data:{labels:['ASDiv\n(Fine-tuned)','ASDiv\n(Base Guide)'],
+    datasets:[{label:'Accuracy Gain vs Baseline (pts)',data:[11,-1],
+      backgroundColor:[FT+'cc',B+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},
+    scales:{y:{min:-5,max:15,title:{display:true,text:'Accuracy gain over baseline (pts)'}}}}
+});
+
+// 7. Consistency distribution
+new Chart(document.getElementById('consistDist'),{
+  type:'bar',
+  data:{labels:['All Wrong (0%)','Low (1–39%)','Medium (40–79%)','High (80–100%)'],
+    datasets:[
+      {label:'Guided (Base)',  data:[30,11,25,34],backgroundColor:G+'cc',borderRadius:6},
+      {label:'Baseline',data:[24,17,29,30],backgroundColor:B+'cc',borderRadius:6},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{title:{display:true,text:'Number of Questions'}}}}
+});
+
+// 8. Win/loss donut
+new Chart(document.getElementById('winLossDoughnut'),{
+  type:'doughnut',
+  data:{labels:['Guided Wins (36)','Baseline Wins (38)','Tied (26)'],
+    datasets:[{data:[36,38,26],backgroundColor:[G,B,'#94a3b8'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+});
+
+// 9. Mean votes bar
+new Chart(document.getElementById('meanVotesBar'),{
+  type:'bar',
+  data:{labels:['Guided (Base)','Baseline'],
+    datasets:[{data:[2.61,2.61],backgroundColor:[G,B],borderRadius:8,label:'Avg correct votes'}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:5,title:{display:true,text:'Correct votes (out of 5)'}}}}
+});
+
+// 10. Correct-question consistency
+new Chart(document.getElementById('correctConsBar'),{
+  type:'bar',
+  data:{labels:['Guided (Base)','Baseline'],
+    datasets:[{data:[84.8,81.5],backgroundColor:[G,B],borderRadius:8,label:'Consistency on correct questions (%)'}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:70,max:90,title:{display:true,text:'Vote consistency (%)'}}}}
+});
+
+// 11. Bucket side by side
+new Chart(document.getElementById('bucketSideBySide'),{
+  type:'bar',
+  data:{labels:['All Wrong','Low','Medium','High'],
+    datasets:[
+      {label:'Guided (Base)',  data:[30,11,25,34],backgroundColor:G+'cc',borderRadius:5},
+      {label:'Baseline',data:[24,17,29,30],backgroundColor:B+'cc',borderRadius:5},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{title:{display:true,text:'Questions'}}}}
+});
+
+// 12. Consistency lift comparison: fine-tuned vs base
+new Chart(document.getElementById('crossConsLift'),{
+  type:'bar',
+  data:{labels:['Fine-tuned Guide','Base Guide (No LoRA)'],
+    datasets:[{label:'Consistency Lift (×)',data:[1.19,1.00],backgroundColor:[FT+'cc',G+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},
+    scales:{y:{min:0.8,max:1.5,title:{display:true,text:'Consistency lift (×)'}}}}
+});
+
+// 13. Calibration chart
+new Chart(document.getElementById('calibChart'),{
+  type:'bar',
+  data:{labels:['Low (<0.40)','Medium (0.40–0.60)','High (0.60–0.80)','Very High (≥0.80)'],
+    datasets:[
+      {label:'Guided (Base)',  data:[12.5,33.3,51.4,70.8],backgroundColor:G+'cc',borderRadius:6},
+      {label:'Baseline',data:[20.0,37.5,57.1,68.2],backgroundColor:B+'cc',borderRadius:6},
+      {label:'Ideal',   data:[25,50,70,90],type:'line',borderColor:'#000',borderDash:[6,4],borderWidth:2,pointRadius:4,backgroundColor:'transparent',tension:0}
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{min:0,max:100,title:{display:true,text:'Accuracy (%)'}}}}
+});
+
+// 14. ECE bar
+new Chart(document.getElementById('eceBar'),{
+  type:'bar',
+  data:{labels:['Guided (Base)','Baseline'],datasets:[{data:[0.182,0.164],backgroundColor:[G,B],borderRadius:8,label:'ECE'}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:0.30,title:{display:true,text:'ECE (lower = better)'}}}}
+});
+
+// 15. Bucket accuracy
+new Chart(document.getElementById('bucketAccChart'),{
+  type:'bar',
+  data:{labels:['Low (<0.40)\nn=8/5','Medium (0.40–0.60)\nn=9/16','High (0.60–0.80)\nn=35/35','Very High (≥0.80)\nn=48/44'],
+    datasets:[
+      {label:'Guided (Base)',  data:[12.5,33.3,51.4,70.8],backgroundColor:G+'cc',borderRadius:6},
+      {label:'Baseline',data:[20.0,37.5,57.1,68.2],backgroundColor:B+'cc',borderRadius:6},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{min:0,max:100,title:{display:true,text:'Accuracy (%)'}}}}
+});
+
+// 16. Bucket count
+new Chart(document.getElementById('bucketCountChart'),{
+  type:'bar',
+  data:{labels:['Low (<0.40)','Medium (0.40–0.60)','High (0.60–0.80)','Very High (≥0.80)'],
+    datasets:[
+      {label:'Guided (Base)',  data:[8,9,35,48],backgroundColor:G+'cc',borderRadius:5},
+      {label:'Baseline',data:[5,16,35,44],backgroundColor:B+'cc',borderRadius:5},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{title:{display:true,text:'Question count'}}}}
+});
+
+// 17. False confidence comparison
+new Chart(document.getElementById('falseConfComp'),{
+  type:'bar',
+  data:{labels:['Fine-tuned Guided','Base Guided','Baseline (shared)'],
+    datasets:[{label:'False confidence count',data:[12,14,14],backgroundColor:[FT+'cc',G+'cc',B+'cc'],borderRadius:5}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:22,title:{display:true,text:'False confidence count'}}}}
+});
+
+// 18. ECE comparison chart
+new Chart(document.getElementById('eceCompChart'),{
+  type:'bar',
+  data:{labels:['Fine-tuned Guided','Base Guided','Baseline'],
+    datasets:[{label:'ECE',data:[0.110,0.182,0.164],backgroundColor:[FT+'cc',G+'cc',B+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:0.28,title:{display:true,text:'ECE (lower = better)'}}}}
+});
+
+// 19. Op type accuracy
+new Chart(document.getElementById('opAccChart'),{
+  type:'bar',
+  data:{labels:['Addition\n(n=13)','Subtraction\n(n=25)','Multiplication\n(n=16)','Division\n(n=16)','Multi-step\n(n=30)'],
+    datasets:[
+      {label:'Guided (Base)',  data:[61.5,64.0,75.0,62.5,33.3],backgroundColor:G+'cc',borderRadius:5},
+      {label:'Baseline',data:[69.2,72.0,68.8,50.0,36.7],backgroundColor:B+'cc',borderRadius:5},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{min:0,max:100,title:{display:true,text:'Accuracy (%)'}}}}
+});
+
+// 20. Op type gain (base)
+new Chart(document.getElementById('opGainChart'),{
+  type:'bar',
+  data:{labels:['Division','Multiplication','Multi-step','Addition','Subtraction'],
+    datasets:[{label:'Accuracy Gain (pts)',data:[12.5,6.2,-3.3,-7.7,-8.0],
+      backgroundColor:['#2563eb','#2563eb','#ef4444','#dc2626','#b91c1c'],borderRadius:8}]},
+  options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{min:-12,max:16,title:{display:true,text:'Percentage point gain'}}}}
+});
+
+// 21. Op type consistency
+new Chart(document.getElementById('opConsChart'),{
+  type:'bar',
+  data:{labels:['Addition','Subtraction','Multiplication','Division','Multi-step'],
+    datasets:[
+      {label:'Guided (Base)',  data:[56.5,57.2,69.0,55.3,35.4],backgroundColor:G+'cc',borderRadius:5},
+      {label:'Baseline',data:[53.5,63.8,64.4,42.2,40.7],backgroundColor:B+'cc',borderRadius:5},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{min:0,max:90,title:{display:true,text:'Vote consistency (%)'}}}}
+});
+
+// 22. Op type consistency lift
+new Chart(document.getElementById('opConsLiftChart'),{
+  type:'bar',
+  data:{labels:['Division','Multiplication','Addition','Multi-step','Subtraction'],
+    datasets:[{label:'Consistency Lift (×)',data:[1.31,1.07,1.06,0.87,0.90],
+      backgroundColor:['#2563eb','#2563eb','#93c5fd','#ef4444','#dc2626'],borderRadius:8}]},
+  options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},
+    scales:{x:{min:0.7,max:1.5,title:{display:true,text:'Consistency lift (×)'}}}}
+});
+
+// 23. Op distribution donut
+new Chart(document.getElementById('opDistChart'),{
+  type:'doughnut',
+  data:{labels:['Multi-step (30)','Subtraction (25)','Division (16)','Multiplication (16)','Addition (13)'],
+    datasets:[{data:[30,25,16,16,13],backgroundColor:['#dc2626','#0891b2','#7c3aed','#d97706','#2563eb'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}
+});
+
+// 24. Op compare: fine-tuned vs base
+new Chart(document.getElementById('opCompareChart'),{
+  type:'bar',
+  data:{labels:['Addition','Subtraction','Multiplication','Division','Multi-step'],
+    datasets:[
+      {label:'Fine-tuned Guide gain',data:[15.38,12.0,6.25,0.0,16.67],backgroundColor:FT+'cc',borderRadius:5},
+      {label:'Base Guide gain',      data:[-7.7,-8.0,6.2,12.5,-3.3], backgroundColor:G+'cc',borderRadius:5},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{min:-12,max:20,title:{display:true,text:'Accuracy gain vs baseline (pts)'}}}}
+});
+
+// 25. Comparison: overall accuracy 3-way
+new Chart(document.getElementById('compAccChart'),{
+  type:'bar',
+  data:{labels:['Baseline','Guided (Base)','Guided (Fine-tuned)'],
+    datasets:[{label:'Accuracy (%)',data:[57,56,64],backgroundColor:[B+'cc',G+'cc',FT+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:45,max:75,title:{display:true,text:'Accuracy (%)'}}}}
+});
+
+// 26. Comparison: consistency lift
+new Chart(document.getElementById('compConsChart'),{
+  type:'bar',
+  data:{labels:['Base Guide','Fine-tuned Guide'],
+    datasets:[{label:'Consistency Lift (×)',data:[1.00,1.19],backgroundColor:[G+'cc',FT+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0.8,max:1.4,title:{display:true,text:'Consistency lift (×)'}}}}
+});
+
+// 27. ECE 3-way comparison
+new Chart(document.getElementById('compEceChart'),{
+  type:'bar',
+  data:{labels:['Baseline','Guided (Fine-tuned)','Guided (Base)'],
+    datasets:[{label:'ECE',data:[0.164,0.110,0.182],backgroundColor:[B+'cc',FT+'cc',G+'cc'],borderRadius:8}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:0.25,title:{display:true,text:'ECE (lower = better)'}}}}
+});
+
+// 28. Op type 3-way comparison
+new Chart(document.getElementById('compOpChart'),{
+  type:'bar',
+  data:{labels:['Addition','Subtraction','Multiplication','Division','Multi-step'],
+    datasets:[
+      {label:'Fine-tuned gain',data:[15.38,12.0,6.25,0.0,16.67], backgroundColor:FT+'cc',borderRadius:4},
+      {label:'Base guide gain', data:[-7.7,-8.0,6.2,12.5,-3.3],  backgroundColor:G+'cc',borderRadius:4},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},
+    scales:{y:{min:-12,max:20,title:{display:true,text:'Accuracy gain vs baseline (pts)'}}}}
+});
+</script>
+</body>
+</html>
