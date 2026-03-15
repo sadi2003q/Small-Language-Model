@@ -1,0 +1,50 @@
+{
+  "dataset": "ASDiv",
+  "by_operation_type": {
+    "Addition": {
+      "n": 61,
+      "guided_acc": 77.05,
+      "baseline_acc": 59.02,
+      "gain": 18.03,
+      "guided_consistency": 67.05,
+      "baseline_consistency": 57.46,
+      "consistency_lift": 1.1669
+    },
+    "Division": {
+      "n": 40,
+      "guided_acc": 52.5,
+      "baseline_acc": 32.5,
+      "gain": 20.0,
+      "guided_consistency": 52.83,
+      "baseline_consistency": 32.29,
+      "consistency_lift": 1.6361
+    },
+    "Multi-step": {
+      "n": 89,
+      "guided_acc": 47.19,
+      "baseline_acc": 47.19,
+      "gain": 0.0,
+      "guided_consistency": 42.58,
+      "baseline_consistency": 41.16,
+      "consistency_lift": 1.0346
+    },
+    "Multiplication": {
+      "n": 43,
+      "guided_acc": 83.72,
+      "baseline_acc": 67.44,
+      "gain": 16.28,
+      "guided_consistency": 74.22,
+      "baseline_consistency": 55.93,
+      "consistency_lift": 1.3271
+    },
+    "Subtraction": {
+      "n": 67,
+      "guided_acc": 68.66,
+      "baseline_acc": 61.19,
+      "gain": 7.46,
+      "guided_consistency": 65.92,
+      "baseline_consistency": 59.93,
+      "consistency_lift": 1.1
+    }
+  }
+}

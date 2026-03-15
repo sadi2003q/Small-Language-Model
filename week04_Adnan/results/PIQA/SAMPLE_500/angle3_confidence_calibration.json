@@ -1,0 +1,44 @@
+{
+  "dataset": "PIQA",
+  "guided_ece": 0.1096,
+  "baseline_ece": 0.3544,
+  "ece_improvement_pct": 69.1,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 484,
+      "accuracy": 0.7872,
+      "expected": 0.9,
+      "gap": 0.1128
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 16,
+      "accuracy": 0.6875,
+      "expected": 0.7,
+      "gap": 0.0125
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 491,
+      "accuracy": 0.5479,
+      "expected": 0.9,
+      "gap": 0.3521
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 9,
+      "accuracy": 0.2222,
+      "expected": 0.7,
+      "gap": 0.4778
+    }
+  ],
+  "guided_false_confidence": 103,
+  "baseline_false_confidence": 222,
+  "guided_high_conf_accuracy": 78.7,
+  "baseline_high_conf_accuracy": 54.8,
+  "guided_high_conf_n": 484,
+  "baseline_high_conf_n": 491
+}
