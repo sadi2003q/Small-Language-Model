@@ -1,0 +1,47 @@
+{
+  "dataset": "ASDiv",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "by_operation": {
+    "Addition": {
+      "n": 61,
+      "ceiling_acc": 42.62,
+      "pipeline_acc": 73.8,
+      "baseline_acc": 55.7,
+      "ceiling_vs_pipeline": -31.18,
+      "ceiling_vs_baseline": -13.08
+    },
+    "Division": {
+      "n": 40,
+      "ceiling_acc": 10.0,
+      "pipeline_acc": 60.0,
+      "baseline_acc": 40.0,
+      "ceiling_vs_pipeline": -50.0,
+      "ceiling_vs_baseline": -30.0
+    },
+    "Multi-step": {
+      "n": 89,
+      "ceiling_acc": 21.35,
+      "pipeline_acc": 53.9,
+      "baseline_acc": 53.9,
+      "ceiling_vs_pipeline": -32.55,
+      "ceiling_vs_baseline": -32.55
+    },
+    "Multiplication": {
+      "n": 43,
+      "ceiling_acc": 37.21,
+      "pipeline_acc": 72.1,
+      "baseline_acc": 55.8,
+      "ceiling_vs_pipeline": -34.89,
+      "ceiling_vs_baseline": -18.59
+    },
+    "Subtraction": {
+      "n": 67,
+      "ceiling_acc": 31.34,
+      "pipeline_acc": 64.2,
+      "baseline_acc": 56.7,
+      "ceiling_vs_pipeline": -32.86,
+      "ceiling_vs_baseline": -25.36
+    }
+  }
+}

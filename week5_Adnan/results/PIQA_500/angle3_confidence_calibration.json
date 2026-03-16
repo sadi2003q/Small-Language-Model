@@ -1,0 +1,25 @@
+{
+  "dataset": "PIQA",
+  "experiment": "ceiling_3b",
+  "n_questions": 500,
+  "ceiling_ece": 0.1332,
+  "pipeline_ece": 0.1096,
+  "baseline_ece": 0.3544,
+  "ceiling_false_confidence": 109,
+  "ceiling_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 463,
+      "accuracy": 0.7646,
+      "expected": 0.9,
+      "gap": 0.1354
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 37,
+      "accuracy": 0.5946,
+      "expected": 0.7,
+      "gap": 0.1054
+    }
+  ]
+}

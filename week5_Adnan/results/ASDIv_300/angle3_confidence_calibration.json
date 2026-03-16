@@ -1,0 +1,39 @@
+{
+  "dataset": "ASDiv",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_ece": 0.4443,
+  "pipeline_ece": 0.1002,
+  "baseline_ece": 0.1827,
+  "ceiling_false_confidence": 124,
+  "ceiling_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 176,
+      "accuracy": 0.2955,
+      "expected": 0.9,
+      "gap": 0.6045
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 37,
+      "accuracy": 0.3243,
+      "expected": 0.7,
+      "gap": 0.3757
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 49,
+      "accuracy": 0.2449,
+      "expected": 0.5,
+      "gap": 0.2551
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 38,
+      "accuracy": 0.2632,
+      "expected": 0.25,
+      "gap": 0.0132
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "dataset": "SVAMP",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_ece": 0.4552,
+  "pipeline_ece": 0.1278,
+  "baseline_ece": 0.2017,
+  "ceiling_false_confidence": 126,
+  "ceiling_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 179,
+      "accuracy": 0.2961,
+      "expected": 0.9,
+      "gap": 0.6039
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 51,
+      "accuracy": 0.4118,
+      "expected": 0.7,
+      "gap": 0.2882
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 39,
+      "accuracy": 0.2051,
+      "expected": 0.5,
+      "gap": 0.2949
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 31,
+      "accuracy": 0.3226,
+      "expected": 0.25,
+      "gap": 0.0726
+    }
+  ]
+}

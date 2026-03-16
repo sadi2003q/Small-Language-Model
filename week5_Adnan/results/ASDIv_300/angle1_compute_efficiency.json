@@ -1,0 +1,32 @@
+{
+  "dataset": "ASDiv",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_accuracy": 28.67,
+  "pipeline_accuracy": 64.0,
+  "baseline_accuracy": 53.7,
+  "ceiling_compute_B": 15.0,
+  "pipeline_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "ceiling_efficiency": 1.9111,
+  "pipeline_efficiency": 6.0952,
+  "baseline_efficiency": 7.16,
+  "ceiling_wasted_votes": 412,
+  "refiner_triggered": 33,
+  "refiner_correct": 19,
+  "strategy_breakdown": {
+    "majority": {
+      "n": 267,
+      "correct": 81
+    },
+    "coin_flip": {
+      "n": 10,
+      "correct": 1
+    },
+    "refiner_tiebreak": {
+      "n": 23,
+      "correct": 4
+    }
+  },
+  "pipeline_beats_ceiling": true
+}

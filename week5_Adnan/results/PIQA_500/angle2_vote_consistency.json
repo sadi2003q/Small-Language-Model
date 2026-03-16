@@ -1,0 +1,19 @@
+{
+  "dataset": "PIQA",
+  "experiment": "ceiling_3b",
+  "n_questions": 500,
+  "ceiling_mean_consistency": 0.742,
+  "pipeline_mean_consistency": 0.778,
+  "baseline_mean_consistency": 0.544,
+  "ceiling_distribution": {
+    "all_wrong  (0%)": 97,
+    "low       (1-39%)": 12,
+    "medium  (40-79%)": 37,
+    "high   (80-100%)": 354
+  },
+  "ceiling_a_pct": 54.96,
+  "ceiling_b_pct": 45.04,
+  "pipeline_a_pct": 42.1,
+  "baseline_a_pct": 93.4,
+  "ceiling_correct_q_consistency": 0.9644
+}

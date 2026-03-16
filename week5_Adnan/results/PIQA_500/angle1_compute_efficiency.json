@@ -1,0 +1,25 @@
+{
+  "dataset": "PIQA",
+  "experiment": "ceiling_3b",
+  "n_questions": 500,
+  "random_chance": 50.0,
+  "ceiling_accuracy": 75.2,
+  "pipeline_accuracy": 78.4,
+  "baseline_accuracy": 54.2,
+  "ceiling_compute_B": 15.0,
+  "pipeline_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "ceiling_efficiency": 5.0133,
+  "pipeline_efficiency": 7.4667,
+  "baseline_efficiency": 7.2267,
+  "ceiling_wasted_votes": 109,
+  "refiner_triggered": 0,
+  "refiner_correct": 0,
+  "strategy_breakdown": {
+    "majority": {
+      "n": 500,
+      "correct": 376
+    }
+  },
+  "pipeline_beats_ceiling": true
+}

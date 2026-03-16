@@ -1,0 +1,15 @@
+{
+  "dataset": "SVAMP",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_mean_consistency": 0.2551,
+  "pipeline_mean_consistency": 0.502,
+  "baseline_mean_consistency": 0.264,
+  "ceiling_distribution": {
+    "all_wrong  (0%)": 168,
+    "low       (1-39%)": 48,
+    "medium  (40-79%)": 31,
+    "high   (80-100%)": 53
+  },
+  "ceiling_correct_q_consistency": 0.7337
+}

@@ -1,0 +1,44 @@
+{
+  "dataset": "ARC-Challenge",
+  "guided_ece": 0.0991,
+  "baseline_ece": 0.1798,
+  "ece_improvement_pct": 44.9,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 896,
+      "accuracy": 0.8013,
+      "expected": 0.9,
+      "gap": 0.0987
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 4,
+      "accuracy": 0.5,
+      "expected": 0.7,
+      "gap": 0.2
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 884,
+      "accuracy": 0.7229,
+      "expected": 0.9,
+      "gap": 0.1771
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 16,
+      "accuracy": 0.375,
+      "expected": 0.7,
+      "gap": 0.325
+    }
+  ],
+  "guided_false_confidence": 178,
+  "baseline_false_confidence": 245,
+  "guided_high_conf_accuracy": 80.1,
+  "baseline_high_conf_accuracy": 72.3,
+  "guided_high_conf_n": 896,
+  "baseline_high_conf_n": 884
+}

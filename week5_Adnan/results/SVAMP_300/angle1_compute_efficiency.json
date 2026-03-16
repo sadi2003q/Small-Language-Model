@@ -1,0 +1,32 @@
+{
+  "dataset": "SVAMP",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_accuracy": 30.67,
+  "pipeline_accuracy": 61.7,
+  "baseline_accuracy": 40.3,
+  "ceiling_compute_B": 15.0,
+  "pipeline_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "ceiling_efficiency": 2.0444,
+  "pipeline_efficiency": 5.8762,
+  "baseline_efficiency": 5.3733,
+  "ceiling_wasted_votes": 390,
+  "refiner_triggered": 27,
+  "refiner_correct": 13,
+  "strategy_breakdown": {
+    "majority": {
+      "n": 273,
+      "correct": 88
+    },
+    "refiner_tiebreak": {
+      "n": 16,
+      "correct": 3
+    },
+    "coin_flip": {
+      "n": 11,
+      "correct": 1
+    }
+  },
+  "pipeline_beats_ceiling": true
+}

@@ -1,0 +1,15 @@
+{
+  "dataset": "ASDiv",
+  "experiment": "ceiling_3b",
+  "n_questions": 300,
+  "ceiling_mean_consistency": 0.2407,
+  "pipeline_mean_consistency": 0.586,
+  "baseline_mean_consistency": 0.496,
+  "ceiling_distribution": {
+    "all_wrong  (0%)": 173,
+    "low       (1-39%)": 47,
+    "medium  (40-79%)": 28,
+    "high   (80-100%)": 52
+  },
+  "ceiling_correct_q_consistency": 0.7322
+}
