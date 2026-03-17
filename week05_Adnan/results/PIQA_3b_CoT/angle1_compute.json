@@ -1,0 +1,14 @@
+{
+  "dataset": "PIQA",
+  "n_questions": 500,
+  "compute_B": 7.5,
+  "cot_accuracy": 54.8,
+  "baseline_accuracy": 55.4,
+  "accuracy_gain": -0.6,
+  "cot_wasted": 347,
+  "baseline_wasted": 70,
+  "cot_refiner": 0,
+  "baseline_refiner": 0,
+  "cot_extraction_failures": 0,
+  "baseline_extraction_failures": 0
+}

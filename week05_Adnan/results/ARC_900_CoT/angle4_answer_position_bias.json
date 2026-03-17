@@ -1,0 +1,36 @@
+{
+  "dataset": "ARC-Challenge",
+  "cot": {
+    "accuracy_by_position": {
+      "A": 75.38,
+      "B": 72.16,
+      "C": 68.14,
+      "D": 73.21
+    },
+    "prediction_distribution": {
+      "A": 24.89,
+      "B": 27.56,
+      "C": 21.44,
+      "D": 26.11
+    },
+    "extraction_failure_pct": 0.0,
+    "position_bias_score": 2.6275
+  },
+  "baseline": {
+    "accuracy_by_position": {
+      "A": 80.51,
+      "B": 69.41,
+      "C": 69.47,
+      "D": 69.2
+    },
+    "prediction_distribution": {
+      "A": 29.44,
+      "B": 25.67,
+      "C": 22.33,
+      "D": 22.56
+    },
+    "extraction_failure_pct": 0.0,
+    "position_bias_score": 4.8291
+  },
+  "bias_reduction": 2.2016
+}

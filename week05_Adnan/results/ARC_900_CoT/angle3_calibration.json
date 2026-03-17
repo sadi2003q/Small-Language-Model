@@ -1,0 +1,47 @@
+{
+  "cot_ece": 0.1744,
+  "baseline_ece": 0.1746,
+  "ece_improvement_pct": 0.06,
+  "cot_false_conf": 241,
+  "baseline_false_conf": 237,
+  "false_conf_reduction": -4,
+  "cot_calibration": [
+    {
+      "bucket": "Very High (>=0.80)",
+      "count": 880,
+      "accuracy": 0.7261,
+      "expected": 0.9,
+      "gap": 0.1739
+    },
+    {
+      "bucket": "High (0.60-0.80)",
+      "count": 20,
+      "accuracy": 0.5,
+      "expected": 0.7,
+      "gap": 0.2
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High (>=0.80)",
+      "count": 870,
+      "accuracy": 0.7276,
+      "expected": 0.9,
+      "gap": 0.1724
+    },
+    {
+      "bucket": "High (0.60-0.80)",
+      "count": 28,
+      "accuracy": 0.4643,
+      "expected": 0.7,
+      "gap": 0.2357
+    },
+    {
+      "bucket": "Low (<0.40)",
+      "count": 2,
+      "accuracy": 0.0,
+      "expected": 0.25,
+      "gap": 0.25
+    }
+  ]
+}

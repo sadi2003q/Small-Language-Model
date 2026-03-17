@@ -1,0 +1,26 @@
+{
+  "dataset": "PIQA",
+  "cot": {
+    "n_sol1_correct": 249,
+    "n_sol2_correct": 251,
+    "acc_when_sol1_correct": 49.0,
+    "acc_when_sol2_correct": 60.56,
+    "acc_gap": -11.56,
+    "pct_predict_1": 44.2,
+    "pct_predict_2": 55.8,
+    "pct_extraction_fail": 0.0,
+    "position_bias_score": 0.058
+  },
+  "baseline": {
+    "n_sol1_correct": 249,
+    "n_sol2_correct": 251,
+    "acc_when_sol1_correct": 97.99,
+    "acc_when_sol2_correct": 13.15,
+    "acc_gap": 84.84,
+    "pct_predict_1": 92.4,
+    "pct_predict_2": 7.6,
+    "pct_extraction_fail": 0.0,
+    "position_bias_score": 0.424
+  },
+  "bias_reduction": 0.366
+}

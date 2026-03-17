@@ -1,0 +1,14 @@
+{
+  "dataset": "ARC-Challenge",
+  "n_questions": 900,
+  "compute_B": 7.5,
+  "cot_accuracy": 72.11,
+  "baseline_accuracy": 71.78,
+  "accuracy_gain": 0.33,
+  "cot_wasted": 53,
+  "baseline_wasted": 94,
+  "cot_refiner": 0,
+  "baseline_refiner": 0,
+  "cot_extraction_failures": 0,
+  "baseline_extraction_failures": 0
+}
