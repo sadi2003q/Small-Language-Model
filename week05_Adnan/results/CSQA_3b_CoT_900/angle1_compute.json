@@ -1,0 +1,14 @@
+{
+  "dataset": "CommonsenseQA",
+  "n": 900,
+  "compute_B": 7.5,
+  "cot_accuracy": 53.78,
+  "baseline_accuracy": 39.78,
+  "guided_accuracy_known": 75.8,
+  "cot_vs_baseline": 14.0,
+  "guided_vs_cot": 22.02,
+  "cot_wasted": 216,
+  "baseline_wasted": 4,
+  "cot_refiner": 79,
+  "baseline_refiner": 0
+}

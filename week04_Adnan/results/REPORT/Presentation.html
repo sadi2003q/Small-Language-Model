@@ -1,1238 +1,2307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLM-to-SLM Guided Reasoning — Research Presentation</title>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
-<style>
-:root {
-  --navy:   #1e3a5f;
-  --blue:   #1a56db;
-  --red:    #c81e1e;
-  --green:  #057a55;
-  --gold:   #b45309;
-  --gray:   #6b7280;
-  --light:  #f3f4f6;
-  --cream:  #fffbeb;
-  --white:  #ffffff;
-  --border: #e5e7eb;
-  --text:   #111827;
-  --muted:  #6b7280;
-  --sig4:   #7c3aed;
-  --sig3:   #1a56db;
-  --sig2:   #057a55;
-  --sig1:   #0891b2;
-  --ns:     #9ca3af;
-  --null:   #dc2626;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body { font-family:'IBM Plex Sans',sans-serif; font-weight:300; background:#f9fafb; color:var(--text); line-height:1.7; font-size:15px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLM-to-SLM Guided Reasoning — Research Presentation</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+  <style>
+    :root {
+      --navy: #1e3a5f;
+      --blue: #1a56db;
+      --red: #c81e1e;
+      --green: #057a55;
+      --gold: #b45309;
+      --gray: #6b7280;
+      --light: #f3f4f6;
+      --cream: #fffbeb;
+      --white: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --sig4: #7c3aed;
+      --sig3: #1a56db;
+      --sig2: #057a55;
+      --sig1: #0891b2;
+      --ns: #9ca3af;
+      --null: #dc2626;
+    }
 
-/* NAV */
-nav {
-  position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.97);
-  backdrop-filter:blur(10px); border-bottom:2px solid var(--navy);
-  padding:0 32px; display:flex; align-items:center; gap:0; height:50px; overflow-x:auto;
-}
-.nav-brand { font-family:'Crimson Pro',serif; font-size:15px; font-weight:700; color:var(--navy); margin-right:20px; padding-right:20px; border-right:2px solid var(--border); white-space:nowrap; }
-nav a { color:var(--muted); text-decoration:none; font-size:12px; font-weight:500; white-space:nowrap; padding:4px 12px; border-radius:3px; transition:all 0.15s; letter-spacing:0.3px; }
-nav a:hover { color:var(--navy); background:var(--light); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* LAYOUT */
-.container { max-width:1100px; margin:0 auto; padding:0 32px; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* HERO */
-.hero { background:var(--navy); color:white; padding:64px 0 48px; }
-.hero-inner { max-width:1100px; margin:0 auto; padding:0 32px; }
-.hero-tag { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#93c5fd; margin-bottom:16px; }
-.hero h1 { font-family:'Crimson Pro',serif; font-size:clamp(28px,4vw,48px); font-weight:700; line-height:1.15; max-width:800px; margin-bottom:16px; }
-.hero h1 em { font-style:italic; color:#fbbf24; }
-.hero-sub { font-size:15px; color:#cbd5e1; max-width:680px; line-height:1.7; margin-bottom:40px; }
-.hero-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
-.hero-stat { background:rgba(255,255,255,0.07); padding:20px 18px; }
-.hero-stat-num { font-family:'Crimson Pro',serif; font-size:38px; font-weight:700; line-height:1; color:#fbbf24; margin-bottom:4px; }
-.hero-stat-num sup { font-size:18px; color:#fbbf24; }
-.hero-stat-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#94a3b8; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 300;
+      background: #f9fafb;
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
 
-/* SECTIONS */
-section { padding:64px 0; }
-section:nth-child(even) { background:var(--white); }
-section:nth-child(odd) { background:#f9fafb; }
-.section-header { margin-bottom:40px; }
-.section-tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:8px; display:block; }
-.section-title { font-family:'Crimson Pro',serif; font-size:clamp(24px,3vw,36px); font-weight:700; color:var(--navy); line-height:1.2; }
-.section-desc { font-size:15px; color:var(--muted); margin-top:10px; max-width:720px; }
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--navy);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 50px;
+      overflow-x: auto;
+    }
 
-/* CARDS */
-.card { background:white; border:1px solid var(--border); border-radius:6px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-.card-title { font-family:'Crimson Pro',serif; font-size:18px; font-weight:700; color:var(--navy); margin-bottom:6px; }
-.card-sub { font-size:12px; color:var(--muted); margin-bottom:16px; }
-canvas { max-height:280px; }
+    .nav-brand {
+      font-family: 'Crimson Pro', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-right: 20px;
+      padding-right: 20px;
+      border-right: 2px solid var(--border);
+      white-space: nowrap;
+    }
 
-/* GRIDS */
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
-.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-@media(max-width:768px) { .g2,.g3,.g4 { grid-template-columns:1fr; } }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      padding: 4px 12px;
+      border-radius: 3px;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
 
-/* METRIC CARDS */
-.metric { background:white; border:1px solid var(--border); border-radius:6px; padding:20px; text-align:center; }
-.metric-val { font-family:'Crimson Pro',serif; font-size:40px; font-weight:700; line-height:1; margin-bottom:4px; }
-.metric-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
-.metric-sub { font-size:12px; color:var(--muted); margin-top:4px; }
-.c-blue { color:var(--blue); }
-.c-green { color:var(--green); }
-.c-red { color:var(--red); }
-.c-navy { color:var(--navy); }
-.c-gold { color:var(--gold); }
-.c-purple { color:var(--sig4); }
+    nav a:hover {
+      color: var(--navy);
+      background: var(--light);
+    }
 
-/* TABLES */
-.tbl-wrap { overflow-x:auto; border-radius:6px; border:1px solid var(--border); }
-table { width:100%; border-collapse:collapse; font-size:13.5px; }
-thead th { background:var(--navy); color:white; padding:11px 14px; text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; }
-tbody td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
-tbody tr:last-child td { border-bottom:none; }
-tbody tr:hover td { background:#f8fafc; }
-tbody tr.best td { background:#f0fdf4; }
-tbody tr.null-row td { background:#fef2f2; color:var(--gray); }
-.td-num { font-family:'IBM Plex Mono',monospace; text-align:right; }
-.td-pos { color:var(--green); font-weight:600; font-family:'IBM Plex Mono',monospace; }
-.td-neg { color:var(--red); font-weight:600; font-family:'IBM Plex Mono',monospace; }
+    /* LAYOUT */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
 
-/* SIG BADGES */
-.sig { display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600; white-space:nowrap; }
-.sig-4 { background:#ede9fe; color:#7c3aed; }
-.sig-3 { background:#dbeafe; color:#1e40af; }
-.sig-2 { background:#d1fae5; color:#065f46; }
-.sig-1 { background:#cffafe; color:#0e7490; }
-.sig-ns { background:#f3f4f6; color:#6b7280; }
-.sig-null { background:#fee2e2; color:#991b1b; }
+    /* HERO */
+    .hero {
+      background: var(--navy);
+      color: white;
+      padding: 64px 0 48px;
+    }
 
-/* FORMULA BOX */
-.formula-box { background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #f59e0b; border-radius:0 6px 6px 0; padding:20px 24px; margin:20px 0; }
-.formula-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#92400e; margin-bottom:12px; }
-.formula-box .MJX-TEX { font-size:18px; }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
 
-/* INSIGHT BOX */
-.insight { background:var(--navy); color:white; border-radius:6px; padding:24px 28px; margin:20px 0; }
-.insight-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#fbbf24; margin-bottom:8px; }
-.insight-text { font-family:'Crimson Pro',serif; font-size:19px; font-style:italic; line-height:1.6; }
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #93c5fd;
+      margin-bottom: 16px;
+    }
 
-/* EXAMPLE BOX */
-.example { background:#f0f9ff; border:1px solid #bae6fd; border-left:4px solid #0ea5e9; border-radius:0 6px 6px 0; padding:18px 22px; margin:16px 0; }
-.example-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#0369a1; margin-bottom:8px; }
+    .hero h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 800px;
+      margin-bottom: 16px;
+    }
 
-/* ANGLE INTRO CARD */
-.angle-intro { background:white; border:2px solid var(--navy); border-radius:6px; padding:28px; margin-bottom:28px; display:flex; gap:24px; align-items:flex-start; }
-.angle-num { font-family:'Crimson Pro',serif; font-size:64px; font-weight:700; color:#e5e7eb; line-height:1; flex-shrink:0; width:72px; }
-.angle-content h3 { font-family:'Crimson Pro',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:8px; }
-.angle-content .angle-plain { font-size:14px; color:var(--text); line-height:1.75; }
+    .hero h1 em {
+      font-style: italic;
+      color: #fbbf24;
+    }
 
-/* PIPE DIAGRAM */
-.pipe { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:16px; background:#f8fafc; border-radius:6px; border:1px solid var(--border); }
-.pipe-box { padding:8px 14px; border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; white-space:nowrap; }
-.pipe-arrow { color:var(--muted); font-size:16px; }
+    .hero-sub {
+      font-size: 15px;
+      color: #cbd5e1;
+      max-width: 680px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
 
-/* PROGRESS BAR */
-.prog-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.prog-label { font-size:13px; width:130px; flex-shrink:0; }
-.prog-track { flex:1; height:22px; background:var(--light); border-radius:3px; overflow:hidden; position:relative; }
-.prog-fill { height:100%; border-radius:3px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:white; font-weight:500; transition:width 0.8s ease; }
-.prog-value { font-family:'IBM Plex Mono',monospace; font-size:13px; width:52px; text-align:right; flex-shrink:0; }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
 
-/* STATUS BANNER */
-.status-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:24px 0; }
-.status-card { border-radius:6px; padding:16px 18px; display:flex; align-items:center; gap:14px; }
-.status-card.confirmed { background:#f0fdf4; border:1px solid #bbf7d0; }
-.status-card.null-r { background:#fef2f2; border:1px solid #fecaca; }
-.status-card.pending { background:#fffbeb; border:1px solid #fde68a; }
-.status-icon { font-size:24px; flex-shrink:0; }
-.status-body .status-name { font-weight:600; font-size:14px; }
-.status-body .status-detail { font-size:12px; color:var(--muted); font-family:'IBM Plex Mono',monospace; }
+    .hero-stat {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 20px 18px;
+    }
 
-/* CALLOUT */
-.callout { display:flex; gap:14px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:16px 18px; margin:16px 0; }
-.callout-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
-.callout-text { font-size:14px; color:var(--navy); line-height:1.65; }
+    .hero-stat-num {
+      font-family: 'Crimson Pro', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
 
-/* DIVIDER */
-hr.divider { border:none; border-top:1px solid var(--border); margin:36px 0; }
+    .hero-stat-num sup {
+      font-size: 18px;
+      color: #fbbf24;
+    }
 
-/* HIGHLIGHT */
-.hl { background:#fef08a; padding:0 3px; border-radius:2px; }
-.hl-g { background:#dcfce7; padding:0 3px; border-radius:2px; color:var(--green); font-weight:600; }
-.hl-r { background:#fee2e2; padding:0 3px; border-radius:2px; color:var(--red); font-weight:600; }
+    .hero-stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
 
-/* SCROLL HINT */
-.scroll-hint { text-align:center; padding:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px; }
-</style>
+    /* SECTIONS */
+    section {
+      padding: 64px 0;
+    }
+
+    section:nth-child(even) {
+      background: var(--white);
+    }
+
+    section:nth-child(odd) {
+      background: #f9fafb;
+    }
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .section-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 10px;
+      max-width: 720px;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-title {
+      font-family: 'Crimson Pro', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    canvas {
+      max-height: 280px;
+    }
+
+    /* GRIDS */
+    .g2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .g3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .g4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media(max-width:768px) {
+
+      .g2,
+      .g3,
+      .g4 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* METRIC CARDS */
+    .metric {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-family: 'Crimson Pro', serif;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .c-blue {
+      color: var(--blue);
+    }
+
+    .c-green {
+      color: var(--green);
+    }
+
+    .c-red {
+      color: var(--red);
+    }
+
+    .c-navy {
+      color: var(--navy);
+    }
+
+    .c-gold {
+      color: var(--gold);
+    }
+
+    .c-purple {
+      color: var(--sig4);
+    }
+
+    /* TABLES */
+    .tbl-wrap {
+      overflow-x: auto;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead th {
+      background: var(--navy);
+      color: white;
+      padding: 11px 14px;
+      text-align: left;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: #f8fafc;
+    }
+
+    tbody tr.best td {
+      background: #f0fdf4;
+    }
+
+    tbody tr.null-row td {
+      background: #fef2f2;
+      color: var(--gray);
+    }
+
+    .td-num {
+      font-family: 'IBM Plex Mono', monospace;
+      text-align: right;
+    }
+
+    .td-pos {
+      color: var(--green);
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .td-neg {
+      color: var(--red);
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* SIG BADGES */
+    .sig {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .sig-4 {
+      background: #ede9fe;
+      color: #7c3aed;
+    }
+
+    .sig-3 {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .sig-2 {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .sig-1 {
+      background: #cffafe;
+      color: #0e7490;
+    }
+
+    .sig-ns {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .sig-null {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* FORMULA BOX */
+    .formula-box {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 6px 6px 0;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .formula-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #92400e;
+      margin-bottom: 12px;
+    }
+
+    .formula-box .MJX-TEX {
+      font-size: 18px;
+    }
+
+    /* INSIGHT BOX */
+    .insight {
+      background: var(--navy);
+      color: white;
+      border-radius: 6px;
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+
+    .insight-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fbbf24;
+      margin-bottom: 8px;
+    }
+
+    .insight-text {
+      font-family: 'Crimson Pro', serif;
+      font-size: 19px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* EXAMPLE BOX */
+    .example {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-left: 4px solid #0ea5e9;
+      border-radius: 0 6px 6px 0;
+      padding: 18px 22px;
+      margin: 16px 0;
+    }
+
+    .example-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #0369a1;
+      margin-bottom: 8px;
+    }
+
+    /* ANGLE INTRO CARD */
+    .angle-intro {
+      background: white;
+      border: 2px solid var(--navy);
+      border-radius: 6px;
+      padding: 28px;
+      margin-bottom: 28px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .angle-num {
+      font-family: 'Crimson Pro', serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: #e5e7eb;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 72px;
+    }
+
+    .angle-content h3 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .angle-content .angle-plain {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* PIPE DIAGRAM */
+    .pipe {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .pipe-box {
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .pipe-arrow {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    /* PROGRESS BAR */
+    .prog-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .prog-label {
+      font-size: 13px;
+      width: 130px;
+      flex-shrink: 0;
+    }
+
+    .prog-track {
+      flex: 1;
+      height: 22px;
+      background: var(--light);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: white;
+      font-weight: 500;
+      transition: width 0.8s ease;
+    }
+
+    .prog-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      width: 52px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* STATUS BANNER */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .status-card {
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .status-card.confirmed {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-card.null-r {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+
+    .status-card.pending {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+    }
+
+    .status-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .status-body .status-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .status-body .status-detail {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* CALLOUT */
+    .callout {
+      display: flex;
+      gap: 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+
+    .callout-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .callout-text {
+      font-size: 14px;
+      color: var(--navy);
+      line-height: 1.65;
+    }
+
+    /* DIVIDER */
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* HIGHLIGHT */
+    .hl {
+      background: #fef08a;
+      padding: 0 3px;
+      border-radius: 2px;
+    }
+
+    .hl-g {
+      background: #dcfce7;
+      padding: 0 3px;
+      border-radius: 2px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .hl-r {
+      background: #fee2e2;
+      padding: 0 3px;
+      border-radius: 2px;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    /* SCROLL HINT */
+    .scroll-hint {
+      text-align: center;
+      padding: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <span class="nav-brand">SLM-to-SLM Research</span>
-  <a href="#overview">Pipeline</a>
-  <a href="#angle1">① Efficiency</a>
-  <a href="#angle2">② Consistency</a>
-  <a href="#angle3">③ Calibration</a>
-  <a href="#results">Results</a>
-  <a href="#mcnemar">McNemar</a>
-  <a href="#power">Power Analysis</a>
-  <a href="#ablation">Ablation</a>
-  <a href="#bias">Position Bias</a>
-  <a href="#boundary">RACE Null</a>
-  <a href="#summary">Summary</a>
-</nav>
+  <!-- NAV -->
+  <nav>
+    <span class="nav-brand">SLM-to-SLM Research</span>
+    <a href="#overview">Pipeline</a>
+    <a href="#angle1">① Efficiency</a>
+    <a href="#angle2">② Consistency</a>
+    <a href="#angle3">③ Calibration</a>
+    <a href="#results">Results</a>
+    <a href="#mcnemar">McNemar</a>
+    <a href="#power">Power Analysis</a>
+    <a href="#ablation">Ablation</a>
+    <a href="#bias">Position Bias</a>
+    <a href="#boundary">RACE Null</a>
+    <a href="#summary">Summary</a>
+  </nav>
 
-<!-- HERO -->
-<div class="hero">
-<div class="hero-inner">
-  <div class="hero-tag">Research Presentation · 2025–2026</div>
-  <h1>Fine-Tuning Quality Over Model Size:<br><em>SLM-to-SLM Guided Reasoning</em></h1>
-  <p class="hero-sub">A fine-tuned 3B guide improves a 1.5B solver across reasoning tasks. 7 benchmarks · 2,300+ question evaluations · 5 statistically confirmed results · 1 clean null that defines the method's boundary.</p>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num">5</div>
-      <div class="hero-stat-label">Confirmed Results (★★ to ★★★★)</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">+24.2<sup>pt</sup></div>
-      <div class="hero-stat-label">Best Accuracy Gain (PIQA)</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">69%</div>
-      <div class="hero-stat-label">Best ECE Improvement</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">7</div>
-      <div class="hero-stat-label">Datasets Across 6 Domains</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">30%</div>
-      <div class="hero-stat-label">Cheaper Than Ceiling</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">p≈0</div>
-      <div class="hero-stat-label">Strongest Significance</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- SECTION: PIPELINE OVERVIEW -->
-<section id="overview">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Architecture</span>
-    <h2 class="section-title">The Pipeline — Two Conditions</h2>
-    <p class="section-desc">A fine-tuned 3B guide produces a verbal reasoning plan that the 1.5B solver uses before voting. Tested against a no-guide baseline on the same questions.</p>
-  </div>
-
-  <div class="g2" style="margin-bottom:28px;">
-    <div class="card" style="border-left:4px solid var(--green);">
-      <div class="card-title" style="color:var(--green);">✦ Guided Pipeline</div>
-      <div class="card-sub">Fine-tuned 3B guide + 1.5B solver × 5 votes</div>
-      <div class="pipe">
-        <span class="pipe-box" style="background:var(--navy);color:white;">Question</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:#166534;color:white;">3B Guide (LoRA)</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:#1e40af;color:white;">Plan</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:var(--navy);color:white;">1.5B Solver × 5</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:var(--green);color:white;">Majority Vote</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:#f59e0b;color:white;">Answer</span>
-      </div>
-      <div style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);">
-        Compute: 3.0B × 1 + 1.5B × 5 = <strong style="color:var(--navy);">10.5B param-passes</strong>
-      </div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--red);">
-      <div class="card-title" style="color:var(--red);">○ Baseline — No Guide</div>
-      <div class="card-sub">1.5B solver × 5 votes, no guidance</div>
-      <div class="pipe">
-        <span class="pipe-box" style="background:var(--navy);color:white;">Question</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:var(--red);color:white;">1.5B Solver × 5</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:var(--red);color:white;">Majority Vote</span>
-        <span class="pipe-arrow">→</span>
-        <span class="pipe-box" style="background:#f59e0b;color:white;">Answer</span>
-      </div>
-      <div style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);">
-        Compute: 1.5B × 5 = <strong style="color:var(--navy);">7.5B param-passes</strong>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">Research Presentation · 2025–2026</div>
+      <h1>Fine-Tuning Quality Over Model Size:<br><em>SLM-to-SLM Guided Reasoning</em></h1>
+      <p class="hero-sub">A fine-tuned 3B guide improves a 1.5B solver across reasoning tasks. 7 benchmarks · 2,300+
+        question evaluations · 5 statistically confirmed results · 1 clean null that defines the method's boundary.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">5</div>
+          <div class="hero-stat-label">Confirmed Results (★★ to ★★★★)</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">+24.2<sup>pt</sup></div>
+          <div class="hero-stat-label">Best Accuracy Gain (PIQA)</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">69%</div>
+          <div class="hero-stat-label">Best ECE Improvement</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">7</div>
+          <div class="hero-stat-label">Datasets Across 6 Domains</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">30%</div>
+          <div class="hero-stat-label">Cheaper Than Ceiling</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">p≈0</div>
+          <div class="hero-stat-label">Strongest Significance</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="g3">
-    <div class="card" style="text-align:center; border-top:3px solid var(--blue);">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">GUIDE MODEL</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">Qwen2.5-3B</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:4px;">+ LoRA fine-tuned on GSM8K<br>Temperature 0.1 · 1 pass</div>
-    </div>
-    <div class="card" style="text-align:center; border-top:3px solid var(--red);">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">SOLVER MODEL</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">Qwen2.5-1.5B</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:4px;">No fine-tuning<br>Temperature 0.4 · 5 votes</div>
-    </div>
-    <div class="card" style="text-align:center; border-top:3px solid var(--gold);">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">COMPUTE REGIME</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">10.5B</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:4px;">Param-passes — 30% below<br>the 15B natural ceiling</div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: ANGLE 1 — COMPUTE EFFICIENCY -->
-<section id="angle1">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Evaluation Angle 1 of 3</span>
-    <h2 class="section-title">① Compute Efficiency</h2>
-  </div>
-
-  <div class="angle-intro">
-    <div class="angle-num">01</div>
-    <div class="angle-content">
-      <h3>What is Compute Efficiency?</h3>
-      <p class="angle-plain"><strong>The Question:</strong> Does the accuracy gain justify the extra cost?</p>
-      <p class="angle-plain" style="margin-top:8px;">We measure compute as <em>parameter-passes</em> — simply the number of model parameters multiplied by how many times the model runs. The guided pipeline costs 10.5B passes vs 7.5B for baseline — 40% more than baseline, but 30% <em>less</em> than just running the 3B model for all 5 votes (15B).</p>
-    </div>
-  </div>
-
-  <div class="example">
-    <div class="example-label">Simple Analogy</div>
-    <p style="font-size:14px;">Imagine hiring a consultant (the guide) to write a brief strategy note before your team (5 workers) tackles a problem. The consultant costs extra time, but the team now works more efficiently with better direction. The question is: does the consultant's fee pay off in better results?</p>
-  </div>
-
-  <div class="g2" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">Accuracy Gain vs Compute Cost</div>
-      <div class="card-sub">Each dataset: guided (blue) vs baseline (red). All reasoning datasets improve.</div>
-      <canvas id="computeAccChart"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">Compute Regime — Where We Sit</div>
-      <div class="card-sub">Guided is between baseline and ceiling — meaningful improvement at controlled cost</div>
-      <canvas id="computeRegimeChart"></canvas>
-    </div>
-  </div>
-
-  <div class="g4" style="margin-top:20px;">
-    <div class="metric"><div class="metric-val c-green">10.5B</div><div class="metric-label">Guided Compute</div><div class="metric-sub">param-passes</div></div>
-    <div class="metric"><div class="metric-val c-red">7.5B</div><div class="metric-label">Baseline Compute</div><div class="metric-sub">param-passes</div></div>
-    <div class="metric"><div class="metric-val c-navy">15.0B</div><div class="metric-label">Ceiling Compute</div><div class="metric-sub">3B × 5 votes</div></div>
-    <div class="metric"><div class="metric-val c-gold">30%</div><div class="metric-label">Cheaper Than Ceiling</div><div class="metric-sub">key selling point</div></div>
-  </div>
-
-  <!-- Wasted votes -->
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">Wasted Votes per Dataset</div>
-    <div class="card-sub">A "wasted vote" = a solver vote that disagrees with the final majority answer. Fewer wasted = more decisive ensemble.</div>
-    <canvas id="wastedVotesChart" style="max-height:200px;"></canvas>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: ANGLE 2 — VOTE CONSISTENCY -->
-<section id="angle2">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Evaluation Angle 2 of 3</span>
-    <h2 class="section-title">② Vote Consistency</h2>
-  </div>
-
-  <div class="angle-intro">
-    <div class="angle-num">02</div>
-    <div class="angle-content">
-      <h3>What is Vote Consistency?</h3>
-      <p class="angle-plain"><strong>The Question:</strong> When the solver votes, how often do the votes agree — and are those agreements correct?</p>
-      <p class="angle-plain" style="margin-top:8px;">We run the solver 5 times per question. Vote consistency measures the fraction of those 5 votes that matched the correct answer. High consistency means the solver reliably reaches the right answer, not just getting lucky on a 3-2 split. A lift of 1.5× means guided consistency is 50% better than baseline.</p>
-    </div>
-  </div>
-
-  <div class="example">
-    <div class="example-label">Simple Analogy</div>
-    <p style="font-size:14px;">Imagine asking 5 friends to solve the same puzzle independently. Without any guidance, maybe 2 get it right and 3 get it wrong (40% consistency). With a helpful hint, 4 out of 5 get it right (80% consistency). The majority vote then correctly picks the right answer — and more confidently.</p>
-  </div>
-
-  <div class="g2" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">Vote Consistency Lift by Dataset</div>
-      <div class="card-sub">Guided / Baseline ratio. SVAMP leads at 1.90× — nearly double the correct-vote rate.</div>
-      <canvas id="consistLiftChart"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">Guided vs Baseline Mean Correct Votes (out of 5)</div>
-      <div class="card-sub">Average number of votes that matched the ground truth per question</div>
-      <canvas id="meanVotesChart"></canvas>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">Vote Distribution — All-Wrong vs High-Agreement by Dataset</div>
-    <div class="card-sub">Each dataset: <span style="color:#c81e1e;font-weight:600;">■ All-Wrong (0/5 correct)</span> vs <span style="color:#1a56db;font-weight:600;">■ High-Agreement (4–5/5 correct)</span> · Guided (darker) vs Baseline (lighter)</div>
-    <div class="g2" style="margin-top:12px;">
-      <div>
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">All-Wrong Questions (0/5 correct) — fewer is better ↓</p>
-        <canvas id="allWrongChart" style="max-height:200px;"></canvas>
+  <!-- SECTION: PIPELINE OVERVIEW -->
+  <section id="overview">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Architecture</span>
+        <h2 class="section-title">The Pipeline — Two Conditions</h2>
+        <p class="section-desc">A fine-tuned 3B guide produces a verbal reasoning plan that the 1.5B solver uses before
+          voting. Tested against a no-guide baseline on the same questions.</p>
       </div>
-      <div>
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">High-Agreement Questions (4–5/5 correct) — more is better ↑</p>
-        <canvas id="highAgreeChart" style="max-height:200px;"></canvas>
+
+      <div class="g2" style="margin-bottom:28px;">
+        <div class="card" style="border-left:4px solid var(--green);">
+          <div class="card-title" style="color:var(--green);">✦ Guided Pipeline</div>
+          <div class="card-sub">Fine-tuned 3B guide + 1.5B solver × 5 votes</div>
+          <div class="pipe">
+            <span class="pipe-box" style="background:var(--navy);color:white;">Question</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:#166534;color:white;">3B Guide (LoRA)</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:#1e40af;color:white;">Plan</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:var(--navy);color:white;">1.5B Solver × 5</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:var(--green);color:white;">Majority Vote</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:#f59e0b;color:white;">Answer</span>
+          </div>
+          <div style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);">
+            Compute: 3.0B × 1 + 1.5B × 5 = <strong style="color:var(--navy);">10.5B param-passes</strong>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--red);">
+          <div class="card-title" style="color:var(--red);">○ Baseline — No Guide</div>
+          <div class="card-sub">1.5B solver × 5 votes, no guidance</div>
+          <div class="pipe">
+            <span class="pipe-box" style="background:var(--navy);color:white;">Question</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:var(--red);color:white;">1.5B Solver × 5</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:var(--red);color:white;">Majority Vote</span>
+            <span class="pipe-arrow">→</span>
+            <span class="pipe-box" style="background:#f59e0b;color:white;">Answer</span>
+          </div>
+          <div style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);">
+            Compute: 1.5B × 5 = <strong style="color:var(--navy);">7.5B param-passes</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="g3">
+        <div class="card" style="text-align:center; border-top:3px solid var(--blue);">
+          <div
+            style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">
+            GUIDE MODEL</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">Qwen2.5-3B
+          </div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px;">+ LoRA fine-tuned on GSM8K<br>Temperature 0.1 ·
+            1 pass</div>
+        </div>
+        <div class="card" style="text-align:center; border-top:3px solid var(--red);">
+          <div
+            style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">
+            SOLVER MODEL</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">Qwen2.5-1.5B
+          </div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px;">No fine-tuning<br>Temperature 0.4 · 5 votes
+          </div>
+        </div>
+        <div class="card" style="text-align:center; border-top:3px solid var(--gold);">
+          <div
+            style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">
+            COMPUTE REGIME</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--navy);">10.5B</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px;">Param-passes — 30% below<br>the 15B natural
+            ceiling</div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="formula-box" style="margin-top:20px;">
-    <div class="formula-label">Vote Consistency Formula</div>
-    $$\text{Consistency}(q) = \frac{\text{Number of votes matching ground truth}}{5}$$
-    $$\text{Lift} = \frac{\overline{\text{Consistency}}_{\text{guided}}}{\overline{\text{Consistency}}_{\text{baseline}}}$$
-  </div>
-</div>
-</section>
-
-<!-- SECTION: ANGLE 3 — CALIBRATION -->
-<section id="angle3">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Evaluation Angle 3 of 3</span>
-    <h2 class="section-title">③ Confidence Calibration</h2>
-  </div>
-
-  <div class="angle-intro">
-    <div class="angle-num">03</div>
-    <div class="angle-content">
-      <h3>What is Confidence Calibration?</h3>
-      <p class="angle-plain"><strong>The Question:</strong> When the model is confident, is it actually correct? We use ECE (Expected Calibration Error) — lower ECE means confidence matches accuracy.</p>
-      <p class="angle-plain" style="margin-top:8px;">We treat vote agreement as confidence: if 5/5 votes agree, confidence = 100%. If 3/5 agree, confidence = 60%. A well-calibrated model at 100% confidence should be right ~100% of the time. ECE measures the gap between confidence and actual accuracy, weighted by how many questions fall in each bucket.</p>
-    </div>
-  </div>
-
-  <div class="example">
-    <div class="example-label">Real Example — PIQA Baseline Problem</div>
-    <p style="font-size:14px;">On PIQA, the baseline solver votes A on 93.4% of questions — so 491 out of 500 questions have "100% confidence" (5/5 votes agree). But those unanimous answers are only correct 54.8% of the time — barely above random chance (50%). That is catastrophically miscalibrated: <strong>maximum confidence, minimum accuracy</strong>. ECE = 0.354. After guidance: ECE = 0.110, a 69% improvement.</p>
-  </div>
-
-  <div class="formula-box">
-    <div class="formula-label">Expected Calibration Error (ECE)</div>
-    $$\text{ECE} = \sum_{b=1}^{B} \frac{|S_b|}{N} \cdot \left| \text{acc}(S_b) - \text{conf}(S_b) \right|$$
-    <p style="font-size:13px; color:#92400e; margin-top:10px;">Where <em>S_b</em> = questions in confidence bucket <em>b</em>, acc = actual accuracy, conf = vote agreement. <strong>Lower ECE = better calibrated.</strong></p>
-  </div>
-
-  <div class="g2" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">ECE Before → After Guidance</div>
-      <div class="card-sub">Each dataset: red dot = Baseline ECE · blue dot = Guided ECE. Lower = better. Every dataset drops.</div>
-      <canvas id="eceChart"></canvas>
-      <div style="display:flex;gap:20px;justify-content:center;margin-top:8px;font-size:12px;font-family:'IBM Plex Mono',monospace;">
-        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;background:#c81e1e;display:inline-block;"></span> Baseline ECE</span>
-        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;background:#1a56db;display:inline-block;"></span> Guided ECE</span>
-        <span style="display:flex;align-items:center;gap:6px;color:var(--muted);">↓ drop = improvement</span>
+  <!-- SECTION: ANGLE 1 — COMPUTE EFFICIENCY -->
+  <section id="angle1">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Evaluation Angle 1 of 3</span>
+        <h2 class="section-title">① Compute Efficiency</h2>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title">ECE Improvement % by Dataset</div>
-      <div class="card-sub">PIQA leads at 69.1%. Even RACE-High (null accuracy) improves ECE.</div>
-      <canvas id="eceImprovChart"></canvas>
-    </div>
-  </div>
 
-  <div class="insight" style="margin-top:20px;">
-    <div class="insight-label">Universal Finding</div>
-    <div class="insight-text">ECE improves on all 7 datasets — including RACE-High where accuracy gain is zero. This means structured planning reliably restructures vote distributions even when it can't improve the final answer. Sign test: the probability of all 7 going positive by chance = 2⁻⁷ = <strong>p = 0.0078</strong>.</div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: MAIN RESULTS -->
-<section id="results">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Main Results</span>
-    <h2 class="section-title">All Results at a Glance</h2>
-    <p class="section-desc">Seven benchmarks across six domains. Four confirmed, one directional, one pending, one clean null.</p>
-  </div>
-
-  <!-- Status cards -->
-  <div class="status-grid">
-    <div class="status-card confirmed"><span class="status-icon">⚡</span><div class="status-body"><div class="status-name">PIQA</div><div class="status-detail">★★★★ N=500 · p≈0</div></div></div>
-    <div class="status-card confirmed"><span class="status-icon">⚡</span><div class="status-body"><div class="status-name">SVAMP</div><div class="status-detail">★★★★ N=300 · p≈0</div></div></div>
-    <div class="status-card confirmed"><span class="status-icon">✅</span><div class="status-body"><div class="status-name">CommonsenseQA</div><div class="status-detail">★★★ N=900 · p&lt;0.001</div></div></div>
-    <div class="status-card confirmed"><span class="status-icon">✅</span><div class="status-body"><div class="status-name">ASDiv</div><div class="status-detail">★★ N=300 · p=0.0035</div></div></div>
-    <div class="status-card pending"><span class="status-icon">⚠️</span><div class="status-body"><div class="status-name">ARC-Challenge</div><div class="status-detail">Directional N=100 · p=0.27</div></div></div>
-    <div class="status-card pending"><span class="status-icon">⏳</span><div class="status-body"><div class="status-name">AQUA-RAT</div><div class="status-detail">+12 pts · test pending</div></div></div>
-    <div class="status-card null-r"><span class="status-icon">⭕</span><div class="status-body"><div class="status-name">RACE-High</div><div class="status-detail">Null N=500 · p=1.000</div></div></div>
-  </div>
-
-  <div class="tbl-wrap" style="margin-top:24px;">
-    <table>
-      <thead>
-        <tr>
-          <th>Dataset</th><th>Domain</th><th>N</th><th>Baseline</th><th>Guided</th><th>Δ Acc</th>
-          <th>Consistency Lift</th><th>ECE Imp.</th><th>McNemar p</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="best">
-          <td><strong>PIQA</strong></td><td>Physical Reasoning</td><td class="td-num">500</td>
-          <td class="td-num">54.2%</td><td class="td-num" style="color:var(--green);font-weight:600;">78.4%</td>
-          <td class="td-pos">+24.2</td><td class="td-num">1.43×</td><td class="td-pos">69.1%</td>
-          <td><span class="sig sig-4">★★★★ p≈0</span></td>
-        </tr>
-        <tr class="best">
-          <td><strong>SVAMP</strong></td><td>Arithmetic Math</td><td class="td-num">300</td>
-          <td class="td-num">40.3%</td><td class="td-num" style="color:var(--green);font-weight:600;">61.7%</td>
-          <td class="td-pos">+21.3</td><td class="td-num">1.90×</td><td class="td-pos">36.6%</td>
-          <td><span class="sig sig-4">★★★★ p≈0</span></td>
-        </tr>
-        <tr>
-          <td><strong>CommonsenseQA</strong></td><td>Commonsense</td><td class="td-num">900</td>
-          <td class="td-num">70.7%</td><td class="td-num" style="color:var(--green);font-weight:600;">75.8%</td>
-          <td class="td-pos">+5.1</td><td class="td-num">1.09×</td><td class="td-pos">19.8%</td>
-          <td><span class="sig sig-3">★★★ p&lt;0.001</span></td>
-        </tr>
-        <tr>
-          <td><strong>ASDiv</strong></td><td>Arithmetic Math</td><td class="td-num">300</td>
-          <td class="td-num">53.7%</td><td class="td-num" style="color:var(--green);font-weight:600;">64.0%</td>
-          <td class="td-pos">+10.3</td><td class="td-num">1.18×</td><td class="td-pos">45.2%</td>
-          <td><span class="sig sig-2">★★ p=0.0035</span></td>
-        </tr>
-        <tr>
-          <td><strong>AQUA-RAT</strong></td><td>Algebraic MCQ</td><td class="td-num">100</td>
-          <td class="td-num">40.0%</td><td class="td-num" style="color:var(--green);font-weight:600;">52.0%</td>
-          <td class="td-pos">+12.0</td><td class="td-num">1.00×</td><td class="td-pos">45.6%</td>
-          <td><span class="sig sig-ns">Pending</span></td>
-        </tr>
-        <tr>
-          <td><strong>ARC-Challenge</strong></td><td>Science Reasoning</td><td class="td-num">100</td>
-          <td class="td-num">70.0%</td><td class="td-num" style="color:var(--green);font-weight:600;">77.0%</td>
-          <td class="td-pos">+7.0</td><td class="td-num">1.09×</td><td class="td-pos">32.6%</td>
-          <td><span class="sig sig-ns">ns p=0.27</span></td>
-        </tr>
-        <tr class="null-row">
-          <td><strong>RACE-High</strong></td><td>Reading / Retrieval</td><td class="td-num">500</td>
-          <td class="td-num">58.6%</td><td class="td-num">58.4%</td>
-          <td class="td-neg">−0.2</td><td class="td-num">—</td><td class="td-pos">23.1%*</td>
-          <td><span class="sig sig-null">NULL p=1.000</span></td>
-        </tr>
-        <tr style="background:#f0fdf4;font-style:italic;">
-          <td><strong>Avg (4 confirmed)</strong></td><td>—</td><td class="td-num">—</td>
-          <td class="td-num">54.7%</td><td class="td-num" style="color:var(--green);font-weight:600;">70.0%</td>
-          <td class="td-pos">+15.2</td><td class="td-num">1.40×</td><td class="td-pos">42.7%</td><td>—</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="font-size:12px;color:var(--muted);margin-top:8px;">* ECE improves on RACE-High but accuracy does not — ECE universality holds across all 7 datasets.</p>
-
-  <div class="card" style="margin-top:24px;">
-    <div class="card-title">Accuracy Gain — Visual Overview</div>
-    <div class="card-sub">Bar length = accuracy gain in percentage points. Colour = significance level.</div>
-    <canvas id="gainOverviewChart" style="max-height:220px;"></canvas>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: MCNEMAR TEST -->
-<section id="mcnemar">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Statistical Proof</span>
-    <h2 class="section-title">McNemar's Test — How We Prove It</h2>
-    <p class="section-desc">Because every question is tested under BOTH conditions, we can ask: on the questions where the two conditions disagree, does guided win significantly more often than baseline?</p>
-  </div>
-
-  <div class="g2">
-    <div>
-      <div class="angle-intro" style="margin-bottom:20px;">
-        <div class="angle-num" style="font-size:48px;width:56px;">?</div>
+      <div class="angle-intro">
+        <div class="angle-num">01</div>
         <div class="angle-content">
-          <h3>Why McNemar's Test?</h3>
-          <p class="angle-plain">Standard tests assume independent samples. Here, each question is tested twice (guided and baseline) — they're <em>paired</em>. McNemar's test uses only the questions where the two conditions <strong>disagree</strong>. Questions where both got it right or both got it wrong don't count.</p>
+          <h3>What is Compute Efficiency?</h3>
+          <p class="angle-plain"><strong>The Question:</strong> Does the accuracy gain justify the extra cost?</p>
+          <p class="angle-plain" style="margin-top:8px;">We measure compute as <em>parameter-passes</em> — simply the
+            number of model parameters multiplied by how many times the model runs. The guided pipeline costs 10.5B
+            passes vs 7.5B for baseline — 40% more than baseline, but 30% <em>less</em> than just running the 3B model
+            for all 5 votes (15B).</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Simple Analogy</div>
+        <p style="font-size:14px;">Imagine hiring a consultant (the guide) to write a brief strategy note before your
+          team (5 workers) tackles a problem. The consultant costs extra time, but the team now works more efficiently
+          with better direction. The question is: does the consultant's fee pay off in better results?</p>
+      </div>
+
+      <div class="g2" style="margin-top:24px;">
+        <div class="card">
+          <div class="card-title">Accuracy Gain vs Compute Cost</div>
+          <div class="card-sub">Each dataset: guided (blue) vs baseline (red). All reasoning datasets improve.</div>
+          <canvas id="computeAccChart"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">Compute Regime — Where We Sit</div>
+          <div class="card-sub">Guided is between baseline and ceiling — meaningful improvement at controlled cost</div>
+          <canvas id="computeRegimeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="g4" style="margin-top:20px;">
+        <div class="metric">
+          <div class="metric-val c-green">10.5B</div>
+          <div class="metric-label">Guided Compute</div>
+          <div class="metric-sub">param-passes</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val c-red">7.5B</div>
+          <div class="metric-label">Baseline Compute</div>
+          <div class="metric-sub">param-passes</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val c-navy">15.0B</div>
+          <div class="metric-label">Ceiling Compute</div>
+          <div class="metric-sub">3B × 5 votes</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val c-gold">30%</div>
+          <div class="metric-label">Cheaper Than Ceiling</div>
+          <div class="metric-sub">key selling point</div>
+        </div>
+      </div>
+
+      <!-- Wasted votes -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">Wasted Votes per Dataset</div>
+        <div class="card-sub">A "wasted vote" = a solver vote that disagrees with the final majority answer. Fewer
+          wasted = more decisive ensemble.</div>
+        <canvas id="wastedVotesChart" style="max-height:200px;"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: ANGLE 2 — VOTE CONSISTENCY -->
+  <section id="angle2">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Evaluation Angle 2 of 3</span>
+        <h2 class="section-title">② Vote Consistency</h2>
+      </div>
+
+      <div class="angle-intro">
+        <div class="angle-num">02</div>
+        <div class="angle-content">
+          <h3>What is Vote Consistency?</h3>
+          <p class="angle-plain"><strong>The Question:</strong> When the solver votes, how often do the votes agree —
+            and are those agreements correct?</p>
+          <p class="angle-plain" style="margin-top:8px;">We run the solver 5 times per question. Vote consistency
+            measures the fraction of those 5 votes that matched the correct answer. High consistency means the solver
+            reliably reaches the right answer, not just getting lucky on a 3-2 split. A lift of 1.5× means guided
+            consistency is 50% better than baseline.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Simple Analogy</div>
+        <p style="font-size:14px;">Imagine asking 5 friends to solve the same puzzle independently. Without any
+          guidance, maybe 2 get it right and 3 get it wrong (40% consistency). With a helpful hint, 4 out of 5 get it
+          right (80% consistency). The majority vote then correctly picks the right answer — and more confidently.</p>
+      </div>
+
+      <div class="g2" style="margin-top:24px;">
+        <div class="card">
+          <div class="card-title">Vote Consistency Lift by Dataset</div>
+          <div class="card-sub">Guided / Baseline ratio. SVAMP leads at 1.90× — nearly double the correct-vote rate.
+          </div>
+          <canvas id="consistLiftChart"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">Guided vs Baseline Mean Correct Votes (out of 5)</div>
+          <div class="card-sub">Average number of votes that matched the ground truth per question</div>
+          <canvas id="meanVotesChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">Vote Distribution — All-Wrong vs High-Agreement by Dataset</div>
+        <div class="card-sub">Each dataset: <span style="color:#c81e1e;font-weight:600;">■ All-Wrong (0/5
+            correct)</span> vs <span style="color:#1a56db;font-weight:600;">■ High-Agreement (4–5/5 correct)</span> ·
+          Guided (darker) vs Baseline (lighter)</div>
+        <div class="g2" style="margin-top:12px;">
+          <div>
+            <p
+              style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">
+              All-Wrong Questions (0/5 correct) — fewer is better ↓</p>
+            <canvas id="allWrongChart" style="max-height:200px;"></canvas>
+          </div>
+          <div>
+            <p
+              style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">
+              High-Agreement Questions (4–5/5 correct) — more is better ↑</p>
+            <canvas id="highAgreeChart" style="max-height:200px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box" style="margin-top:20px;">
+        <div class="formula-label">Vote Consistency Formula</div>
+        $$\text{Consistency}(q) = \frac{\text{Number of votes matching ground truth}}{5}$$
+        $$\text{Lift} =
+        \frac{\overline{\text{Consistency}}_{\text{guided}}}{\overline{\text{Consistency}}_{\text{baseline}}}$$
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: ANGLE 3 — CALIBRATION -->
+  <section id="angle3">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Evaluation Angle 3 of 3</span>
+        <h2 class="section-title">③ Confidence Calibration</h2>
+      </div>
+
+      <div class="angle-intro">
+        <div class="angle-num">03</div>
+        <div class="angle-content">
+          <h3>What is Confidence Calibration?</h3>
+          <p class="angle-plain"><strong>The Question:</strong> When the model is confident, is it actually correct? We
+            use ECE (Expected Calibration Error) — lower ECE means confidence matches accuracy.</p>
+          <p class="angle-plain" style="margin-top:8px;">We treat vote agreement as confidence: if 5/5 votes agree,
+            confidence = 100%. If 3/5 agree, confidence = 60%. A well-calibrated model at 100% confidence should be
+            right ~100% of the time. ECE measures the gap between confidence and actual accuracy, weighted by how many
+            questions fall in each bucket.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Real Example — PIQA Baseline Problem</div>
+        <p style="font-size:14px;">On PIQA, the baseline solver votes A on 93.4% of questions — so 491 out of 500
+          questions have "100% confidence" (5/5 votes agree). But those unanimous answers are only correct 54.8% of the
+          time — barely above random chance (50%). That is catastrophically miscalibrated: <strong>maximum confidence,
+            minimum accuracy</strong>. ECE = 0.354. After guidance: ECE = 0.110, a 69% improvement.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-label">Expected Calibration Error (ECE)</div>
+        $$\text{ECE} = \sum_{b=1}^{B} \frac{|S_b|}{N} \cdot \left| \text{acc}(S_b) - \text{conf}(S_b) \right|$$
+        <p style="font-size:13px; color:#92400e; margin-top:10px;">Where <em>S_b</em> = questions in confidence bucket
+          <em>b</em>, acc = actual accuracy, conf = vote agreement. <strong>Lower ECE = better calibrated.</strong></p>
+      </div>
+
+      <div class="g2" style="margin-top:24px;">
+        <div class="card">
+          <div class="card-title">ECE Before → After Guidance</div>
+          <div class="card-sub">Each dataset: red dot = Baseline ECE · blue dot = Guided ECE. Lower = better. Every
+            dataset drops.</div>
+          <canvas id="eceChart"></canvas>
+          <div
+            style="display:flex;gap:20px;justify-content:center;margin-top:8px;font-size:12px;font-family:'IBM Plex Mono',monospace;">
+            <span style="display:flex;align-items:center;gap:6px;"><span
+                style="width:12px;height:12px;border-radius:50%;background:#c81e1e;display:inline-block;"></span>
+              Baseline ECE</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span
+                style="width:12px;height:12px;border-radius:50%;background:#1a56db;display:inline-block;"></span> Guided
+              ECE</span>
+            <span style="display:flex;align-items:center;gap:6px;color:var(--muted);">↓ drop = improvement</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">ECE Improvement % by Dataset</div>
+          <div class="card-sub">PIQA leads at 69.1%. Even RACE-High (null accuracy) improves ECE.</div>
+          <canvas id="eceImprovChart"></canvas>
+        </div>
+      </div>
+
+      <div class="insight" style="margin-top:20px;">
+        <div class="insight-label">Universal Finding</div>
+        <div class="insight-text">ECE improves on all 7 datasets — including RACE-High where accuracy gain is zero. This
+          means structured planning reliably restructures vote distributions even when it can't improve the final
+          answer. Sign test: the probability of all 7 going positive by chance = 2⁻⁷ = <strong>p = 0.0078</strong>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: MAIN RESULTS -->
+  <section id="results">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Main Results</span>
+        <h2 class="section-title">All Results at a Glance</h2>
+        <p class="section-desc">Seven benchmarks across six domains. Four confirmed, one directional, one pending, one
+          clean null.</p>
+      </div>
+
+      <!-- Status cards -->
+      <div class="status-grid">
+        <div class="status-card confirmed"><span class="status-icon">⚡</span>
+          <div class="status-body">
+            <div class="status-name">PIQA</div>
+            <div class="status-detail">★★★★ N=500 · p≈0</div>
+          </div>
+        </div>
+        <div class="status-card confirmed"><span class="status-icon">⚡</span>
+          <div class="status-body">
+            <div class="status-name">SVAMP</div>
+            <div class="status-detail">★★★★ N=300 · p≈0</div>
+          </div>
+        </div>
+        <div class="status-card confirmed"><span class="status-icon">✅</span>
+          <div class="status-body">
+            <div class="status-name">CommonsenseQA</div>
+            <div class="status-detail">★★★ N=900 · p&lt;0.001</div>
+          </div>
+        </div>
+        <div class="status-card confirmed"><span class="status-icon">✅</span>
+          <div class="status-body">
+            <div class="status-name">ASDiv</div>
+            <div class="status-detail">★★ N=300 · p=0.0035</div>
+          </div>
+        </div>
+        <div class="status-card pending"><span class="status-icon">⚠️</span>
+          <div class="status-body">
+            <div class="status-name">ARC-Challenge</div>
+            <div class="status-detail">Directional N=100 · p=0.27</div>
+          </div>
+        </div>
+        <div class="status-card pending"><span class="status-icon">⏳</span>
+          <div class="status-body">
+            <div class="status-name">AQUA-RAT</div>
+            <div class="status-detail">+12 pts · test pending</div>
+          </div>
+        </div>
+        <div class="status-card null-r"><span class="status-icon">⭕</span>
+          <div class="status-body">
+            <div class="status-name">RACE-High</div>
+            <div class="status-detail">Null N=500 · p=1.000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:24px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Domain</th>
+              <th>N</th>
+              <th>Baseline</th>
+              <th>Guided</th>
+              <th>Δ Acc</th>
+              <th>Consistency Lift</th>
+              <th>ECE Imp.</th>
+              <th>McNemar p</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="best">
+              <td><strong>PIQA</strong></td>
+              <td>Physical Reasoning</td>
+              <td class="td-num">500</td>
+              <td class="td-num">54.2%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">78.4%</td>
+              <td class="td-pos">+24.2</td>
+              <td class="td-num">1.43×</td>
+              <td class="td-pos">69.1%</td>
+              <td><span class="sig sig-4">★★★★ p≈0</span></td>
+            </tr>
+            <tr class="best">
+              <td><strong>SVAMP</strong></td>
+              <td>Arithmetic Math</td>
+              <td class="td-num">300</td>
+              <td class="td-num">40.3%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">61.7%</td>
+              <td class="td-pos">+21.3</td>
+              <td class="td-num">1.90×</td>
+              <td class="td-pos">36.6%</td>
+              <td><span class="sig sig-4">★★★★ p≈0</span></td>
+            </tr>
+            <tr>
+              <td><strong>CommonsenseQA</strong></td>
+              <td>Commonsense</td>
+              <td class="td-num">900</td>
+              <td class="td-num">70.7%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">75.8%</td>
+              <td class="td-pos">+5.1</td>
+              <td class="td-num">1.09×</td>
+              <td class="td-pos">19.8%</td>
+              <td><span class="sig sig-3">★★★ p&lt;0.001</span></td>
+            </tr>
+            <tr>
+              <td><strong>ASDiv</strong></td>
+              <td>Arithmetic Math</td>
+              <td class="td-num">300</td>
+              <td class="td-num">53.7%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">64.0%</td>
+              <td class="td-pos">+10.3</td>
+              <td class="td-num">1.18×</td>
+              <td class="td-pos">45.2%</td>
+              <td><span class="sig sig-2">★★ p=0.0035</span></td>
+            </tr>
+            <tr>
+              <td><strong>AQUA-RAT</strong></td>
+              <td>Algebraic MCQ</td>
+              <td class="td-num">100</td>
+              <td class="td-num">40.0%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">52.0%</td>
+              <td class="td-pos">+12.0</td>
+              <td class="td-num">1.00×</td>
+              <td class="td-pos">45.6%</td>
+              <td><span class="sig sig-ns">Pending</span></td>
+            </tr>
+            <tr>
+              <td><strong>ARC-Challenge</strong></td>
+              <td>Science Reasoning</td>
+              <td class="td-num">100</td>
+              <td class="td-num">70.0%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">77.0%</td>
+              <td class="td-pos">+7.0</td>
+              <td class="td-num">1.09×</td>
+              <td class="td-pos">32.6%</td>
+              <td><span class="sig sig-ns">ns p=0.27</span></td>
+            </tr>
+            <tr class="null-row">
+              <td><strong>RACE-High</strong></td>
+              <td>Reading / Retrieval</td>
+              <td class="td-num">500</td>
+              <td class="td-num">58.6%</td>
+              <td class="td-num">58.4%</td>
+              <td class="td-neg">−0.2</td>
+              <td class="td-num">—</td>
+              <td class="td-pos">23.1%*</td>
+              <td><span class="sig sig-null">NULL p=1.000</span></td>
+            </tr>
+            <tr style="background:#f0fdf4;font-style:italic;">
+              <td><strong>Avg (4 confirmed)</strong></td>
+              <td>—</td>
+              <td class="td-num">—</td>
+              <td class="td-num">54.7%</td>
+              <td class="td-num" style="color:var(--green);font-weight:600;">70.0%</td>
+              <td class="td-pos">+15.2</td>
+              <td class="td-num">1.40×</td>
+              <td class="td-pos">42.7%</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">* ECE improves on RACE-High but accuracy does not —
+        ECE universality holds across all 7 datasets.</p>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-title">Accuracy Gain — Visual Overview</div>
+        <div class="card-sub">Bar length = accuracy gain in percentage points. Colour = significance level.</div>
+        <canvas id="gainOverviewChart" style="max-height:220px;"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: MCNEMAR TEST -->
+  <section id="mcnemar">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Statistical Proof</span>
+        <h2 class="section-title">McNemar's Test — How We Prove It</h2>
+        <p class="section-desc">Because every question is tested under BOTH conditions, we can ask: on the questions
+          where the two conditions disagree, does guided win significantly more often than baseline?</p>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="angle-intro" style="margin-bottom:20px;">
+            <div class="angle-num" style="font-size:48px;width:56px;">?</div>
+            <div class="angle-content">
+              <h3>Why McNemar's Test?</h3>
+              <p class="angle-plain">Standard tests assume independent samples. Here, each question is tested twice
+                (guided and baseline) — they're <em>paired</em>. McNemar's test uses only the questions where the two
+                conditions <strong>disagree</strong>. Questions where both got it right or both got it wrong don't
+                count.</p>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-label">The 2×2 Contingency Table</div>
+            <table
+              style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;font-family:'IBM Plex Mono',monospace;">
+              <thead>
+                <tr>
+                  <th
+                    style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;">
+                  </th>
+                  <th
+                    style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;">
+                    Baseline ✓<br><span style="font-size:11px;">(baseline correct)</span></th>
+                  <th
+                    style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;">
+                    Baseline ✗<br><span style="font-size:11px;">(baseline wrong)</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;font-weight:600;text-align:center;">
+                    Guided ✓<br><span style="font-size:11px;">(guided correct)</span></td>
+                  <td
+                    style="border:2px solid #d97706;padding:12px 14px;background:#f3f4f6;text-align:center;color:#6b7280;">
+                    A — Both correct<br><span style="font-size:11px;">Ignored by test</span></td>
+                  <td style="border:2px solid #d97706;padding:12px 14px;background:#dcfce7;text-align:center;"><strong
+                      style="font-size:18px;color:#057a55;">B</strong><br><span
+                      style="font-size:12px;color:#057a55;font-weight:600;">Guided wins ✅</span><br><span
+                      style="font-size:11px;color:#6b7280;">Guided ✓ · Baseline ✗</span></td>
+                </tr>
+                <tr>
+                  <td
+                    style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;font-weight:600;text-align:center;">
+                    Guided ✗<br><span style="font-size:11px;">(guided wrong)</span></td>
+                  <td style="border:2px solid #d97706;padding:12px 14px;background:#fee2e2;text-align:center;"><strong
+                      style="font-size:18px;color:#c81e1e;">C</strong><br><span
+                      style="font-size:12px;color:#c81e1e;font-weight:600;">Baseline wins ❌</span><br><span
+                      style="font-size:11px;color:#6b7280;">Guided ✗ · Baseline ✓</span></td>
+                  <td
+                    style="border:2px solid #d97706;padding:12px 14px;background:#f3f4f6;text-align:center;color:#6b7280;">
+                    D — Both wrong<br><span style="font-size:11px;">Ignored by test</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size:13px;color:#92400e;margin-top:10px;">Only <strong>B</strong> and <strong>C</strong>
+              matter for the test. A and D cancel out — they tell us nothing about which method is better.</p>
+          </div>
+
+          <div class="formula-box" style="margin-top:12px;">
+            <div class="formula-label">McNemar Chi-Square Statistic (with Yates correction)</div>
+            $$\chi^2 = \frac{(|B - C| - 1)^2}{B + C}$$
+            <p style="font-size:13px;color:#92400e;margin-top:8px;">Under H₀ (no difference), this follows a chi-square
+              distribution with 1 degree of freedom. Large χ² → small p-value → reject H₀.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">McNemar Results — All Datasets</div>
+          <div class="card-sub">B = guided wins · C = baseline wins · ratio B/C</div>
+          <canvas id="mcnemarChart"></canvas>
+          <div class="tbl-wrap" style="margin-top:16px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>N</th>
+                  <th>B</th>
+                  <th>C</th>
+                  <th>χ²</th>
+                  <th>p-value</th>
+                  <th>Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>PIQA</strong></td>
+                  <td>500</td>
+                  <td style="color:var(--green);font-weight:600;">193</td>
+                  <td style="color:var(--red);">72</td>
+                  <td>54.34</td>
+                  <td>≈ 0</td>
+                  <td><span class="sig sig-4">★★★★</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SVAMP</strong></td>
+                  <td>300</td>
+                  <td style="color:var(--green);font-weight:600;">93</td>
+                  <td style="color:var(--red);">29</td>
+                  <td>32.53</td>
+                  <td>≈ 0</td>
+                  <td><span class="sig sig-4">★★★★</span></td>
+                </tr>
+                <tr>
+                  <td><strong>CSQA</strong></td>
+                  <td>900</td>
+                  <td style="color:var(--green);font-weight:600;">174</td>
+                  <td style="color:var(--red);">92</td>
+                  <td>24.67</td>
+                  <td>0.0000007</td>
+                  <td><span class="sig sig-3">★★★</span></td>
+                </tr>
+                <tr>
+                  <td><strong>ASDiv</strong></td>
+                  <td>300</td>
+                  <td style="color:var(--green);font-weight:600;">125</td>
+                  <td style="color:var(--red);">82</td>
+                  <td>8.52</td>
+                  <td>0.0035</td>
+                  <td><span class="sig sig-2">★★</span></td>
+                </tr>
+                <tr>
+                  <td><strong>ARC</strong></td>
+                  <td>100</td>
+                  <td style="color:var(--green);">18</td>
+                  <td style="color:var(--red);">11</td>
+                  <td>1.24</td>
+                  <td>0.27</td>
+                  <td><span class="sig sig-ns">ns</span></td>
+                </tr>
+                <tr class="null-row">
+                  <td><strong>RACE</strong></td>
+                  <td>500</td>
+                  <td>60</td>
+                  <td>61</td>
+                  <td>0.00</td>
+                  <td>1.000</td>
+                  <td><span class="sig sig-null">NULL</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">B/C Ratio — How Lopsided Is the Win?</div>
+        <div class="card-sub">A B/C ratio of 2.68 means guided won on 2.68 questions for every 1 that baseline won.
+          SVAMP leads at 3.21×.</div>
+        <canvas id="bcRatioChart" style="max-height:180px;"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: POWER ANALYSIS -->
+  <section id="power">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Sample Size Planning</span>
+        <h2 class="section-title">Power Analysis — How Many Questions Do We Need?</h2>
+        <p class="section-desc">Power analysis tells us the minimum N required to have 80% chance of detecting a real
+          effect, given the expected effect size. Too few questions → we might miss a real effect (Type II error).</p>
+      </div>
+
+      <div class="angle-intro">
+        <div class="angle-num" style="font-size:48px;width:72px;">N?</div>
+        <div class="angle-content">
+          <h3>Simple Explanation</h3>
+          <p class="angle-plain">Imagine trying to determine if a coin is biased. If you flip it 5 times, you can't tell
+            much. If you flip it 1000 times, you can be very sure. Power analysis calculates: given the effect size we
+            expect, how many flips (questions) do we need before we can trust the result? The formula depends on the
+            discordant rate (how often the two conditions disagree) and the signal strength (B-C difference).</p>
         </div>
       </div>
 
       <div class="formula-box">
-        <div class="formula-label">The 2×2 Contingency Table</div>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;font-family:'IBM Plex Mono',monospace;">
+        <div class="formula-label">Power Analysis Formula for McNemar's Test</div>
+        $$N_{\min} = \left( \frac{z_{\alpha/2}\sqrt{\pi_d} + z_\beta\sqrt{\pi_d - \delta^2}}{\delta} \right)^2$$
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#92400e;margin-top:12px;line-height:2;">
+          π_d = π_B + π_C &nbsp;&nbsp;(discordant rate = fraction of questions where conditions disagree)<br>
+          δ = π_B - π_C &nbsp;&nbsp;&nbsp;(signal = how much more often guided wins than baseline)<br>
+          z_{α/2} = 1.96 &nbsp;&nbsp;&nbsp;(for α = 0.05, two-sided)<br>
+          z_β = 0.842 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(for 80% power)
+        </div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:20px;">
+        <table>
           <thead>
             <tr>
-              <th style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;"></th>
-              <th style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;">Baseline ✓<br><span style="font-size:11px;">(baseline correct)</span></th>
-              <th style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;text-align:center;">Baseline ✗<br><span style="font-size:11px;">(baseline wrong)</span></th>
+              <th>Dataset</th>
+              <th>Baseline</th>
+              <th>Guided</th>
+              <th>B</th>
+              <th>C</th>
+              <th>N Ran</th>
+              <th>N Needed</th>
+              <th>Gap</th>
+              <th>Observed Power</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;font-weight:600;text-align:center;">Guided ✓<br><span style="font-size:11px;">(guided correct)</span></td>
-              <td style="border:2px solid #d97706;padding:12px 14px;background:#f3f4f6;text-align:center;color:#6b7280;">A — Both correct<br><span style="font-size:11px;">Ignored by test</span></td>
-              <td style="border:2px solid #d97706;padding:12px 14px;background:#dcfce7;text-align:center;"><strong style="font-size:18px;color:#057a55;">B</strong><br><span style="font-size:12px;color:#057a55;font-weight:600;">Guided wins ✅</span><br><span style="font-size:11px;color:#6b7280;">Guided ✓ · Baseline ✗</span></td>
+            <tr class="best">
+              <td><strong>PIQA</strong></td>
+              <td>54.2%</td>
+              <td>78.4%</td>
+              <td>193</td>
+              <td>72</td>
+              <td>500</td>
+              <td>69</td>
+              <td style="color:var(--green);font-weight:600;">+431</td>
+              <td>100%</td>
+              <td><span class="sig sig-4">★★★★ Confirmed</span></td>
+            </tr>
+            <tr class="best">
+              <td><strong>SVAMP</strong></td>
+              <td>40.3%</td>
+              <td>61.7%</td>
+              <td>93</td>
+              <td>29</td>
+              <td>300</td>
+              <td>68</td>
+              <td style="color:var(--green);font-weight:600;">+232</td>
+              <td>100%</td>
+              <td><span class="sig sig-4">★★★★ Confirmed</span></td>
+            </tr>
+            <tr class="best">
+              <td><strong>CSQA</strong></td>
+              <td>70.7%</td>
+              <td>75.8%</td>
+              <td>174</td>
+              <td>92</td>
+              <td>900</td>
+              <td>388</td>
+              <td style="color:var(--green);font-weight:600;">+512</td>
+              <td>99.9%</td>
+              <td><span class="sig sig-3">★★★ Confirmed</span></td>
+            </tr>
+            <tr class="best">
+              <td><strong>ASDiv</strong></td>
+              <td>53.7%</td>
+              <td>64.0%</td>
+              <td>125</td>
+              <td>82</td>
+              <td>300</td>
+              <td>317</td>
+              <td style="color:var(--gold);font-weight:600;">−17*</td>
+              <td>~80%</td>
+              <td><span class="sig sig-2">★★ Confirmed</span></td>
             </tr>
             <tr>
-              <td style="border:2px solid #d97706;padding:10px 14px;background:#fef3c7;color:#92400e;font-weight:600;text-align:center;">Guided ✗<br><span style="font-size:11px;">(guided wrong)</span></td>
-              <td style="border:2px solid #d97706;padding:12px 14px;background:#fee2e2;text-align:center;"><strong style="font-size:18px;color:#c81e1e;">C</strong><br><span style="font-size:12px;color:#c81e1e;font-weight:600;">Baseline wins ❌</span><br><span style="font-size:11px;color:#6b7280;">Guided ✗ · Baseline ✓</span></td>
-              <td style="border:2px solid #d97706;padding:12px 14px;background:#f3f4f6;text-align:center;color:#6b7280;">D — Both wrong<br><span style="font-size:11px;">Ignored by test</span></td>
+              <td><strong>ARC</strong></td>
+              <td>70.0%</td>
+              <td>77.0%</td>
+              <td>18</td>
+              <td>11</td>
+              <td>100</td>
+              <td>626</td>
+              <td style="color:var(--red);">+526</td>
+              <td>~30%</td>
+              <td><span class="sig sig-ns">Underpowered</span></td>
+            </tr>
+            <tr class="null-row">
+              <td><strong>RACE</strong></td>
+              <td>58.6%</td>
+              <td>58.4%</td>
+              <td>60</td>
+              <td>61</td>
+              <td>500</td>
+              <td>—</td>
+              <td>—</td>
+              <td>100%</td>
+              <td><span class="sig sig-null">TRUE NULL</span></td>
             </tr>
           </tbody>
         </table>
-        <p style="font-size:13px;color:#92400e;margin-top:10px;">Only <strong>B</strong> and <strong>C</strong> matter for the test. A and D cancel out — they tell us nothing about which method is better.</p>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">* ASDiv confirmed despite being 17 below theoretical
+        minimum — actual discordant rate (69%) was higher than formula's conservative estimate (49%). Formula is a
+        conservative upper bound.</p>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">N Ran vs N Needed — Power Adequacy</div>
+        <div class="card-sub">Green bar = ran. Line = minimum needed. RACE ran enough to confirm a true null — 500
+          questions with 100% power to detect any real effect ≥ 5 pts.</div>
+        <canvas id="powerChart"></canvas>
       </div>
 
-      <div class="formula-box" style="margin-top:12px;">
-        <div class="formula-label">McNemar Chi-Square Statistic (with Yates correction)</div>
-        $$\chi^2 = \frac{(|B - C| - 1)^2}{B + C}$$
-        <p style="font-size:13px;color:#92400e;margin-top:8px;">Under H₀ (no difference), this follows a chi-square distribution with 1 degree of freedom. Large χ² → small p-value → reject H₀.</p>
+      <div class="callout" style="margin-top:20px;">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text"><strong>Why ARC-Challenge is "underpowered" not "failing":</strong> With +7 pts and
+          only N=100, we had ~30% power — meaning we'd only detect this effect 30% of the time even if real. It's not
+          that the method doesn't work on ARC; it's that we haven't run enough questions to prove it. Requiring N=626 to
+          confirm is simply too many runs to justify when we already have 5 confirmed results.</div>
       </div>
     </div>
+  </section>
 
-    <div class="card">
-      <div class="card-title">McNemar Results — All Datasets</div>
-      <div class="card-sub">B = guided wins · C = baseline wins · ratio B/C</div>
-      <canvas id="mcnemarChart"></canvas>
-      <div class="tbl-wrap" style="margin-top:16px;">
+  <!-- SECTION: ABLATION -->
+  <section id="ablation">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Ablation Study</span>
+        <h2 class="section-title">Fine-Tuning Quality vs Model Size</h2>
+        <p class="section-desc">Does the benefit come from the 3B model being larger, or from the fine-tuning? We run an
+          identically-sized <em>untuned</em> 3B guide to find out.</p>
+      </div>
+
+      <div class="insight">
+        <div class="insight-label">Core Finding</div>
+        <div class="insight-text">"Fine-tuning quality is the sufficient condition. An untuned 3B guide is inconsistent
+          and can actively mislead — turning uncertain wrong answers into confidently wrong answers. The structure of
+          the plan matters more than the size of the planner."</div>
+      </div>
+
+      <div class="g2" style="margin-top:24px;">
+        <div class="card">
+          <div class="card-title">Three-Way Comparison</div>
+          <div class="card-sub">Baseline (no guide) · Base 3B (no LoRA) · Fine-Tuned 3B (LoRA)</div>
+          <canvas id="ablationChart" height="700px"></canvas>
+        </div>
+        <div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>Baseline</th>
+                  <th>Base 3B</th>
+                  <th>Fine-Tuned 3B</th>
+                  <th>Interpretation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ASDiv</td>
+                  <td>57.0%</td>
+                  <td style="color:var(--red);">56.0% (−1.0)</td>
+                  <td style="color:var(--green);font-weight:600;">64.0% (+11.0)</td>
+                  <td style="font-size:12px;">Size adds nothing; planning is everything</td>
+                </tr>
+                <tr>
+                  <td>SVAMP</td>
+                  <td>39.0%</td>
+                  <td style="color:var(--green);">61.0% (+22.0)</td>
+                  <td style="color:var(--green);font-weight:600;">61.7% (+22.7)</td>
+                  <td style="font-size:12px;">Both help; FT wins absolute accuracy</td>
+                </tr>
+                <tr>
+                  <td>ARC</td>
+                  <td>72.0%</td>
+                  <td style="color:var(--green);">74.0% (+2.0)</td>
+                  <td style="color:var(--green);font-weight:600;">77.0% (+7.0)</td>
+                  <td style="font-size:12px;">FT multiplies 3.5× the base gain</td>
+                </tr>
+                <tr>
+                  <td>CSQA</td>
+                  <td>74.8%</td>
+                  <td style="color:var(--red);">72.8% (−2.0)</td>
+                  <td style="color:var(--green);font-weight:600;">77.0% (+9.0)</td>
+                  <td style="font-size:12px;color:var(--red);font-weight:500;">Base guide actively misleads!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="example" style="margin-top:16px;">
+            <div class="example-label">The "Confident Misdirection" Failure Mode</div>
+            <p style="font-size:13px;">On CommonsenseQA (N=250), the untuned 3B guide makes votes more decisive but
+              <em>more wrong</em>. False-confidence cases increase from 54 to 65 — uncertain 3-2 wrong splits become
+              unanimous 5-0 wrong answers. Fine-tuning's structured elimination format prevents this.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">The Two-Layer Mechanism</div>
+        <div class="card-sub">What does model size contribute vs. what does fine-tuning contribute?</div>
+        <div class="g2" style="margin-top:12px;">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:20px;">
+            <div
+              style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#1e40af;margin-bottom:8px;">
+              LAYER 1 — MODEL SIZE</div>
+            <div style="font-size:14px;line-height:1.75;">Factual knowledge from pretraining that partially transfers
+              when domain aligns with training content (science: +2 pts on ARC, math: +15 on SVAMP at high temp). <span
+                style="color:var(--red);">Absent on commonsense — actively misleads.</span></div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:20px;">
+            <div
+              style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#065f46;margin-bottom:8px;">
+              LAYER 2 — FINE-TUNING STRUCTURE</div>
+            <div style="font-size:14px;line-height:1.75;">Structured enumerated reasoning steps force content-based
+              thinking, suppress positional heuristics, and create tight vote clusters. Adds <strong>+5–12 pts on
+                top</strong> of Layer 1 across all domains. <span style="color:var(--green);">Always positive.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: POSITION BIAS -->
+  <section id="bias">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Special Finding</span>
+        <h2 class="section-title">Position Bias Suppression</h2>
+        <p class="section-desc">Small models often pick the same answer position regardless of content — the guide fixes
+          this.</p>
+      </div>
+
+      <div class="insight">
+        <div class="insight-label">The PIQA Discovery</div>
+        <div class="insight-text">The unguided 1.5B solver picks Option A on <strong>93.4%</strong> of PIQA questions —
+          a binary choice task where 50/50 is expected. It's not reasoning about physical actions; it's defaulting to
+          position A as a heuristic. The guide's verbal plan forces engagement with the question content, dropping
+          A-selection to 42.1%. This single bias correction accounts for a substantial fraction of the +24.2 pt gain.
+        </div>
+      </div>
+
+      <div class="g2" style="margin-top:24px;">
+        <div class="card">
+          <div class="card-title">PIQA — A/B Option Selection Rate</div>
+          <div class="card-sub">Expected: 50% each. Baseline: 93.4% A. Guided: 42.1% A — near-uniform.</div>
+          <canvas id="biasChart"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">E-Option Bias — CommonsenseQA</div>
+          <div class="card-sub">Baseline over-selects E (24.8% vs expected 20%). Guidance brings it to 14.0%.</div>
+          <canvas id="csqaBiasChart"></canvas>
+        </div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:20px;">
         <table>
-          <thead><tr><th>Dataset</th><th>N</th><th>B</th><th>C</th><th>χ²</th><th>p-value</th><th>Verdict</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Bias Type</th>
+              <th>Baseline Rate</th>
+              <th>Guided Rate</th>
+              <th>Expected</th>
+              <th>Suppression</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><strong>PIQA</strong></td><td>500</td><td style="color:var(--green);font-weight:600;">193</td><td style="color:var(--red);">72</td><td>54.34</td><td>≈ 0</td><td><span class="sig sig-4">★★★★</span></td></tr>
-            <tr><td><strong>SVAMP</strong></td><td>300</td><td style="color:var(--green);font-weight:600;">93</td><td style="color:var(--red);">29</td><td>32.53</td><td>≈ 0</td><td><span class="sig sig-4">★★★★</span></td></tr>
-            <tr><td><strong>CSQA</strong></td><td>900</td><td style="color:var(--green);font-weight:600;">174</td><td style="color:var(--red);">92</td><td>24.67</td><td>0.0000007</td><td><span class="sig sig-3">★★★</span></td></tr>
-            <tr><td><strong>ASDiv</strong></td><td>300</td><td style="color:var(--green);font-weight:600;">125</td><td style="color:var(--red);">82</td><td>8.52</td><td>0.0035</td><td><span class="sig sig-2">★★</span></td></tr>
-            <tr><td><strong>ARC</strong></td><td>100</td><td style="color:var(--green);">18</td><td style="color:var(--red);">11</td><td>1.24</td><td>0.27</td><td><span class="sig sig-ns">ns</span></td></tr>
-            <tr class="null-row"><td><strong>RACE</strong></td><td>500</td><td>60</td><td>61</td><td>0.00</td><td>1.000</td><td><span class="sig sig-null">NULL</span></td></tr>
+            <tr class="best">
+              <td><strong>PIQA</strong></td>
+              <td>A-option collapse</td>
+              <td class="td-neg">93.4%</td>
+              <td class="td-pos">42.1%</td>
+              <td>50.0%</td>
+              <td class="td-pos">−51.3 pts ← largest in study</td>
+            </tr>
+            <tr>
+              <td><strong>CommonsenseQA</strong></td>
+              <td>E-option preference</td>
+              <td class="td-neg">24.8%</td>
+              <td class="td-pos">14.0%</td>
+              <td>20.0%</td>
+              <td class="td-pos">−10.8 pts</td>
+            </tr>
+            <tr>
+              <td><strong>ARC-Challenge</strong></td>
+              <td>None detected</td>
+              <td>—</td>
+              <td>—</td>
+              <td>25.0%</td>
+              <td>—</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">B/C Ratio — How Lopsided Is the Win?</div>
-    <div class="card-sub">A B/C ratio of 2.68 means guided won on 2.68 questions for every 1 that baseline won. SVAMP leads at 3.21×.</div>
-    <canvas id="bcRatioChart" style="max-height:180px;"></canvas>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: POWER ANALYSIS -->
-<section id="power">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Sample Size Planning</span>
-    <h2 class="section-title">Power Analysis — How Many Questions Do We Need?</h2>
-    <p class="section-desc">Power analysis tells us the minimum N required to have 80% chance of detecting a real effect, given the expected effect size. Too few questions → we might miss a real effect (Type II error).</p>
-  </div>
-
-  <div class="angle-intro">
-    <div class="angle-num" style="font-size:48px;width:72px;">N?</div>
-    <div class="angle-content">
-      <h3>Simple Explanation</h3>
-      <p class="angle-plain">Imagine trying to determine if a coin is biased. If you flip it 5 times, you can't tell much. If you flip it 1000 times, you can be very sure. Power analysis calculates: given the effect size we expect, how many flips (questions) do we need before we can trust the result? The formula depends on the discordant rate (how often the two conditions disagree) and the signal strength (B-C difference).</p>
-    </div>
-  </div>
-
-  <div class="formula-box">
-    <div class="formula-label">Power Analysis Formula for McNemar's Test</div>
-    $$N_{\min} = \left( \frac{z_{\alpha/2}\sqrt{\pi_d} + z_\beta\sqrt{\pi_d - \delta^2}}{\delta} \right)^2$$
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#92400e;margin-top:12px;line-height:2;">
-      π_d = π_B + π_C &nbsp;&nbsp;(discordant rate = fraction of questions where conditions disagree)<br>
-      δ = π_B - π_C &nbsp;&nbsp;&nbsp;(signal = how much more often guided wins than baseline)<br>
-      z_{α/2} = 1.96 &nbsp;&nbsp;&nbsp;(for α = 0.05, two-sided)<br>
-      z_β = 0.842 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(for 80% power)
-    </div>
-  </div>
-
-  <div class="tbl-wrap" style="margin-top:20px;">
-    <table>
-      <thead>
-        <tr><th>Dataset</th><th>Baseline</th><th>Guided</th><th>B</th><th>C</th><th>N Ran</th><th>N Needed</th><th>Gap</th><th>Observed Power</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        <tr class="best"><td><strong>PIQA</strong></td><td>54.2%</td><td>78.4%</td><td>193</td><td>72</td><td>500</td><td>69</td><td style="color:var(--green);font-weight:600;">+431</td><td>100%</td><td><span class="sig sig-4">★★★★ Confirmed</span></td></tr>
-        <tr class="best"><td><strong>SVAMP</strong></td><td>40.3%</td><td>61.7%</td><td>93</td><td>29</td><td>300</td><td>68</td><td style="color:var(--green);font-weight:600;">+232</td><td>100%</td><td><span class="sig sig-4">★★★★ Confirmed</span></td></tr>
-        <tr class="best"><td><strong>CSQA</strong></td><td>70.7%</td><td>75.8%</td><td>174</td><td>92</td><td>900</td><td>388</td><td style="color:var(--green);font-weight:600;">+512</td><td>99.9%</td><td><span class="sig sig-3">★★★ Confirmed</span></td></tr>
-        <tr class="best"><td><strong>ASDiv</strong></td><td>53.7%</td><td>64.0%</td><td>125</td><td>82</td><td>300</td><td>317</td><td style="color:var(--gold);font-weight:600;">−17*</td><td>~80%</td><td><span class="sig sig-2">★★ Confirmed</span></td></tr>
-        <tr><td><strong>ARC</strong></td><td>70.0%</td><td>77.0%</td><td>18</td><td>11</td><td>100</td><td>626</td><td style="color:var(--red);">+526</td><td>~30%</td><td><span class="sig sig-ns">Underpowered</span></td></tr>
-        <tr class="null-row"><td><strong>RACE</strong></td><td>58.6%</td><td>58.4%</td><td>60</td><td>61</td><td>500</td><td>—</td><td>—</td><td>100%</td><td><span class="sig sig-null">TRUE NULL</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="font-size:12px;color:var(--muted);margin-top:8px;">* ASDiv confirmed despite being 17 below theoretical minimum — actual discordant rate (69%) was higher than formula's conservative estimate (49%). Formula is a conservative upper bound.</p>
-
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">N Ran vs N Needed — Power Adequacy</div>
-    <div class="card-sub">Green bar = ran. Line = minimum needed. RACE ran enough to confirm a true null — 500 questions with 100% power to detect any real effect ≥ 5 pts.</div>
-    <canvas id="powerChart"></canvas>
-  </div>
-
-  <div class="callout" style="margin-top:20px;">
-    <div class="callout-icon">💡</div>
-    <div class="callout-text"><strong>Why ARC-Challenge is "underpowered" not "failing":</strong> With +7 pts and only N=100, we had ~30% power — meaning we'd only detect this effect 30% of the time even if real. It's not that the method doesn't work on ARC; it's that we haven't run enough questions to prove it. Requiring N=626 to confirm is simply too many runs to justify when we already have 5 confirmed results.</div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: ABLATION -->
-<section id="ablation">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Ablation Study</span>
-    <h2 class="section-title">Fine-Tuning Quality vs Model Size</h2>
-    <p class="section-desc">Does the benefit come from the 3B model being larger, or from the fine-tuning? We run an identically-sized <em>untuned</em> 3B guide to find out.</p>
-  </div>
-
-  <div class="insight">
-    <div class="insight-label">Core Finding</div>
-    <div class="insight-text">"Fine-tuning quality is the sufficient condition. An untuned 3B guide is inconsistent and can actively mislead — turning uncertain wrong answers into confidently wrong answers. The structure of the plan matters more than the size of the planner."</div>
-  </div>
-
-  <div class="g2" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">Three-Way Comparison</div>
-      <div class="card-sub">Baseline (no guide) · Base 3B (no LoRA) · Fine-Tuned 3B (LoRA)</div>
-      <canvas id="ablationChart"></canvas>
-    </div>
-    <div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Dataset</th><th>Baseline</th><th>Base 3B</th><th>Fine-Tuned 3B</th><th>Interpretation</th></tr></thead>
-          <tbody>
-            <tr><td>ASDiv</td><td>57.0%</td><td style="color:var(--red);">56.0% (−1.0)</td><td style="color:var(--green);font-weight:600;">64.0% (+11.0)</td><td style="font-size:12px;">Size adds nothing; planning is everything</td></tr>
-            <tr><td>SVAMP †</td><td>48.0%</td><td style="color:var(--green);">63.0% (+15.0)</td><td style="color:var(--green);font-weight:600;">61.0% (+13.0)</td><td style="font-size:12px;">Both help; FT wins absolute accuracy</td></tr>
-            <tr><td>ARC</td><td>72.0%</td><td style="color:var(--green);">74.0% (+2.0)</td><td style="color:var(--green);font-weight:600;">77.0% (+7.0)</td><td style="font-size:12px;">FT multiplies 3.5× the base gain</td></tr>
-            <tr><td>CSQA</td><td>74.8%</td><td style="color:var(--red);">72.8% (−2.0)</td><td style="color:var(--green);font-weight:600;">77.0% (+9.0)</td><td style="font-size:12px;color:var(--red);font-weight:500;">Base guide actively misleads!</td></tr>
-          </tbody>
-        </table>
+  <!-- SECTION: RACE-HIGH NULL -->
+  <section id="boundary">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Boundary Condition</span>
+        <h2 class="section-title">The RACE-High Null — When Guidance Doesn't Help</h2>
+        <p class="section-desc">The N=500 clean null on RACE-High is not a failure — it tells us <em>where</em> and
+          <em>why</em> the method works.</p>
       </div>
-      <p style="font-size:12px;color:var(--muted);margin-top:8px;">† SVAMP ablation at solver temp 0.7 (vs 0.4 in main results). Deltas internally consistent but not directly comparable to main result.</p>
 
-      <div class="example" style="margin-top:16px;">
-        <div class="example-label">The "Confident Misdirection" Failure Mode</div>
-        <p style="font-size:13px;">On CommonsenseQA (N=250), the untuned 3B guide makes votes more decisive but <em>more wrong</em>. False-confidence cases increase from 54 to 65 — uncertain 3-2 wrong splits become unanimous 5-0 wrong answers. Fine-tuning's structured elimination format prevents this.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">The Two-Layer Mechanism</div>
-    <div class="card-sub">What does model size contribute vs. what does fine-tuning contribute?</div>
-    <div class="g2" style="margin-top:12px;">
-      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:20px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#1e40af;margin-bottom:8px;">LAYER 1 — MODEL SIZE</div>
-        <div style="font-size:14px;line-height:1.75;">Factual knowledge from pretraining that partially transfers when domain aligns with training content (science: +2 pts on ARC, math: +15 on SVAMP at high temp). <span style="color:var(--red);">Absent on commonsense — actively misleads.</span></div>
-      </div>
-      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:20px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#065f46;margin-bottom:8px;">LAYER 2 — FINE-TUNING STRUCTURE</div>
-        <div style="font-size:14px;line-height:1.75;">Structured enumerated reasoning steps force content-based thinking, suppress positional heuristics, and create tight vote clusters. Adds <strong>+5–12 pts on top</strong> of Layer 1 across all domains. <span style="color:var(--green);">Always positive.</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: POSITION BIAS -->
-<section id="bias">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Special Finding</span>
-    <h2 class="section-title">Position Bias Suppression</h2>
-    <p class="section-desc">Small models often pick the same answer position regardless of content — the guide fixes this.</p>
-  </div>
-
-  <div class="insight">
-    <div class="insight-label">The PIQA Discovery</div>
-    <div class="insight-text">The unguided 1.5B solver picks Option A on <strong>93.4%</strong> of PIQA questions — a binary choice task where 50/50 is expected. It's not reasoning about physical actions; it's defaulting to position A as a heuristic. The guide's verbal plan forces engagement with the question content, dropping A-selection to 42.1%. This single bias correction accounts for a substantial fraction of the +24.2 pt gain.</div>
-  </div>
-
-  <div class="g2" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">PIQA — A/B Option Selection Rate</div>
-      <div class="card-sub">Expected: 50% each. Baseline: 93.4% A. Guided: 42.1% A — near-uniform.</div>
-      <canvas id="biasChart"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">E-Option Bias — CommonsenseQA</div>
-      <div class="card-sub">Baseline over-selects E (24.8% vs expected 20%). Guidance brings it to 14.0%.</div>
-      <canvas id="csqaBiasChart"></canvas>
-    </div>
-  </div>
-
-  <div class="tbl-wrap" style="margin-top:20px;">
-    <table>
-      <thead><tr><th>Dataset</th><th>Bias Type</th><th>Baseline Rate</th><th>Guided Rate</th><th>Expected</th><th>Suppression</th></tr></thead>
-      <tbody>
-        <tr class="best"><td><strong>PIQA</strong></td><td>A-option collapse</td><td class="td-neg">93.4%</td><td class="td-pos">42.1%</td><td>50.0%</td><td class="td-pos">−51.3 pts ← largest in study</td></tr>
-        <tr><td><strong>CommonsenseQA</strong></td><td>E-option preference</td><td class="td-neg">24.8%</td><td class="td-pos">14.0%</td><td>20.0%</td><td class="td-pos">−10.8 pts</td></tr>
-        <tr><td><strong>ARC-Challenge</strong></td><td>None detected</td><td>—</td><td>—</td><td>25.0%</td><td>—</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: RACE-HIGH NULL -->
-<section id="boundary">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Boundary Condition</span>
-    <h2 class="section-title">The RACE-High Null — When Guidance Doesn't Help</h2>
-    <p class="section-desc">The N=500 clean null on RACE-High is not a failure — it tells us <em>where</em> and <em>why</em> the method works.</p>
-  </div>
-
-  <div class="g2">
-    <div>
-      <div class="insight" style="margin-bottom:20px;">
-        <div class="insight-label">Reasoning vs. Retrieval</div>
-        <div class="insight-text">Verbal planning helps tasks that require <strong>generating a solution path</strong>. It does not help tasks that require <strong>locating pre-existing evidence</strong> in a passage. RACE-High answers are already in the text — the model just needs to find them. A plan can't help you search.</div>
-      </div>
-      <div class="example">
-        <div class="example-label">Simple Analogy</div>
-        <p style="font-size:14px;"><strong>Reasoning task (PIQA, SVAMP):</strong> "How do you remove a stripped screw?" — You need to think through the physics and generate a solution. A verbal plan helps enormously.<br><br><strong>Retrieval task (RACE-High):</strong> "According to paragraph 3, what year did X happen?" — The answer is already in the passage. Writing a plan first doesn't help you find the relevant sentence any faster.</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">RACE-High Cumulative Accuracy Trend (N=500)</div>
-      <div class="card-sub">The +9 pt apparent gain at N=100 was sampling variance — gone by N=300, settled at −0.2 pts.</div>
-      <canvas id="raceProgressChart"></canvas>
-    </div>
-  </div>
-
-  <div class="g3" style="margin-top:20px;">
-    <div class="metric"><div class="metric-val" style="color:var(--red);">60</div><div class="metric-label">B (Guided Wins)</div><div class="metric-sub">N=500</div></div>
-    <div class="metric"><div class="metric-val" style="color:var(--red);">61</div><div class="metric-label">C (Baseline Wins)</div><div class="metric-sub">Near-identical</div></div>
-    <div class="metric"><div class="metric-val" style="color:var(--red);">1.000</div><div class="metric-label">McNemar p-value</div><div class="metric-sub">True null confirmed</div></div>
-  </div>
-
-  <div class="callout" style="margin-top:16px;">
-    <div class="callout-icon">✅</div>
-    <div class="callout-text"><strong>This is a feature, not a bug.</strong> A null result with 100% power (N=500 detects any real ≥5 pt effect) is scientifically valuable. It allows us to claim: "Our method works on reasoning tasks. It does not work on retrieval tasks. This distinction is testable and falsifiable."</div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION: SUMMARY -->
-<section id="summary">
-<div class="container">
-  <div class="section-header">
-    <span class="section-tag">Final Summary</span>
-    <h2 class="section-title">What This Research Shows</h2>
-  </div>
-
-  <div class="g2" style="margin-bottom:24px;">
-    <div class="card" style="border-top:4px solid var(--green);">
-      <div class="card-title">✅ What Works — Confirmed Results</div>
-      <div style="margin-top:16px;">
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:500;">PIQA <span style="color:var(--muted);font-weight:300;">(Physical)</span></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);font-weight:600;">+24.2 pts &nbsp;<span class="sig sig-4">★★★★</span></span>
+      <div class="g2">
+        <div>
+          <div class="insight" style="margin-bottom:20px;">
+            <div class="insight-label">Reasoning vs. Retrieval</div>
+            <div class="insight-text">Verbal planning helps tasks that require <strong>generating a solution
+                path</strong>. It does not help tasks that require <strong>locating pre-existing evidence</strong> in a
+              passage. RACE-High answers are already in the text — the model just needs to find them. A plan can't help
+              you search.</div>
           </div>
-          <div class="prog-track"><div class="prog-fill" style="width:93%;background:var(--green);"></div></div>
+          <div class="example">
+            <div class="example-label">Simple Analogy</div>
+            <p style="font-size:14px;"><strong>Reasoning task (PIQA, SVAMP):</strong> "How do you remove a stripped
+              screw?" — You need to think through the physics and generate a solution. A verbal plan helps
+              enormously.<br><br><strong>Retrieval task (RACE-High):</strong> "According to paragraph 3, what year did X
+              happen?" — The answer is already in the passage. Writing a plan first doesn't help you find the relevant
+              sentence any faster.</p>
+          </div>
         </div>
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:500;">SVAMP <span style="color:var(--muted);font-weight:300;">(Math)</span></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);font-weight:600;">+21.3 pts &nbsp;<span class="sig sig-4">★★★★</span></span>
-          </div>
-          <div class="prog-track"><div class="prog-fill" style="width:82%;background:var(--green);"></div></div>
-        </div>
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:500;">ASDiv <span style="color:var(--muted);font-weight:300;">(Math)</span></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sig2);font-weight:600;">+10.3 pts &nbsp;<span class="sig sig-2">★★</span></span>
-          </div>
-          <div class="prog-track"><div class="prog-fill" style="width:40%;background:var(--sig2);"></div></div>
-        </div>
-        <div style="margin-bottom:4px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:500;">CommonsenseQA <span style="color:var(--muted);font-weight:300;">(Commonsense)</span></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sig3);font-weight:600;">+5.1 pts &nbsp;<span class="sig sig-3">★★★</span></span>
-          </div>
-          <div class="prog-track"><div class="prog-fill" style="width:20%;background:var(--sig3);"></div></div>
+        <div class="card">
+          <div class="card-title">RACE-High Cumulative Accuracy Trend (N=500)</div>
+          <div class="card-sub">The +9 pt apparent gain at N=100 was sampling variance — gone by N=300, settled at −0.2
+            pts.</div>
+          <canvas id="raceProgressChart"></canvas>
         </div>
       </div>
-    </div>
-    <div class="card" style="border-top:4px solid var(--red);">
-      <div class="card-title">⭕ Boundary Conditions</div>
-      <div style="margin-top:12px;font-size:14px;line-height:1.85;">
-        <p>🔴 <strong>RACE-High (Retrieval):</strong> p=1.000 at N=500. Verbal planning cannot help locate evidence in a passage. Clean null.</p>
-        <hr class="divider" style="margin:12px 0;">
-        <p>🟡 <strong>ARC-Challenge:</strong> +7 pts but underpowered at N=100. Real but unconfirmed — needs N=626.</p>
-        <hr class="divider" style="margin:12px 0;">
-        <p>🟡 <strong>AQUA-RAT:</strong> +12 pts directional. McNemar p-value pending.</p>
+
+      <div class="g3" style="margin-top:20px;">
+        <div class="metric">
+          <div class="metric-val" style="color:var(--red);">60</div>
+          <div class="metric-label">B (Guided Wins)</div>
+          <div class="metric-sub">N=500</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val" style="color:var(--red);">61</div>
+          <div class="metric-label">C (Baseline Wins)</div>
+          <div class="metric-sub">Near-identical</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val" style="color:var(--red);">1.000</div>
+          <div class="metric-label">McNemar p-value</div>
+          <div class="metric-sub">True null confirmed</div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:16px;">
+        <div class="callout-icon">✅</div>
+        <div class="callout-text"><strong>This is a feature, not a bug.</strong> A null result with 100% power (N=500
+          detects any real ≥5 pt effect) is scientifically valuable. It allows us to claim: "Our method works on
+          reasoning tasks. It does not work on retrieval tasks. This distinction is testable and falsifiable."</div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="g3" style="margin-bottom:24px;">
-    <div class="card" style="text-align:center;border-top:3px solid var(--blue);">
-      <div style="font-size:32px;margin-bottom:8px;">📐</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">Fine-Tuning > Model Size</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:6px;">An untuned 3B guide can actively mislead. Fine-tuning quality is the critical variable, not parameter count.</div>
+  <!-- SECTION: SUMMARY -->
+  <section id="summary">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Final Summary</span>
+        <h2 class="section-title">What This Research Shows</h2>
+      </div>
+
+      <div class="g2" style="margin-bottom:24px;">
+        <div class="card" style="border-top:4px solid var(--green);">
+          <div class="card-title">✅ What Works — Confirmed Results</div>
+          <div style="margin-top:16px;">
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:500;">PIQA <span
+                    style="color:var(--muted);font-weight:300;">(Physical)</span></span>
+                <span
+                  style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);font-weight:600;">+24.2
+                  pts &nbsp;<span class="sig sig-4">★★★★</span></span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:93%;background:var(--green);"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:500;">SVAMP <span
+                    style="color:var(--muted);font-weight:300;">(Math)</span></span>
+                <span
+                  style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);font-weight:600;">+21.3
+                  pts &nbsp;<span class="sig sig-4">★★★★</span></span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:82%;background:var(--green);"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:500;">ASDiv <span
+                    style="color:var(--muted);font-weight:300;">(Math)</span></span>
+                <span
+                  style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sig2);font-weight:600;">+10.3
+                  pts &nbsp;<span class="sig sig-2">★★</span></span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:40%;background:var(--sig2);"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:500;">CommonsenseQA <span
+                    style="color:var(--muted);font-weight:300;">(Commonsense)</span></span>
+                <span
+                  style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sig3);font-weight:600;">+5.1
+                  pts &nbsp;<span class="sig sig-3">★★★</span></span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:20%;background:var(--sig3);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-top:4px solid var(--red);">
+          <div class="card-title">⭕ Boundary Conditions</div>
+          <div style="margin-top:12px;font-size:14px;line-height:1.85;">
+            <p>🔴 <strong>RACE-High (Retrieval):</strong> p=1.000 at N=500. Verbal planning cannot help locate evidence
+              in a passage. Clean null.</p>
+            <hr class="divider" style="margin:12px 0;">
+            <p>🟡 <strong>ARC-Challenge:</strong> +7 pts but underpowered at N=100. Real but unconfirmed — needs N=626.
+            </p>
+            <hr class="divider" style="margin:12px 0;">
+            <p>🟡 <strong>AQUA-RAT:</strong> +12 pts directional. McNemar p-value pending.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="g3" style="margin-bottom:24px;">
+        <div class="card" style="text-align:center;border-top:3px solid var(--blue);">
+          <div style="font-size:32px;margin-bottom:8px;">📐</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">Fine-Tuning >
+            Model Size</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px;">An untuned 3B guide can actively mislead.
+            Fine-tuning quality is the critical variable, not parameter count.</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:3px solid var(--gold);">
+          <div style="font-size:32px;margin-bottom:8px;">🎯</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">Reasoning ≠
+            Retrieval</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px;">Verbal planning helps solution generation. It
+            does not help evidence location. A clear, falsifiable boundary condition.</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:3px solid var(--green);">
+          <div style="font-size:32px;margin-bottom:8px;">💰</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">30% Below
+            Ceiling</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px;">The guided pipeline costs 10.5B param-passes vs
+            15B for running the 3B model alone — meaningful gains at controlled cost.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Final Comparison Chart — All Datasets</div>
+        <div class="card-sub">Baseline (red) vs Guided (blue) accuracy across all 7 benchmarks.</div>
+        <canvas id="finalCompChart" style="max-height:260px;"></canvas>
+      </div>
+
+      <div style="background:var(--navy);color:white;border-radius:6px;padding:32px;margin-top:24px;text-align:center;">
+        <div
+          style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;color:#fbbf24;margin-bottom:12px;">
+          CORE RESEARCH CONTRIBUTION</div>
+        <div
+          style="font-family:'Crimson Pro',serif;font-size:22px;font-style:italic;line-height:1.5;max-width:700px;margin:0 auto;">
+          "A carefully fine-tuned small language model can replace expensive LLM guides in a reasoning pipeline —
+          delivering statistically confirmed improvements at 30% lower compute than the natural ceiling, with clearly
+          defined boundary conditions."</div>
+        <div style="display:flex;justify-content:center;gap:32px;margin-top:20px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">5</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">
+              CONFIRMED</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">1</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">CLEAN
+              NULL</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">2,300+</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">
+              QUESTIONS TESTED</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">7</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">
+              BENCHMARKS</div>
+          </div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#94a3b8;margin-top:16px;">Guide:
+          Qwen2.5-3B+LoRA · Solver: Qwen2.5-1.5B×5 · McNemar's Test · α=0.05</div>
+      </div>
     </div>
-    <div class="card" style="text-align:center;border-top:3px solid var(--gold);">
-      <div style="font-size:32px;margin-bottom:8px;">🎯</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">Reasoning ≠ Retrieval</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:6px;">Verbal planning helps solution generation. It does not help evidence location. A clear, falsifiable boundary condition.</div>
-    </div>
-    <div class="card" style="text-align:center;border-top:3px solid var(--green);">
-      <div style="font-size:32px;margin-bottom:8px;">💰</div>
-      <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:var(--navy);">30% Below Ceiling</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:6px;">The guided pipeline costs 10.5B param-passes vs 15B for running the 3B model alone — meaningful gains at controlled cost.</div>
-    </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <div class="card-title">Final Comparison Chart — All Datasets</div>
-    <div class="card-sub">Baseline (red) vs Guided (blue) accuracy across all 7 benchmarks.</div>
-    <canvas id="finalCompChart" style="max-height:260px;"></canvas>
-  </div>
+  <div class="scroll-hint">Adnan Abdullh Sadi · North South University · SLM-to-SLM Guided Reasoning Pipeline</div>
 
-  <div style="background:var(--navy);color:white;border-radius:6px;padding:32px;margin-top:24px;text-align:center;">
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;color:#fbbf24;margin-bottom:12px;">CORE RESEARCH CONTRIBUTION</div>
-    <div style="font-family:'Crimson Pro',serif;font-size:22px;font-style:italic;line-height:1.5;max-width:700px;margin:0 auto;">"A carefully fine-tuned small language model can replace expensive LLM guides in a reasoning pipeline — delivering statistically confirmed improvements at 30% lower compute than the natural ceiling, with clearly defined boundary conditions."</div>
-    <div style="display:flex;justify-content:center;gap:32px;margin-top:20px;flex-wrap:wrap;">
-      <div style="text-align:center;"><div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">5</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">CONFIRMED</div></div>
-      <div style="text-align:center;"><div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">1</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">CLEAN NULL</div></div>
-      <div style="text-align:center;"><div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">2,300+</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">QUESTIONS TESTED</div></div>
-      <div style="text-align:center;"><div style="font-family:'Crimson Pro',serif;font-size:28px;font-weight:700;color:#fbbf24;">7</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;">BENCHMARKS</div></div>
-    </div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#94a3b8;margin-top:16px;">Guide: Qwen2.5-3B+LoRA · Solver: Qwen2.5-1.5B×5 · McNemar's Test · α=0.05</div>
-  </div>
-</div>
-</section>
+  <script>
+    Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = '#6b7280';
 
-<div class="scroll-hint">Adnan Abdullh Sadi · North South University · SLM-to-SLM Guided Reasoning Pipeline</div>
+    const GUIDED_COLOR = '#1a56db';
+    const BASE_COLOR = '#c81e1e';
+    const GREEN_COLOR = '#057a55';
+    const GOLD_COLOR = '#b45309';
+    const GRAY_COLOR = '#9ca3af';
+    const NAVY_COLOR = '#1e3a5f';
 
-<script>
-Chart.defaults.font.family = "'IBM Plex Mono', monospace";
-Chart.defaults.font.size = 11;
-Chart.defaults.color = '#6b7280';
-
-const GUIDED_COLOR = '#1a56db';
-const BASE_COLOR   = '#c81e1e';
-const GREEN_COLOR  = '#057a55';
-const GOLD_COLOR   = '#b45309';
-const GRAY_COLOR   = '#9ca3af';
-const NAVY_COLOR   = '#1e3a5f';
-
-// ── Compute Accuracy Chart ──
-new Chart(document.getElementById('computeAccChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA\n(N=500)', 'SVAMP\n(N=300)', 'ASDiv\n(N=300)', 'CSQA\n(N=900)', 'ARC\n(N=100)', 'RACE\n(N=500)'],
-    datasets: [
-      { label: 'Baseline', data: [54.2, 40.3, 53.7, 70.7, 70.0, 58.6], backgroundColor: BASE_COLOR + 'cc', borderRadius: 2 },
-      { label: 'Guided',   data: [78.4, 61.7, 64.0, 75.8, 77.0, 58.4], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:30, max:90, title:{display:true,text:'Accuracy (%)'}} } }
-});
-
-// ── Compute Regime ──
-new Chart(document.getElementById('computeRegimeChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Baseline', 'Guided', 'Ceiling'],
-    datasets: [{
-      label: 'Param-Passes (B)',
-      data: [7.5, 10.5, 15.0],
-      backgroundColor: [BASE_COLOR, GUIDED_COLOR, NAVY_COLOR],
-      borderRadius: 3
-    }]
-  },
-  options: { responsive:true, plugins:{legend:{display:false}},
-    scales:{ y:{max:18, title:{display:true,text:'Param-Passes (Billions)'}} } }
-});
-
-// ── Wasted Votes ──
-new Chart(document.getElementById('wastedVotesChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC'],
-    datasets: [
-      { label: 'Guided Wasted',   data: [41,  461, 278, 20,  0],  backgroundColor: GUIDED_COLOR+'aa', borderRadius: 2 },
-      { label: 'Baseline Wasted', data: [22,  721, 291, 219, 30], backgroundColor: BASE_COLOR+'aa',   borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{title:{display:true,text:'Wasted Votes'}} } }
-});
-
-// ── Consistency Lift ──
-new Chart(document.getElementById('consistLiftChart'), {
-  type: 'bar',
-  data: {
-    labels: ['SVAMP', 'PIQA', 'ASDiv', 'ARC', 'CSQA'],
-    datasets: [{
-      label: 'Consistency Lift (×)',
-      data: [1.90, 1.43, 1.18, 1.09, 1.09],
-      backgroundColor: [GUIDED_COLOR, GUIDED_COLOR, GUIDED_COLOR+'cc', GUIDED_COLOR+'88', GUIDED_COLOR+'88'],
-      borderRadius: 3
-    }]
-  },
-  options: { responsive:true, plugins:{legend:{display:false}},
-    scales:{ y:{min:0.8, max:2.2, title:{display:true,text:'Lift Ratio'}} },
-    plugins:{ annotation:{annotations:{line1:{type:'line',yMin:1,yMax:1,borderColor:BASE_COLOR,borderDash:[5,5],borderWidth:2}}} }
-  }
-});
-
-// ── Mean Votes ──
-new Chart(document.getElementById('meanVotesChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC'],
-    datasets: [
-      { label: 'Guided',   data: [3.89, 2.51, 2.93, 3.78, 3.5],  backgroundColor: GUIDED_COLOR+'cc', borderRadius: 2 },
-      { label: 'Baseline', data: [2.72, 1.32, 2.48, 3.48, 3.2],  backgroundColor: BASE_COLOR+'cc',   borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:0, max:5, title:{display:true,text:'Avg Correct Votes (/ 5)'}} } }
-});
-
-// ── Vote Distribution ──
-// ── All-Wrong Chart ──
-new Chart(document.getElementById('allWrongChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA', 'SVAMP', 'CSQA'],
-    datasets: [
-      { label: 'Guided',   data: [100, 73,  215], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 3 },
-      { label: 'Baseline', data: [222, 110, 225], backgroundColor: BASE_COLOR+'cc',   borderRadius: 3 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'},title:{display:true,text:'↓ Fewer all-wrong = better',font:{size:11},color:'#6b7280'}},
-    scales:{ y:{title:{display:true,text:'Questions with 0/5 correct votes'}} } }
-});
-
-// ── High-Agreement Chart ──
-new Chart(document.getElementById('highAgreeChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA', 'SVAMP', 'CSQA'],
-    datasets: [
-      { label: 'Guided',   data: [381, 115, 680], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 3 },
-      { label: 'Baseline', data: [269, 18,  603], backgroundColor: BASE_COLOR+'cc',   borderRadius: 3 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'},title:{display:true,text:'↑ More high-agreement = better',font:{size:11},color:'#6b7280'}},
-    scales:{ y:{title:{display:true,text:'Questions with 4–5/5 correct votes'}} } }
-});
-
-// ── ECE Before/After — scatter with connecting lines ──
-new Chart(document.getElementById('eceChart'), {
-  type: 'scatter',
-  data: {
-    datasets: [
-      {
-        label: 'Baseline ECE',
-        data: [{x:1,y:0.354},{x:2,y:0.202},{x:3,y:0.183},{x:4,y:0.176},{x:5,y:0.190},{x:6,y:0.320}],
-        backgroundColor: BASE_COLOR, pointRadius: 10, pointStyle: 'circle'
+    // ── Compute Accuracy Chart ──
+    new Chart(document.getElementById('computeAccChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA\n(N=500)', 'SVAMP\n(N=300)', 'ASDiv\n(N=300)', 'CSQA\n(N=900)', 'ARC\n(N=100)', 'RACE\n(N=500)'],
+        datasets: [
+          { label: 'Baseline', data: [54.2, 40.3, 53.7, 70.7, 70.0, 58.6], backgroundColor: BASE_COLOR + 'cc', borderRadius: 2 },
+          { label: 'Guided', data: [78.4, 61.7, 64.0, 75.8, 77.0, 58.4], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+        ]
       },
-      {
-        label: 'Guided ECE',
-        data: [{x:1,y:0.110},{x:2,y:0.128},{x:3,y:0.100},{x:4,y:0.141},{x:5,y:0.128},{x:6,y:0.246}],
-        backgroundColor: GUIDED_COLOR, pointRadius: 10, pointStyle: 'circle'
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 30, max: 90, title: { display: true, text: 'Accuracy (%)' } } }
+      }
+    });
+
+    // ── Compute Regime ──
+    new Chart(document.getElementById('computeRegimeChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Baseline', 'Guided', 'Ceiling'],
+        datasets: [{
+          label: 'Param-Passes (B)',
+          data: [7.5, 10.5, 15.0],
+          backgroundColor: [BASE_COLOR, GUIDED_COLOR, NAVY_COLOR],
+          borderRadius: 3
+        }]
       },
-      // connector lines as invisible datasets with borderColor
-      ...['PIQA','SVAMP','ASDiv','CSQA','ARC','RACE'].map((d,i) => ({
-        label: '',
-        data: [{x:i+1,y:[0.354,0.202,0.183,0.176,0.190,0.320][i]},{x:i+1,y:[0.110,0.128,0.100,0.141,0.128,0.246][i]}],
-        type:'line', borderColor:'#d1d5db', borderWidth:2, borderDash:[4,3],
-        pointRadius:0, showLine:true, tension:0, fill:false
-      }))
-    ]
-  },
-  options: {
-    responsive:true,
-    plugins:{
-      legend:{labels:{filter:item=>item.text!=='',boxWidth:12},position:'bottom'},
-      tooltip:{callbacks:{
-        label: ctx => {
-          if(!ctx.dataset.label) return null;
-          const names=['PIQA','SVAMP','ASDiv','CSQA','ARC','RACE'];
-          return `${ctx.dataset.label} — ${names[ctx.parsed.x-1]}: ${ctx.parsed.y.toFixed(3)}`;
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { max: 18, title: { display: true, text: 'Param-Passes (Billions)' } } }
+      }
+    });
+
+    // ── Wasted Votes ──
+    new Chart(document.getElementById('wastedVotesChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC'],
+        datasets: [
+          { label: 'Guided Wasted', data: [41, 461, 278, 20, 0], backgroundColor: GUIDED_COLOR + 'aa', borderRadius: 2 },
+          { label: 'Baseline Wasted', data: [22, 721, 291, 219, 30], backgroundColor: BASE_COLOR + 'aa', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'Wasted Votes' } } }
+      }
+    });
+
+    // ── Consistency Lift ──
+    new Chart(document.getElementById('consistLiftChart'), {
+      type: 'bar',
+      data: {
+        labels: ['SVAMP', 'PIQA', 'ASDiv', 'ARC', 'CSQA'],
+        datasets: [{
+          label: 'Consistency Lift (×)',
+          data: [1.90, 1.43, 1.18, 1.09, 1.09],
+          backgroundColor: [GUIDED_COLOR, GUIDED_COLOR, GUIDED_COLOR + 'cc', GUIDED_COLOR + '88', GUIDED_COLOR + '88'],
+          borderRadius: 3
+        }]
+      },
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { min: 0.8, max: 2.2, title: { display: true, text: 'Lift Ratio' } } },
+        plugins: { annotation: { annotations: { line1: { type: 'line', yMin: 1, yMax: 1, borderColor: BASE_COLOR, borderDash: [5, 5], borderWidth: 2 } } } }
+      }
+    });
+
+    // ── Mean Votes ──
+    new Chart(document.getElementById('meanVotesChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC'],
+        datasets: [
+          { label: 'Guided', data: [3.89, 2.51, 2.93, 3.78, 3.5], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+          { label: 'Baseline', data: [2.72, 1.32, 2.48, 3.48, 3.2], backgroundColor: BASE_COLOR + 'cc', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 0, max: 5, title: { display: true, text: 'Avg Correct Votes (/ 5)' } } }
+      }
+    });
+
+    // ── Vote Distribution ──
+    // ── All-Wrong Chart ──
+    new Chart(document.getElementById('allWrongChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'CSQA'],
+        datasets: [
+          { label: 'Guided', data: [100, 73, 215], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 3 },
+          { label: 'Baseline', data: [222, 110, 225], backgroundColor: BASE_COLOR + 'cc', borderRadius: 3 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' }, title: { display: true, text: '↓ Fewer all-wrong = better', font: { size: 11 }, color: '#6b7280' } },
+        scales: { y: { title: { display: true, text: 'Questions with 0/5 correct votes' } } }
+      }
+    });
+
+    // ── High-Agreement Chart ──
+    new Chart(document.getElementById('highAgreeChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'CSQA'],
+        datasets: [
+          { label: 'Guided', data: [381, 115, 680], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 3 },
+          { label: 'Baseline', data: [269, 18, 603], backgroundColor: BASE_COLOR + 'cc', borderRadius: 3 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' }, title: { display: true, text: '↑ More high-agreement = better', font: { size: 11 }, color: '#6b7280' } },
+        scales: { y: { title: { display: true, text: 'Questions with 4–5/5 correct votes' } } }
+      }
+    });
+
+    // ── ECE Before/After — scatter with connecting lines ──
+    new Chart(document.getElementById('eceChart'), {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Baseline ECE',
+            data: [{ x: 1, y: 0.354 }, { x: 2, y: 0.202 }, { x: 3, y: 0.183 }, { x: 4, y: 0.176 }, { x: 5, y: 0.190 }, { x: 6, y: 0.320 }],
+            backgroundColor: BASE_COLOR, pointRadius: 10, pointStyle: 'circle'
+          },
+          {
+            label: 'Guided ECE',
+            data: [{ x: 1, y: 0.110 }, { x: 2, y: 0.128 }, { x: 3, y: 0.100 }, { x: 4, y: 0.141 }, { x: 5, y: 0.128 }, { x: 6, y: 0.246 }],
+            backgroundColor: GUIDED_COLOR, pointRadius: 10, pointStyle: 'circle'
+          },
+          // connector lines as invisible datasets with borderColor
+          ...['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC', 'RACE'].map((d, i) => ({
+            label: '',
+            data: [{ x: i + 1, y: [0.354, 0.202, 0.183, 0.176, 0.190, 0.320][i] }, { x: i + 1, y: [0.110, 0.128, 0.100, 0.141, 0.128, 0.246][i] }],
+            type: 'line', borderColor: '#d1d5db', borderWidth: 2, borderDash: [4, 3],
+            pointRadius: 0, showLine: true, tension: 0, fill: false
+          }))
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { filter: item => item.text !== '', boxWidth: 12 }, position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                if (!ctx.dataset.label) return null;
+                const names = ['PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC', 'RACE'];
+                return `${ctx.dataset.label} — ${names[ctx.parsed.x - 1]}: ${ctx.parsed.y.toFixed(3)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: 0.5, max: 6.5,
+            ticks: { stepSize: 1, callback: v => ['', 'PIQA', 'SVAMP', 'ASDiv', 'CSQA', 'ARC', 'RACE'][v] || '' },
+            grid: { display: false }
+          },
+          y: { min: 0, max: 0.42, title: { display: true, text: 'ECE (lower = better)' } }
         }
-      }}
-    },
-    scales:{
-      x:{
-        min:0.5, max:6.5,
-        ticks:{ stepSize:1, callback:v=>['','PIQA','SVAMP','ASDiv','CSQA','ARC','RACE'][v]||'' },
-        grid:{display:false}
+      }
+    });
+
+    // ── ECE Improvement ──
+    new Chart(document.getElementById('eceImprovChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'ASDiv', 'AQUA', 'ARC', 'SVAMP', 'RACE', 'CSQA'],
+        datasets: [{
+          label: 'ECE Improvement (%)',
+          data: [69.1, 45.2, 45.6, 32.6, 36.6, 23.1, 19.8],
+          backgroundColor: [GREEN_COLOR, GREEN_COLOR, GREEN_COLOR + 'bb', GREEN_COLOR + '88', GREEN_COLOR + 'aa', GREEN_COLOR + '66', GREEN_COLOR + '55'],
+          borderRadius: 3
+        }]
       },
-      y:{ min:0, max:0.42, title:{display:true,text:'ECE (lower = better)'} }
-    }
-  }
-});
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { min: 0, max: 80, title: { display: true, text: 'ECE Improvement (%)' } } }
+      }
+    });
 
-// ── ECE Improvement ──
-new Chart(document.getElementById('eceImprovChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA', 'ASDiv', 'AQUA', 'ARC', 'SVAMP', 'RACE', 'CSQA'],
-    datasets: [{
-      label: 'ECE Improvement (%)',
-      data: [69.1, 45.2, 45.6, 32.6, 36.6, 23.1, 19.8],
-      backgroundColor: [GREEN_COLOR, GREEN_COLOR, GREEN_COLOR+'bb', GREEN_COLOR+'88', GREEN_COLOR+'aa', GREEN_COLOR+'66', GREEN_COLOR+'55'],
-      borderRadius: 3
-    }]
-  },
-  options: { responsive:true, plugins:{legend:{display:false}},
-    scales:{ y:{min:0, max:80, title:{display:true,text:'ECE Improvement (%)'}} } }
-});
+    // ── Gain Overview ──
+    new Chart(document.getElementById('gainOverviewChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA\nN=500', 'SVAMP\nN=300', 'CSQA\nN=900', 'ASDiv\nN=300', 'AQUA\nN=100', 'ARC\nN=100', 'RACE\nN=500'],
+        datasets: [{
+          label: 'Accuracy Gain (pp)',
+          data: [24.2, 21.3, 5.1, 10.3, 12.0, 7.0, -0.2],
+          backgroundColor: ['#7c3aed', '#7c3aed', '#1a56db', '#057a55', '#b45309', '#9ca3af', '#dc2626'],
+          borderRadius: 3
+        }]
+      },
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { min: -2, max: 28, title: { display: true, text: 'Accuracy Gain (pp)' } } }
+      }
+    });
 
-// ── Gain Overview ──
-new Chart(document.getElementById('gainOverviewChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA\nN=500', 'SVAMP\nN=300', 'CSQA\nN=900', 'ASDiv\nN=300', 'AQUA\nN=100', 'ARC\nN=100', 'RACE\nN=500'],
-    datasets: [{
-      label: 'Accuracy Gain (pp)',
-      data: [24.2, 21.3, 5.1, 10.3, 12.0, 7.0, -0.2],
-      backgroundColor: ['#7c3aed','#7c3aed','#1a56db','#057a55','#b45309','#9ca3af','#dc2626'],
-      borderRadius: 3
-    }]
-  },
-  options: { responsive:true, plugins:{legend:{display:false}},
-    scales:{ y:{min:-2, max:28, title:{display:true,text:'Accuracy Gain (pp)'}} } }
-});
+    // ── McNemar B/C chart ──
+    new Chart(document.getElementById('mcnemarChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'CSQA', 'ASDiv', 'ARC', 'RACE'],
+        datasets: [
+          { label: 'B (Guided Wins)', data: [193, 93, 174, 125, 18, 60], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+          { label: 'C (Baseline Wins)', data: [72, 29, 92, 82, 11, 61], backgroundColor: BASE_COLOR + 'cc', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'Question Count' } } }
+      }
+    });
 
-// ── McNemar B/C chart ──
-new Chart(document.getElementById('mcnemarChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA','SVAMP','CSQA','ASDiv','ARC','RACE'],
-    datasets: [
-      { label: 'B (Guided Wins)', data: [193,93,174,125,18,60], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 2 },
-      { label: 'C (Baseline Wins)', data: [72,29,92,82,11,61],  backgroundColor: BASE_COLOR+'cc',   borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{title:{display:true,text:'Question Count'}} } }
-});
+    // ── B/C Ratio ──
+    new Chart(document.getElementById('bcRatioChart'), {
+      type: 'bar',
+      data: {
+        labels: ['SVAMP', 'PIQA', 'ASDiv', 'CSQA', 'ARC', 'RACE'],
+        datasets: [{
+          label: 'B/C Ratio',
+          data: [3.21, 2.68, 1.52, 1.89, 1.64, 0.98],
+          backgroundColor: [GREEN_COLOR, GREEN_COLOR, GREEN_COLOR + 'bb', GREEN_COLOR + 'aa', GRAY_COLOR + 'bb', BASE_COLOR],
+          borderRadius: 3
+        }]
+      },
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { min: 0, max: 4, title: { display: true, text: 'B/C Ratio (>1 = guided wins more)' } } }
+      }
+    });
 
-// ── B/C Ratio ──
-new Chart(document.getElementById('bcRatioChart'), {
-  type: 'bar',
-  data: {
-    labels: ['SVAMP','PIQA','ASDiv','CSQA','ARC','RACE'],
-    datasets: [{
-      label: 'B/C Ratio',
-      data: [3.21, 2.68, 1.52, 1.89, 1.64, 0.98],
-      backgroundColor: [GREEN_COLOR, GREEN_COLOR, GREEN_COLOR+'bb', GREEN_COLOR+'aa', GRAY_COLOR+'bb', BASE_COLOR],
-      borderRadius: 3
-    }]
-  },
-  options: { responsive:true, plugins:{legend:{display:false}},
-    scales:{ y:{min:0, max:4, title:{display:true,text:'B/C Ratio (>1 = guided wins more)'}} } }
-});
+    // ── Power Chart ──
+    new Chart(document.getElementById('powerChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA', 'SVAMP', 'CSQA', 'ASDiv', 'ARC'],
+        datasets: [
+          { label: 'N Ran', data: [500, 300, 900, 300, 100], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+          { label: 'N Needed (80% power)', data: [69, 68, 388, 317, 626], backgroundColor: BASE_COLOR + '44', borderRadius: 2, borderColor: BASE_COLOR, borderWidth: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'Number of Questions' } } }
+      }
+    });
 
-// ── Power Chart ──
-new Chart(document.getElementById('powerChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA','SVAMP','CSQA','ASDiv','ARC'],
-    datasets: [
-      { label: 'N Ran', data: [500,300,900,300,100], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 2 },
-      { label: 'N Needed (80% power)', data: [69,68,388,317,626], backgroundColor: BASE_COLOR+'44', borderRadius: 2, borderColor: BASE_COLOR, borderWidth:2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{title:{display:true,text:'Number of Questions'}} } }
-});
+    // ── Ablation ──
+    new Chart(document.getElementById('ablationChart'), {
+      type: 'bar',
+      data: {
+        labels: ['ASDiv', 'SVAMP†', 'ARC-Challenge', 'CommonsenseQA'],
+        datasets: [
+          { label: 'Baseline', data: [57.0, 39.0, 72.0, 74.8], backgroundColor: BASE_COLOR + '77', borderRadius: 2 },
+          { label: 'Base 3B (No FT)', data: [56.0, 61.0, 74.0, 72.8], backgroundColor: GOLD_COLOR + '99', borderRadius: 2 },
+          { label: 'Fine-Tuned 3B', data: [64.0, 61.7, 77.0, 77.0], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 30, max: 90, title: { display: true, text: 'Accuracy (%)' } } }
+      }
+    });
 
-// ── Ablation ──
-new Chart(document.getElementById('ablationChart'), {
-  type: 'bar',
-  data: {
-    labels: ['ASDiv','SVAMP†','ARC-Challenge','CommonsenseQA'],
-    datasets: [
-      { label: 'Baseline',       data: [57.0,48.0,72.0,74.8], backgroundColor: BASE_COLOR+'77',   borderRadius: 2 },
-      { label: 'Base 3B (No FT)',data: [56.0,63.0,74.0,72.8], backgroundColor: GOLD_COLOR+'99',   borderRadius: 2 },
-      { label: 'Fine-Tuned 3B',  data: [64.0,61.0,77.0,77.0], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:40, max:85, title:{display:true,text:'Accuracy (%)'}} } }
-});
+    // ── Position Bias PIQA ──
+    new Chart(document.getElementById('biasChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Option A', 'Option B'],
+        datasets: [
+          { label: 'Guided', data: [42.1, 57.9], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 3 },
+          { label: 'Baseline', data: [93.4, 6.6], backgroundColor: BASE_COLOR + 'cc', borderRadius: 3 },
+          { label: 'Expected', data: [50, 50], type: 'line', borderColor: GRAY_COLOR, borderDash: [5, 5], borderWidth: 2, pointRadius: 5, backgroundColor: 'transparent' },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 0, max: 100, title: { display: true, text: '% of votes selecting option' } } }
+      }
+    });
 
-// ── Position Bias PIQA ──
-new Chart(document.getElementById('biasChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Option A','Option B'],
-    datasets: [
-      { label: 'Guided',   data: [42.1,57.9], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 3 },
-      { label: 'Baseline', data: [93.4, 6.6], backgroundColor: BASE_COLOR+'cc',   borderRadius: 3 },
-      { label: 'Expected', data: [50,   50],  type:'line', borderColor: GRAY_COLOR, borderDash:[5,5], borderWidth:2, pointRadius:5, backgroundColor:'transparent' },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:0, max:100, title:{display:true,text:'% of votes selecting option'}} } }
-});
+    // ── CSQA Bias ──
+    new Chart(document.getElementById('csqaBiasChart'), {
+      type: 'bar',
+      data: {
+        labels: ['A', 'B', 'C', 'D', 'E'],
+        datasets: [
+          { label: 'Guided', data: [22.3, 20.9, 19.1, 23.8, 14.0], backgroundColor: GUIDED_COLOR + 'cc', borderRadius: 2 },
+          { label: 'Baseline', data: [16.5, 20.6, 19.1, 18.9, 24.8], backgroundColor: BASE_COLOR + 'cc', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 0, max: 32, title: { display: true, text: '% of winning votes' } } }
+      }
+    });
 
-// ── CSQA Bias ──
-new Chart(document.getElementById('csqaBiasChart'), {
-  type: 'bar',
-  data: {
-    labels: ['A','B','C','D','E'],
-    datasets: [
-      { label: 'Guided',   data: [22.3,20.9,19.1,23.8,14.0], backgroundColor: GUIDED_COLOR+'cc', borderRadius: 2 },
-      { label: 'Baseline', data: [16.5,20.6,19.1,18.9,24.8], backgroundColor: BASE_COLOR+'cc',   borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:0, max:32, title:{display:true,text:'% of winning votes'}} } }
-});
+    // ── RACE Progress ──
+    new Chart(document.getElementById('raceProgressChart'), {
+      type: 'line',
+      data: {
+        labels: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
+        datasets: [
+          { label: 'Guided', data: [66.0, 64.0, 64.7, 63.0, 62.4, 60.7, 59.1, 59.0, 58.2, 58.4], borderColor: GUIDED_COLOR, backgroundColor: GUIDED_COLOR + '22', fill: true, tension: 0.3 },
+          { label: 'Baseline', data: [58.0, 55.0, 59.3, 59.5, 61.6, 60.7, 59.4, 61.0, 59.1, 58.6], borderColor: BASE_COLOR, backgroundColor: BASE_COLOR + '22', fill: true, tension: 0.3 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 50, max: 75, title: { display: true, text: 'Cumulative Accuracy (%)' } }, x: { title: { display: true, text: 'N Questions' } } }
+      }
+    });
 
-// ── RACE Progress ──
-new Chart(document.getElementById('raceProgressChart'), {
-  type: 'line',
-  data: {
-    labels: [50,100,150,200,250,300,350,400,450,500],
-    datasets: [
-      { label: 'Guided', data: [66.0,64.0,64.7,63.0,62.4,60.7,59.1,59.0,58.2,58.4], borderColor: GUIDED_COLOR, backgroundColor: GUIDED_COLOR+'22', fill:true, tension:0.3 },
-      { label: 'Baseline', data: [58.0,55.0,59.3,59.5,61.6,60.7,59.4,61.0,59.1,58.6], borderColor: BASE_COLOR, backgroundColor: BASE_COLOR+'22', fill:true, tension:0.3 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:50, max:75, title:{display:true,text:'Cumulative Accuracy (%)'}}, x:{title:{display:true,text:'N Questions'}} } }
-});
+    // ── Final Comparison ──
+    new Chart(document.getElementById('finalCompChart'), {
+      type: 'bar',
+      data: {
+        labels: ['PIQA\nN=500', 'SVAMP\nN=300', 'ASDiv\nN=300', 'CSQA\nN=900', 'ARC\nN=100', 'AQUA\nN=100', 'RACE\nN=500'],
+        datasets: [
+          { label: 'Baseline', data: [54.2, 40.3, 53.7, 70.7, 70.0, 40.0, 58.6], backgroundColor: BASE_COLOR + 'bb', borderRadius: 2 },
+          { label: 'Guided', data: [78.4, 61.7, 64.0, 75.8, 77.0, 52.0, 58.4], backgroundColor: GUIDED_COLOR + 'bb', borderRadius: 2 },
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 25, max: 90, title: { display: true, text: 'Accuracy (%)' } } }
+      }
+    });
+  </script>
 
-// ── Final Comparison ──
-new Chart(document.getElementById('finalCompChart'), {
-  type: 'bar',
-  data: {
-    labels: ['PIQA\nN=500','SVAMP\nN=300','ASDiv\nN=300','CSQA\nN=900','ARC\nN=100','AQUA\nN=100','RACE\nN=500'],
-    datasets: [
-      { label: 'Baseline', data: [54.2,40.3,53.7,70.7,70.0,40.0,58.6], backgroundColor: BASE_COLOR+'bb', borderRadius: 2 },
-      { label: 'Guided',   data: [78.4,61.7,64.0,75.8,77.0,52.0,58.4], backgroundColor: GUIDED_COLOR+'bb', borderRadius: 2 },
-    ]
-  },
-  options: { responsive:true, plugins:{legend:{position:'bottom'}},
-    scales:{ y:{min:25, max:90, title:{display:true,text:'Accuracy (%)'}} } }
-});
-</script>
-
-<script>
-// Trigger MathJax to render after load
-window.addEventListener('load', () => {
-  if(window.MathJax) MathJax.typesetPromise();
-});
-</script>
+  <script>
+    // Trigger MathJax to render after load
+    window.addEventListener('load', () => {
+      if (window.MathJax) MathJax.typesetPromise();
+    });
+  </script>
 
 </body>
+
 </html>
