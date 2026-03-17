@@ -1615,14 +1615,14 @@
                   <td>ARC</td>
                   <td>72.0%</td>
                   <td style="color:var(--green);">74.0% (+2.0)</td>
-                  <td style="color:var(--green);font-weight:600;">77.0% (+7.0)</td>
+                  <td style="color:var(--green);font-weight:600;">77.0%<br>(+7.0)</td>
                   <td style="font-size:12px;">FT multiplies 3.5× the base gain</td>
                 </tr>
                 <tr>
                   <td>CSQA</td>
                   <td>74.8%</td>
                   <td style="color:var(--red);">72.8% (−2.0)</td>
-                  <td style="color:var(--green);font-weight:600;">77.0% (+9.0)</td>
+                  <td style="color:var(--green);font-weight:600;">77.0%<br>(+9.0)</td>
                   <td style="font-size:12px;color:var(--red);font-weight:500;">Base guide actively misleads!</td>
                 </tr>
               </tbody>
@@ -2216,7 +2216,7 @@
     new Chart(document.getElementById('ablationChart'), {
       type: 'bar',
       data: {
-        labels: ['ASDiv', 'SVAMP†', 'ARC-Challenge', 'CommonsenseQA'],
+        labels: ['ASDiv', 'SVAMP', 'ARC-Challenge', 'CommonsenseQA'],
         datasets: [
           { label: 'Baseline', data: [57.0, 39.0, 72.0, 74.8], backgroundColor: BASE_COLOR + '77', borderRadius: 2 },
           { label: 'Base 3B (No FT)', data: [56.0, 61.0, 74.0, 72.8], backgroundColor: GOLD_COLOR + '99', borderRadius: 2 },
