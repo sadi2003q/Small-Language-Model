@@ -1,0 +1,12 @@
+{
+  "dataset": "SVAMP",
+  "n_questions": 300,
+  "compute_B": 7.5,
+  "cot_accuracy": 47.0,
+  "baseline_accuracy": 36.67,
+  "accuracy_gain": 10.33,
+  "cot_wasted": 236,
+  "baseline_wasted": 260,
+  "cot_refiner": 57,
+  "baseline_refiner": 0
+}
