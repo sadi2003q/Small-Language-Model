@@ -1,0 +1,54 @@
+{
+  "cot_ece": 0.1908,
+  "baseline_ece": 0.1841,
+  "guided_ece_known": 0.141,
+  "ece_improvement_pct": -3.62,
+  "cot_false_conf": 208,
+  "baseline_false_conf": 234,
+  "cot_calibration": [
+    {
+      "bucket": "0.9",
+      "count": 764,
+      "accuracy": 0.7277,
+      "gap": 0.1723
+    },
+    {
+      "bucket": "0.7",
+      "count": 113,
+      "accuracy": 0.3717,
+      "gap": 0.3283
+    },
+    {
+      "bucket": "0.5",
+      "count": 9,
+      "accuracy": 0.6667,
+      "gap": 0.1667
+    },
+    {
+      "bucket": "0.25",
+      "count": 14,
+      "accuracy": 0.3571,
+      "gap": 0.1071
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "0.9",
+      "count": 848,
+      "accuracy": 0.7241,
+      "gap": 0.1759
+    },
+    {
+      "bucket": "0.7",
+      "count": 50,
+      "accuracy": 0.38,
+      "gap": 0.32
+    },
+    {
+      "bucket": "0.25",
+      "count": 2,
+      "accuracy": 0.5,
+      "gap": 0.25
+    }
+  ]
+}

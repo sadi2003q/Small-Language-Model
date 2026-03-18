@@ -1,0 +1,34 @@
+{
+  "cot_mean_consistency": 0.6625,
+  "baseline_mean_consistency": 0.7025,
+  "consistency_lift": 0.943,
+  "cot_wins": 86,
+  "baseline_wins": 164,
+  "tied": 650,
+  "cot_distribution": {
+    "all_wrong (0%)": 201,
+    "low (1-39%)": 73,
+    "medium (40-79%)": 70,
+    "high (80-100%)": 556
+  },
+  "baseline_distribution": {
+    "all_wrong (0%)": 233,
+    "low (1-39%)": 18,
+    "medium (40-79%)": 35,
+    "high (80-100%)": 614
+  },
+  "cot_option_dist": {
+    "A": 131,
+    "B": 207,
+    "E": 275,
+    "C": 133,
+    "D": 154
+  },
+  "baseline_option_dist": {
+    "A": 184,
+    "B": 218,
+    "E": 189,
+    "C": 149,
+    "D": 160
+  }
+}
