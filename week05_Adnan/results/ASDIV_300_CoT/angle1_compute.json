@@ -1,0 +1,12 @@
+{
+  "dataset": "ASDiv",
+  "n_questions": 300,
+  "compute_B": 7.5,
+  "cot_accuracy": 44.33,
+  "baseline_accuracy": 47.0,
+  "accuracy_gain": -2.67,
+  "cot_wasted": 242,
+  "baseline_wasted": 223,
+  "cot_refiner": 61,
+  "baseline_refiner": 0
+}

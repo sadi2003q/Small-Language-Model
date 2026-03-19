@@ -1,0 +1,35 @@
+{
+  "dataset": "ASDiv",
+  "by_operation_type": {
+    "Addition": {
+      "n": 61,
+      "cot_acc": 55.74,
+      "baseline_acc": 60.66,
+      "gain": -4.92
+    },
+    "Division": {
+      "n": 40,
+      "cot_acc": 37.5,
+      "baseline_acc": 27.5,
+      "gain": 10.0
+    },
+    "Multi-step": {
+      "n": 89,
+      "cot_acc": 39.33,
+      "baseline_acc": 34.83,
+      "gain": 4.49
+    },
+    "Multiplication": {
+      "n": 43,
+      "cot_acc": 41.86,
+      "baseline_acc": 65.12,
+      "gain": -23.26
+    },
+    "Subtraction": {
+      "n": 67,
+      "cot_acc": 46.27,
+      "baseline_acc": 50.75,
+      "gain": -4.48
+    }
+  }
+}
