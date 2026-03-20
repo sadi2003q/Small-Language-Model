@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARC-Challenge: Ceiling 3B Experiment — Full Comparison Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --ink:       #0d1117;
+      --paper:     #f7f6f1;
+      --cream:     #fffef9;
+      --navy:      #1e3a5f;
+      --blue:      #1a56db;
+      --ceil:      #7c3aed;   /* ceiling — purple */
+      --pipe:      #057a55;   /* pipeline/guided — green */
+      --base:      #c81e1e;   /* baseline — red */
+      --gold:      #b45309;
+      --muted:     #6b7280;
+      --border:    #e5e7eb;
+      --light:     #f3f4f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--ink);
+      padding: 0 32px;
+      display: flex; align-items: center; gap: 0;
+      height: 48px; overflow-x: auto;
+    }
+    .nav-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 500;
+      color: #fbbf24; margin-right: 24px;
+      padding-right: 24px; border-right: 1px solid #374151;
+      white-space: nowrap; letter-spacing: 0.5px;
+    }
+    nav a {
+      color: #9ca3af; text-decoration: none;
+      font-size: 11px; font-weight: 500;
+      white-space: nowrap; padding: 4px 10px;
+      border-radius: 3px; letter-spacing: 0.3px;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: white; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      color: white; padding: 72px 0 52px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, #1e3a5f44, transparent);
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; position: relative; }
+    .hero-tag {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: #fbbf24; margin-bottom: 18px; display: block;
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(30px, 4.5vw, 56px);
+      font-weight: 900; line-height: 1.1;
+      max-width: 820px; margin-bottom: 18px;
+    }
+    .hero h1 em { font-style: italic; color: #86efac; }
+    .hero-sub {
+      font-size: 15px; color: #cbd5e1;
+      max-width: 680px; line-height: 1.75; margin-bottom: 44px;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 2px; background: rgba(255,255,255,0.06);
+      border-radius: 6px; overflow: hidden;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,0.04);
+      padding: 22px 20px;
+    }
+    .hero-stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 42px; font-weight: 900; line-height: 1;
+      margin-bottom: 4px;
+    }
+    .hero-stat-num.ceil { color: #c4b5fd; }
+    .hero-stat-num.pipe { color: #86efac; }
+    .hero-stat-num.base { color: #fca5a5; }
+    .hero-stat-num.gold { color: #fbbf24; }
+    .hero-stat-label {
+      font-family: 'DM Mono', monospace; font-size: 9px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: #6b7280;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    section { padding: 64px 0; }
+    section:nth-child(even) { background: var(--cream); }
+    section:nth-child(odd) { background: var(--paper); }
+
+    .section-tag {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 8px; display: block;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 900; color: var(--ink); line-height: 1.15;
+    }
+    .section-desc {
+      font-size: 15px; color: var(--muted);
+      margin-top: 10px; max-width: 720px;
+    }
+    .section-header { margin-bottom: 40px; }
+
+    /* ── CARDS ── */
+    .card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 8px; padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .card-title {
+      font-family: 'Fraunces', serif; font-size: 18px;
+      font-weight: 700; color: var(--navy); margin-bottom: 4px;
+    }
+    .card-sub { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+
+    /* ── GRIDS ── */
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media(max-width: 768px) { .g2,.g3,.g4 { grid-template-columns: 1fr; } }
+
+    canvas { max-height: 280px; }
+
+    /* ── METRIC CARDS ── */
+    .metric {
+      background: white; border: 1px solid var(--border);
+      border-radius: 8px; padding: 22px; text-align: center;
+    }
+    .metric-val {
+      font-family: 'Fraunces', serif; font-size: 44px;
+      font-weight: 900; line-height: 1; margin-bottom: 4px;
+    }
+    .metric-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+    }
+    .metric-sub { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+    .c-ceil   { color: var(--ceil); }
+    .c-pipe   { color: var(--pipe); }
+    .c-base   { color: var(--base); }
+    .c-navy   { color: var(--navy); }
+    .c-gold   { color: var(--gold); }
+
+    /* ── TABLES ── */
+    .tbl-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead th {
+      background: var(--ink); color: white; padding: 11px 14px;
+      text-align: left; font-family: 'DM Mono', monospace;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafaf8; }
+    tbody tr.winner td { background: #f0fdf4; }
+    tbody tr.loser td { background: #fef2f2; color: var(--muted); }
+    .td-num { font-family: 'DM Mono', monospace; text-align: right; }
+    .td-pos { color: var(--pipe); font-weight: 600; font-family: 'DM Mono', monospace; }
+    .td-neg { color: var(--base); font-weight: 600; font-family: 'DM Mono', monospace; }
+
+    /* ── VERDICT BOXES ── */
+    .verdict-box {
+      border-radius: 8px; padding: 26px 30px; margin: 20px 0;
+    }
+    .verdict-box.green  { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid var(--pipe); }
+    .verdict-box.red    { background: #fef2f2; border: 1px solid #fecaca; border-left: 5px solid var(--base); }
+    .verdict-box.purple { background: #f5f3ff; border: 1px solid #ddd6fe; border-left: 5px solid var(--ceil); }
+    .verdict-box.gold   { background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid var(--gold); }
+    .verdict-box .vb-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .verdict-box .vb-text {
+      font-family: 'Fraunces', serif; font-size: 18px;
+      font-style: italic; line-height: 1.6;
+    }
+
+    /* ── CONDITION LEGEND ── */
+    .cond-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 12px; border-radius: 20px;
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      font-weight: 500; letter-spacing: 0.3px;
+    }
+    .cond-pill .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cond-pill.ceil { background: #f5f3ff; color: #5b21b6; }
+    .cond-pill.pipe { background: #f0fdf4; color: #065f46; }
+    .cond-pill.base { background: #fef2f2; color: #991b1b; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display: flex; gap: 14px; background: #eff6ff;
+      border: 1px solid #bfdbfe; border-radius: 8px;
+      padding: 16px 18px; margin: 16px 0;
+    }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .callout-text { font-size: 14px; color: var(--navy); line-height: 1.65; }
+
+    /* ── BUCKET TABLE ── */
+    .bucket-row {
+      display: grid; grid-template-columns: 180px 1fr 80px 80px 80px;
+      gap: 12px; align-items: center; padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .bucket-row:last-child { border-bottom: none; }
+    .bucket-label { font-family: 'DM Mono', monospace; font-size: 12px; }
+    .bucket-bar { height: 20px; border-radius: 3px; position: relative; background: var(--light); overflow: hidden; }
+    .bucket-fill { height: 100%; border-radius: 3px; }
+    .bucket-num { font-family: 'DM Mono', monospace; font-size: 12px; text-align: right; }
+
+    /* ── BIG FINDING CARD ── */
+    .finding-card {
+      background: var(--ink); color: white;
+      border-radius: 8px; padding: 32px;
+    }
+    .finding-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 3px; color: #fbbf24; margin-bottom: 14px;
+    }
+    .finding-text {
+      font-family: 'Fraunces', serif; font-size: 22px;
+      font-style: italic; line-height: 1.55; color: white;
+    }
+
+    /* ── RANK DISPLAY ── */
+    .rank-row {
+      display: flex; gap: 12px; margin-bottom: 12px; align-items: center;
+    }
+    .rank-pos { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 900; width: 36px; }
+    .rank-bar-wrap { flex: 1; }
+    .rank-label { font-size: 13px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .rank-bar { height: 24px; border-radius: 3px; overflow: hidden; }
+    .rank-fill { height: 100%; display: flex; align-items: center; padding-left: 10px; font-family: 'DM Mono', monospace; font-size: 12px; color: white; font-weight: 500; }
+
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+    .scroll-hint {
+      text-align: center; padding: 20px;
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      color: var(--muted); letter-spacing: 1px;
+    }
+
+    .badge {
+      display: inline-block; font-family: 'DM Mono', monospace;
+      font-size: 10px; padding: 3px 9px; border-radius: 10px; font-weight: 600;
+    }
+    .badge-win  { background: #d1fae5; color: #065f46; }
+    .badge-lose { background: #fee2e2; color: #991b1b; }
+    .badge-mid  { background: #e0e7ff; color: #3730a3; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">ARC Ceiling Report</span>
+  <a href="#overview">Overview</a>
+  <a href="#findings">Core Findings</a>
+  <a href="#angle1">Accuracy</a>
+  <a href="#angle2">Consistency</a>
+  <a href="#angle3">Calibration</a>
+  <a href="#ceiling-deep">Ceiling Deep-Dive</a>
+  <a href="#efficiency">Efficiency</a>
+  <a href="#verdict">Verdict</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">ARC-Challenge · Ceiling Experiment · N = 900 · 2025–2026</span>
+    <h1>The 3B Ceiling:<br><em>Bigger ≠ Better</em></h1>
+    <p class="hero-sub">A full three-way comparison of the untuned 3B ceiling (15B param-passes), the fine-tuned pipeline (10.5B), and the 1.5B baseline (7.5B) across all three evaluation angles — accuracy, consistency, and calibration.</p>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;">
+      <span class="cond-pill ceil"><span class="dot" style="background:var(--ceil);"></span>Ceiling — 3B Base × 5 (15B)</span>
+      <span class="cond-pill pipe"><span class="dot" style="background:var(--pipe);"></span>Pipeline — 3B LoRA + 1.5B × 5 (10.5B)</span>
+      <span class="cond-pill base"><span class="dot" style="background:var(--base);"></span>Baseline — 1.5B × 5 (7.5B)</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num ceil">66.8%</div>
+        <div class="hero-stat-label">Ceiling Accuracy</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num pipe">80.0%</div>
+        <div class="hero-stat-label">Pipeline Accuracy</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num base">71.7%</div>
+        <div class="hero-stat-label">Baseline Accuracy</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num gold">+13.2</div>
+        <div class="hero-stat-label">Pipeline Beats Ceiling (pp)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num ceil">0.226</div>
+        <div class="hero-stat-label">Ceiling ECE (worst)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num pipe">0.099</div>
+        <div class="hero-stat-label">Pipeline ECE (best)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Experiment Setup</span>
+      <h2 class="section-title">Three Conditions, One Dataset</h2>
+      <p class="section-desc">All three conditions evaluated on the same 900 ARC-Challenge questions. The ceiling experiment is new — the others come from the main pipeline study.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Model Configuration</th>
+            <th>Fine-Tuned?</th>
+            <th>Votes</th>
+            <th>Param-Passes</th>
+            <th>Cost vs Baseline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">✦ Pipeline (Guided)</strong></td>
+            <td>3B LoRA guide + 1.5B solver × 5</td>
+            <td><span class="badge badge-win">Yes — LoRA</span></td>
+            <td class="td-num">5 (solver)</td>
+            <td class="td-num"><strong>10.5B</strong></td>
+            <td class="td-num">+40%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">○ Baseline</strong></td>
+            <td>1.5B solver × 5 (no guide)</td>
+            <td><span class="badge badge-lose">No</span></td>
+            <td class="td-num">5</td>
+            <td class="td-num"><strong>7.5B</strong></td>
+            <td class="td-num">—</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--ceil);">● Ceiling (New)</strong></td>
+            <td>3B base model × 5 (no fine-tuning)</td>
+            <td><span class="badge badge-lose">No</span></td>
+            <td class="td-num">5</td>
+            <td class="td-num"><strong>15.0B</strong></td>
+            <td class="td-num">+100%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-icon">🔬</div>
+      <div class="callout-text"><strong>What the ceiling experiment tests:</strong> The ceiling asks whether simply scaling to the 3B model (without fine-tuning) explains the pipeline's gains. If the ceiling performed similarly to the pipeline, model size — not fine-tuning — would be sufficient. If the ceiling underperforms, fine-tuning is the necessary ingredient.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CORE FINDINGS -->
+<section id="findings">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Summary</span>
+      <h2 class="section-title">Core Findings at a Glance</h2>
+    </div>
+
+    <div class="finding-card" style="margin-bottom:24px;">
+      <div class="finding-label">THE HEADLINE RESULT</div>
+      <div class="finding-text">"The untuned 3B ceiling (15B param-passes, the most expensive condition) finishes <em>last</em> in accuracy at 66.8% — 4.9 pts below baseline and 13.2 pts below the guided pipeline. Fine-tuning quality is not just helpful: it is the decisive factor."</div>
+      <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:#86efac;">1st</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PIPELINE (80.0%)</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:#fca5a5;">2nd</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">BASELINE (71.7%)</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:#c4b5fd;">3rd</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CEILING (66.8%)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g3">
+      <div class="verdict-box green">
+        <div class="vb-label" style="color:#065f46;">Angle 1 — Accuracy</div>
+        <div class="vb-text">Pipeline wins by 13.2 pts over ceiling. The most expensive condition has the worst accuracy.</div>
+      </div>
+      <div class="verdict-box purple">
+        <div class="vb-label" style="color:#5b21b6;">Angle 2 — Consistency</div>
+        <div class="vb-text">Ceiling mean consistency (0.635) is lower than even the baseline (0.717). Voting on the raw 3B is noisy.</div>
+      </div>
+      <div class="verdict-box gold">
+        <div class="vb-label" style="color:#92400e;">Angle 3 — Calibration</div>
+        <div class="vb-text">Ceiling ECE = 0.226 — worst of all three. 272 questions answered with false maximum confidence.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: ANGLE 1 — ACCURACY -->
+<section id="angle1">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Angle 1 of 3</span>
+      <h2 class="section-title">① Accuracy — The Three-Way Race</h2>
+      <p class="section-desc">Simple question: which condition gets more answers right? The answer is unambiguous.</p>
+    </div>
+
+    <!-- Ranked visual -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">Accuracy Ranking — N=900</div>
+      <div class="card-sub">Bar length scaled from random chance (25%) to 100%. The ceiling bar is shorter than even the baseline.</div>
+      <div style="margin-top:20px;">
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--pipe);">🥇</div>
+          <div class="rank-bar-wrap">
+            <div class="rank-label">
+              <span>Pipeline — 3B LoRA + 1.5B×5 (10.5B)</span>
+              <span style="font-family:'DM Mono',monospace;color:var(--pipe);font-weight:600;">80.0%</span>
+            </div>
+            <div class="rank-bar" style="background:#dcfce7;">
+              <div class="rank-fill" style="width:73%;background:var(--pipe);">80.0%</div>
+            </div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--base);">🥈</div>
+          <div class="rank-bar-wrap">
+            <div class="rank-label">
+              <span>Baseline — 1.5B×5 (7.5B)</span>
+              <span style="font-family:'DM Mono',monospace;color:var(--base);font-weight:600;">71.7%</span>
+            </div>
+            <div class="rank-bar" style="background:#fee2e2;">
+              <div class="rank-fill" style="width:62%;background:var(--base);">71.7%</div>
+            </div>
+          </div>
+        </div>
+        <div class="rank-row" style="margin-bottom:0;">
+          <div class="rank-pos" style="color:var(--ceil);">🥉</div>
+          <div class="rank-bar-wrap">
+            <div class="rank-label">
+              <span>Ceiling — 3B Base×5 (15B) <span style="font-size:11px;color:var(--base);font-family:'DM Mono',monospace;">most expensive</span></span>
+              <span style="font-family:'DM Mono',monospace;color:var(--ceil);font-weight:600;">66.8%</span>
+            </div>
+            <div class="rank-bar" style="background:#f5f3ff;">
+              <div class="rank-fill" style="width:56%;background:var(--ceil);">66.8%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Accuracy — All Three Conditions</div>
+        <div class="card-sub">ARC-Challenge N=900. Dashed line = random chance (25%)</div>
+        <canvas id="accChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Accuracy Gaps</div>
+        <div class="card-sub">How much each condition trails the pipeline winner</div>
+        <canvas id="accGapChart"></canvas>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:20px;">
+      <div class="metric">
+        <div class="metric-val c-pipe">80.0%</div>
+        <div class="metric-label">Pipeline</div>
+        <div class="metric-sub">Champion — 10.5B</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val c-base">71.7%</div>
+        <div class="metric-label">Baseline</div>
+        <div class="metric-sub">Runner-up — 7.5B</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val c-ceil">66.8%</div>
+        <div class="metric-label">Ceiling</div>
+        <div class="metric-sub">Last place — 15.0B ⚠️</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val c-navy">+13.2</div>
+        <div class="metric-label">Pipeline vs Ceiling</div>
+        <div class="metric-sub">percentage points</div>
+      </div>
+    </div>
+
+    <div class="verdict-box red" style="margin-top:20px;">
+      <div class="vb-label" style="color:#991b1b;">⚠️ Critical Observation</div>
+      <div class="vb-text">The ceiling (15B, double the baseline compute) finishes 4.9 pts <em>below</em> the baseline (7.5B). Running the 3B model 5 times without fine-tuning is actively worse than running the 1.5B model 5 times. The ceiling is not a ceiling — it is a floor.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: ANGLE 2 — CONSISTENCY -->
+<section id="angle2">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Angle 2 of 3</span>
+      <h2 class="section-title">② Vote Consistency — Is the Ensemble Decisive?</h2>
+      <p class="section-desc">Mean fraction of votes matching the ground truth per question (out of 5). Higher = solver reliably reaches correct answer.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Mean Consistency — Three Conditions</div>
+        <div class="card-sub">Fraction of 5 votes that matched ground truth, averaged over 900 questions</div>
+        <canvas id="consistChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Vote Distribution — Correct-Vote Buckets</div>
+        <div class="card-sub">Ceiling has the most "all-wrong" questions (283). Pipeline has 549 high-agreement correct questions.</div>
+        <canvas id="voteBucketChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Mean Consistency</th>
+            <th>All-Wrong (0/5)</th>
+            <th>High-Agreement (4–5/5 correct)</th>
+            <th>Wasted Votes</th>
+            <th>vs Pipeline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">0.800</td>
+            <td class="td-num">—</td>
+            <td class="td-num">—</td>
+            <td class="td-num">—</td>
+            <td class="td-pos">—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">0.717</td>
+            <td class="td-num">—</td>
+            <td class="td-num">—</td>
+            <td class="td-num">—</td>
+            <td class="td-neg">−0.083×</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--ceil);">Ceiling (3B Base)</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:600;">0.635</td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">283</td>
+            <td class="td-num" style="color:var(--pipe);">549</td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">263</td>
+            <td class="td-neg">−0.165×</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Vote Distribution — All 900 Questions</div>
+      <div class="card-sub">283 questions (31.4%) got <em>zero</em> correct votes — the ceiling ensemble was completely wrong on nearly a third of questions</div>
+      <div style="margin-top:16px;">
+        <div class="bucket-row">
+          <span class="bucket-label">All-Wrong (0/5)</span>
+          <div class="bucket-bar"><div class="bucket-fill" style="width:31.4%;background:#dc2626;"></div></div>
+          <span class="bucket-num" style="color:var(--base);">283</span>
+          <span class="bucket-num" style="color:var(--base);">31.4%</span>
+          <span class="bucket-num"></span>
+        </div>
+        <div class="bucket-row">
+          <span class="bucket-label">Low (1–39%)</span>
+          <div class="bucket-bar"><div class="bucket-fill" style="width:4.7%;background:#f59e0b;"></div></div>
+          <span class="bucket-num">42</span>
+          <span class="bucket-num">4.7%</span>
+          <span class="bucket-num"></span>
+        </div>
+        <div class="bucket-row">
+          <span class="bucket-label">Medium (40–79%)</span>
+          <div class="bucket-bar"><div class="bucket-fill" style="width:5.6%;background:#60a5fa;"></div></div>
+          <span class="bucket-num">50</span>
+          <span class="bucket-num">5.6%</span>
+          <span class="bucket-num"></span>
+        </div>
+        <div class="bucket-row" style="border-bottom:none;">
+          <span class="bucket-label">High (80–100%)</span>
+          <div class="bucket-bar"><div class="bucket-fill" style="width:60.9%;background:var(--pipe);"></div></div>
+          <span class="bucket-num" style="color:var(--pipe);">525</span>
+          <span class="bucket-num" style="color:var(--pipe);">58.3%</span>
+          <span class="bucket-num"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: ANGLE 3 — CALIBRATION -->
+<section id="angle3">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Angle 3 of 3</span>
+      <h2 class="section-title">③ Calibration — Confidence vs Reality</h2>
+      <p class="section-desc">ECE (Expected Calibration Error) — lower is better. The ceiling is catastrophically miscalibrated despite using a larger model.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">ECE — All Three Conditions</div>
+        <div class="card-sub">Lower = better calibrated. Ceiling = 0.226, more than 2× worse than pipeline.</div>
+        <canvas id="eceBarChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">False Confidence Cases (Ceiling)</div>
+        <div class="card-sub">Questions where ceiling voted unanimously (conf ≥ 0.8) but was wrong. 272 out of 821 high-confidence questions.</div>
+        <canvas id="falseConfChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Calibration buckets deep-dive -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Calibration Bucket Analysis</div>
+      <div class="card-sub">N=900. For each confidence bucket: expected confidence vs actual accuracy. Larger gap = worse calibration.</div>
+      <div class="tbl-wrap" style="margin-top:12px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Confidence Bucket</th>
+              <th>Count</th>
+              <th>% of Questions</th>
+              <th>Expected Confidence</th>
+              <th>Actual Accuracy</th>
+              <th>Calibration Gap</th>
+              <th>Assessment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loser">
+              <td><strong>Very High (≥ 0.80)</strong></td>
+              <td class="td-num">821</td>
+              <td class="td-num">91.2%</td>
+              <td class="td-num">0.900</td>
+              <td class="td-num" style="color:var(--base);font-weight:600;">0.669</td>
+              <td class="td-num" style="color:var(--base);font-weight:600;">−0.231</td>
+              <td><span class="badge badge-lose">Severely overconfident</span></td>
+            </tr>
+            <tr>
+              <td>High (0.60–0.80)</td>
+              <td class="td-num">40</td>
+              <td class="td-num">4.4%</td>
+              <td class="td-num">0.700</td>
+              <td class="td-num">0.650</td>
+              <td class="td-num">−0.050</td>
+              <td><span class="badge badge-mid">Slightly overconfident</span></td>
+            </tr>
+            <tr>
+              <td>Medium (0.40–0.60)</td>
+              <td class="td-num">19</td>
+              <td class="td-num">2.1%</td>
+              <td class="td-num">0.500</td>
+              <td class="td-num" style="color:var(--pipe);">0.632</td>
+              <td class="td-num" style="color:var(--pipe);">+0.132</td>
+              <td><span class="badge badge-win">Underconfident</span></td>
+            </tr>
+            <tr>
+              <td>Low (&lt; 0.40)</td>
+              <td class="td-num">20</td>
+              <td class="td-num">2.2%</td>
+              <td class="td-num">0.250</td>
+              <td class="td-num" style="color:var(--pipe);">0.700</td>
+              <td class="td-num" style="color:var(--pipe);">+0.450</td>
+              <td><span class="badge badge-win">Severely underconfident</span></td>
+            </tr>
+            <tr style="background:#f0fdf4;">
+              <td><strong>Overall ECE</strong></td>
+              <td class="td-num">900</td>
+              <td class="td-num">100%</td>
+              <td class="td-num">—</td>
+              <td class="td-num">—</td>
+              <td class="td-num" style="color:var(--ceil);font-weight:700;">0.226</td>
+              <td><span class="badge badge-lose">Poorly calibrated</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;background:#f5f3ff;border-color:#ddd6fe;">
+      <div class="callout-icon">🔮</div>
+      <div class="callout-text" style="color:#5b21b6;"><strong>The miscalibration pattern:</strong> 91.2% of ceiling questions fall in the "Very High" confidence bucket, but actual accuracy in that bucket is only 66.9%. The model is strongly confident most of the time — but that confidence is not warranted. This is the "confidently wrong" failure mode at scale: <strong>272 false-confidence cases</strong> where the 3B ensemble voted unanimously for the wrong answer.</div>
+    </div>
+
+    <!-- ECE comparison -->
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>ECE</th>
+            <th>False Confidence Cases</th>
+            <th>Calibration Rank</th>
+            <th>vs Pipeline ECE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline (Guided)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.099</td>
+            <td class="td-num">—</td>
+            <td class="td-num">1st 🥇</td>
+            <td class="td-pos">—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">0.180</td>
+            <td class="td-num">—</td>
+            <td class="td-num">2nd</td>
+            <td class="td-neg">+0.081 worse</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--ceil);">Ceiling (3B Base)</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:700;">0.226</td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">272 cases</td>
+            <td class="td-num">3rd 🥉</td>
+            <td class="td-neg">+0.127 worse</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CEILING DEEP-DIVE -->
+<section id="ceiling-deep">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Ceiling Deep-Dive</span>
+      <h2 class="section-title">Inside the 3B Ceiling — Why It Underperforms</h2>
+      <p class="section-desc">Detailed breakdown of the 900-question ceiling run from results.jsonl.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Letter Distribution — Ceiling vs Expected</div>
+        <div class="card-sub">Expected 25% each. Ceiling shows mild C-option bias (28.2%) — no catastrophic collapse like PIQA baseline.</div>
+        <canvas id="letterChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Question Outcome Breakdown</div>
+        <div class="card-sub">Ceiling result: 601 correct, 299 wrong — 66.8% accuracy. 283 of those 299 wrong answers were all-5-votes-wrong.</div>
+        <canvas id="outcomeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Confidence vs Accuracy Scatter — Ceiling</div>
+      <div class="card-sub">Each bucket: actual accuracy (bar) vs expected confidence (dashed line). The very-high bucket (91% of questions) is dramatically overconfident.</div>
+      <canvas id="calibScatterChart" style="max-height:220px;"></canvas>
+    </div>
+
+    <div class="g3" style="margin-top:20px;">
+      <div class="metric">
+        <div class="metric-val c-ceil">31.4%</div>
+        <div class="metric-label">All-Wrong Rate</div>
+        <div class="metric-sub">283 / 900 questions</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val c-ceil">272</div>
+        <div class="metric-label">False Confidence</div>
+        <div class="metric-sub">Conf ≥ 0.8 but wrong</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val c-ceil">263</div>
+        <div class="metric-label">Wasted Votes</div>
+        <div class="metric-sub">Votes on wrong minority answer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: EFFICIENCY -->
+<section id="efficiency">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Compute Efficiency</span>
+      <h2 class="section-title">Accuracy per Billion Parameter-Passes</h2>
+      <p class="section-desc">The most expensive condition delivers the worst return on compute. Fine-tuning unlocks efficiency that scaling alone cannot.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Compute vs Accuracy — Three Conditions</div>
+        <div class="card-sub">X axis = cost (param-passes in billions). Y axis = accuracy. Higher right = better efficiency.</div>
+        <canvas id="effScatterChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Efficiency Ratio (Accuracy / Compute)</div>
+        <div class="card-sub">Higher = more accuracy per unit of compute. Baseline is most efficient per param-pass; pipeline delivers best absolute accuracy.</div>
+        <canvas id="effBarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Param-Passes (B)</th>
+            <th>Accuracy</th>
+            <th>Efficiency (Acc/B)</th>
+            <th>Rank</th>
+            <th>Gain Over Random</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">7.5</td>
+            <td class="td-num">71.7%</td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">9.56</td>
+            <td class="td-num">1st (efficiency)</td>
+            <td class="td-num">+46.7 pp</td>
+          </tr>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num">10.5</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">80.0%</td>
+            <td class="td-num" style="color:var(--pipe);">7.62</td>
+            <td class="td-num">2nd (efficiency)</td>
+            <td class="td-num">+55.0 pp</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num">15.0</td>
+            <td class="td-num" style="color:var(--ceil);font-weight:600;">66.8%</td>
+            <td class="td-num" style="color:var(--base);">4.45</td>
+            <td class="td-num">3rd (efficiency) 🥉</td>
+            <td class="td-num">+41.8 pp</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="verdict-box green" style="margin-top:20px;">
+      <div class="vb-label" style="color:#065f46;">✦ Efficiency Takeaway</div>
+      <div class="vb-text">The pipeline at 10.5B achieves 80.0% accuracy — 30% cheaper than the 15B ceiling and 13.2 pts more accurate. A fine-tuned guide costs less <em>and</em> performs better. This is the strongest possible argument for fine-tuning quality over raw model scale.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: COMPLETE COMPARISON TABLE -->
+<section id="verdict">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Final Comparison</span>
+      <h2 class="section-title">Complete Three-Way Scorecard</h2>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Baseline (7.5B)</th>
+            <th>Pipeline — Guided (10.5B)</th>
+            <th>Ceiling — 3B Base (15.0B)</th>
+            <th>Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accuracy</strong></td>
+            <td class="td-num">71.7%</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">80.0% ✦</td>
+            <td class="td-num" style="color:var(--ceil);">66.8%</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>ECE (lower = better)</strong></td>
+            <td class="td-num">0.180</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.099 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">0.226</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mean Vote Consistency</strong></td>
+            <td class="td-num">0.717</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.800 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">0.635</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>All-Wrong Questions</strong></td>
+            <td class="td-num">—</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">— ✦</td>
+            <td class="td-num" style="color:var(--ceil);">283 (31.4%)</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>False Confidence Cases</strong></td>
+            <td class="td-num">—</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">— ✦</td>
+            <td class="td-num" style="color:var(--ceil);">272</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>Compute (param-passes)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">7.5B ✦</td>
+            <td class="td-num">10.5B</td>
+            <td class="td-num" style="color:var(--ceil);">15.0B</td>
+            <td><span class="badge badge-mid">Baseline (lowest cost)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Efficiency (Acc/B)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">9.56 ✦</td>
+            <td class="td-num">7.62</td>
+            <td class="td-num" style="color:var(--ceil);">4.45</td>
+            <td><span class="badge badge-mid">Baseline (per param-pass)</span></td>
+          </tr>
+          <tr>
+            <td><strong>McNemar vs Baseline</strong></td>
+            <td class="td-num">—</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">★★★★ p&lt;0.0001 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">Worse than baseline</td>
+            <td><span class="badge badge-win" style="background:#dcfce7;color:#065f46;">Pipeline</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Final verdict -->
+    <div class="finding-card" style="margin-top:28px;">
+      <div class="finding-label">DEFINITIVE CONCLUSION — ARC-CHALLENGE CEILING EXPERIMENT</div>
+      <div class="finding-text">"Scaling the guide from fine-tuned (3B LoRA, 10.5B total) to the untuned ceiling (3B base, 15B total) produces a <em>regression</em> in all three evaluation dimensions — accuracy drops by 13.2 pts, mean consistency drops from 0.80 to 0.635, and ECE worsens from 0.099 to 0.226 with 272 false-confidence cases. The ablation is decisive: <em>fine-tuning quality is the sufficient and necessary condition</em>. Model size alone not only fails to replicate the gains — it actively degrades performance."</div>
+      <div style="margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="text-align:center;background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#86efac;">3/3</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">ANGLES WON BY PIPELINE</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#c4b5fd;">LAST</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CEILING RANK (ALL METRICS)</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#fbbf24;">30%</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CHEAPER THAN CEILING</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.07);border-radius:6px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#86efac;">+13.2</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PTS PIPELINE OVER CEILING</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implication for paper -->
+    <div class="verdict-box gold" style="margin-top:24px;">
+      <div class="vb-label" style="color:#92400e;">📄 Implication for the Paper</div>
+      <div class="vb-text">This ceiling result upgrades the ablation argument from "fine-tuning adds beyond size" to a <em>two-sided</em> claim: "size without fine-tuning is not neutral — it is actively harmful at this compute regime." Recommended addition: include the ceiling in Table III (Ablation) alongside the base-3B column, highlighting that N=900 ARC results show Ceiling (66.8%) &lt; Baseline (71.7%) &lt; Pipeline (80.0%).</div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-hint">
+  ARC-Challenge Ceiling Experiment · N=900 · Adnan Abdullah Sadi · North South University · SLM-to-SLM Guided Reasoning
+</div>
+
+<script>
+  Chart.defaults.font.family = "'DM Mono', monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = '#6b7280';
+
+  const CEIL  = '#7c3aed';
+  const PIPE  = '#057a55';
+  const BASE  = '#c81e1e';
+  const GOLD  = '#b45309';
+  const NAVY  = '#1e3a5f';
+
+  // ── Accuracy Bar ──
+  new Chart(document.getElementById('accChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline (10.5B)', 'Baseline (7.5B)', 'Ceiling (15.0B)'],
+      datasets: [{
+        label: 'Accuracy (%)',
+        data: [80.0, 71.7, 66.78],
+        backgroundColor: [PIPE+'cc', BASE+'cc', CEIL+'cc'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: {
+          annotations: {
+            random: { type: 'line', yMin: 25, yMax: 25, borderColor: '#9ca3af', borderDash: [4,3], borderWidth: 1.5 }
+          }
+        }
+      },
+      scales: {
+        y: { min: 25, max: 90, title: { display: true, text: 'Accuracy (%)' } }
+      }
+    }
+  });
+
+  // ── Accuracy Gap ──
+  new Chart(document.getElementById('accGapChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline (winner)', 'Baseline', 'Ceiling'],
+      datasets: [{
+        label: 'Gap from Pipeline (pp)',
+        data: [0, -8.3, -13.22],
+        backgroundColor: [PIPE+'cc', BASE+'66', CEIL+'cc'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: -16, max: 2, title: { display: true, text: 'pp vs Pipeline' } } }
+    }
+  });
+
+  // ── Consistency ──
+  new Chart(document.getElementById('consistChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Baseline', 'Ceiling'],
+      datasets: [{
+        label: 'Mean Vote Consistency',
+        data: [0.800, 0.717, 0.635],
+        backgroundColor: [PIPE+'cc', BASE+'cc', CEIL+'cc'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: 0.5, max: 0.9, title: { display: true, text: 'Mean Consistency (0–1)' } } }
+    }
+  });
+
+  // ── Vote Buckets ──
+  new Chart(document.getElementById('voteBucketChart'), {
+    type: 'bar',
+    data: {
+      labels: ['All-Wrong (0/5)', 'Low (1–39%)', 'Medium (40–79%)', 'High (80–100%)'],
+      datasets: [{
+        label: 'Ceiling (3B Base)',
+        data: [283, 42, 50, 525],
+        backgroundColor: [BASE, GOLD, '#60a5fa', PIPE],
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { title: { display: true, text: 'Number of questions' } } }
+    }
+  });
+
+  // ── ECE Bar ──
+  new Chart(document.getElementById('eceBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline (best)', 'Baseline', 'Ceiling (worst)'],
+      datasets: [{
+        label: 'ECE',
+        data: [0.099, 0.180, 0.226],
+        backgroundColor: [PIPE+'cc', BASE+'66', CEIL+'cc'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 0.28, title: { display: true, text: 'ECE (lower = better)' } } }
+    }
+  });
+
+  // ── False Confidence ──
+  new Chart(document.getElementById('falseConfChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct (high-conf)', 'False Confidence (wrong)'],
+      datasets: [{
+        data: [549, 272],
+        backgroundColor: [PIPE+'cc', CEIL+'cc'],
+        borderWidth: 2, borderColor: 'white'
+      }]
+    },
+    options: {
+      responsive: true, cutout: '60%',
+      plugins: {
+        legend: { position: 'bottom' },
+        title: { display: true, text: '821 very-high-confidence questions', font: { size: 11 }, color: '#6b7280' }
+      }
+    }
+  });
+
+  // ── Letter Distribution ──
+  new Chart(document.getElementById('letterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['A', 'B', 'C', 'D'],
+      datasets: [
+        {
+          label: 'Ceiling',
+          data: [24.11, 24.71, 28.23, 22.96],
+          backgroundColor: CEIL+'cc', borderRadius: 3
+        },
+        {
+          label: 'Expected (25% each)',
+          data: [25, 25, 25, 25],
+          type: 'line',
+          borderColor: '#9ca3af', borderDash: [4,3], borderWidth: 2,
+          pointRadius: 0, backgroundColor: 'transparent'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 15, max: 35, title: { display: true, text: '% of questions selecting option' } } }
+    }
+  });
+
+  // ── Outcome Pie ──
+  new Chart(document.getElementById('outcomeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct (601)', 'Wrong — all-5 wrong (283)', 'Wrong — some right (16)'],
+      datasets: [{
+        data: [601, 283, 16],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', GOLD+'cc'],
+        borderWidth: 2, borderColor: 'white'
+      }]
+    },
+    options: {
+      responsive: true, cutout: '55%',
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  // ── Calibration Bar (expected vs actual per bucket) ──
+  new Chart(document.getElementById('calibScatterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Very High (n=821)', 'High (n=40)', 'Medium (n=19)', 'Low (n=20)'],
+      datasets: [
+        {
+          label: 'Actual Accuracy',
+          data: [0.6687, 0.65, 0.6316, 0.70],
+          backgroundColor: [CEIL+'cc', CEIL+'99', PIPE+'aa', PIPE+'cc'],
+          borderRadius: 3
+        },
+        {
+          label: 'Expected Confidence',
+          data: [0.90, 0.70, 0.50, 0.25],
+          type: 'line',
+          borderColor: '#1a56db', borderDash: [5,3], borderWidth: 2,
+          pointRadius: 6, pointStyle: 'rectRot', backgroundColor: '#1a56db'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 0, max: 1.05, title: { display: true, text: 'Proportion' } } }
+    }
+  });
+
+  // ── Efficiency Scatter ──
+  new Chart(document.getElementById('effScatterChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Pipeline',
+          data: [{ x: 10.5, y: 80.0 }],
+          backgroundColor: PIPE, pointRadius: 16, pointStyle: 'circle'
+        },
+        {
+          label: 'Baseline',
+          data: [{ x: 7.5, y: 71.7 }],
+          backgroundColor: BASE, pointRadius: 16, pointStyle: 'circle'
+        },
+        {
+          label: 'Ceiling',
+          data: [{ x: 15.0, y: 66.78 }],
+          backgroundColor: CEIL, pointRadius: 16, pointStyle: 'circle'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}% @ ${ctx.parsed.x}B` } }
+      },
+      scales: {
+        x: { min: 5, max: 17, title: { display: true, text: 'Param-Passes (Billions)' } },
+        y: { min: 60, max: 85, title: { display: true, text: 'Accuracy (%)' } }
+      }
+    }
+  });
+
+  // ── Efficiency Bar ──
+  new Chart(document.getElementById('effBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Baseline (7.5B)', 'Pipeline (10.5B)', 'Ceiling (15.0B)'],
+      datasets: [{
+        label: 'Accuracy per Billion Param-Passes',
+        data: [9.56, 7.62, 4.45],
+        backgroundColor: [BASE+'cc', PIPE+'cc', CEIL+'cc'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 12, title: { display: true, text: 'Acc/B param-passes' } } }
+    }
+  });
+</script>
+</body>
+</html>

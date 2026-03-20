@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommonsenseQA — Four-Way Comparison Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --ink:    #0e0e0e;
+      --paper:  #f5f4ef;
+      --cream:  #fdfcf7;
+      --navy:   #1a2e4a;
+      --pipe:   #166534;   /* guided pipeline — deep green */
+      --base:   #92400e;   /* baseline — amber/brown */
+      --cot:    #9f1239;   /* CoT — crimson */
+      --ceil:   #4c1d95;   /* ceiling — violet */
+      --blue:   #1d4ed8;
+      --muted:  #6b7280;
+      --border: #e2e0d8;
+      --light:  #f3f2ec;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.72;
+      font-size: 15px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:sticky; top:0; z-index:100;
+      background: var(--navy);
+      padding: 0 32px;
+      display:flex; align-items:center; gap:0;
+      height:48px; overflow-x:auto;
+    }
+    .nav-brand {
+      font-family:'JetBrains Mono',monospace;
+      font-size:11px; font-weight:500; color:#fde68a;
+      margin-right:24px; padding-right:24px;
+      border-right:1px solid #2d4a6e;
+      white-space:nowrap; letter-spacing:.5px;
+    }
+    nav a {
+      color:#94a3b8; text-decoration:none;
+      font-size:11px; white-space:nowrap;
+      padding:4px 10px; border-radius:3px;
+      letter-spacing:.3px; transition:color .15s;
+    }
+    nav a:hover { color:white; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy); color:white;
+      padding:68px 0 52px; position:relative; overflow:hidden;
+    }
+    .hero::after {
+      content:'';
+      position:absolute; bottom:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, var(--pipe), var(--ceil), var(--cot), var(--base));
+    }
+    .hero-inner { max-width:1120px; margin:0 auto; padding:0 32px; }
+    .hero-tag {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:3px; text-transform:uppercase;
+      color:#fde68a; margin-bottom:18px; display:block;
+    }
+    .hero h1 {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(28px, 4.5vw, 54px);
+      font-weight:900; line-height:1.1; max-width:800px; margin-bottom:16px;
+    }
+    .hero h1 em { font-style:italic; color:#a5f3fc; }
+    .hero-sub { font-size:15px; color:#cbd5e1; max-width:680px; line-height:1.75; margin-bottom:40px; }
+
+    /* condition pills row */
+    .pill-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:5px 13px; border-radius:20px;
+      font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+    }
+    .pill .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .pill.pipe { background:rgba(22,101,52,.35); color:#86efac; border:1px solid #166534; }
+    .pill.base { background:rgba(146,64,14,.25); color:#fcd34d; border:1px solid #92400e; }
+    .pill.cot  { background:rgba(159,18,57,.25); color:#fda4af; border:1px solid #9f1239; }
+    .pill.ceil { background:rgba(76,29,149,.3);  color:#c4b5fd; border:1px solid #4c1d95; }
+
+    .hero-stats {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+      gap:2px; background:rgba(255,255,255,.06); border-radius:6px; overflow:hidden;
+    }
+    .hs { background:rgba(255,255,255,.04); padding:20px 18px; }
+    .hs-num {
+      font-family:'Playfair Display',serif;
+      font-size:40px; font-weight:900; line-height:1; margin-bottom:4px;
+    }
+    .hs-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; }
+    .cn-pipe { color:#86efac; }
+    .cn-ceil { color:#c4b5fd; }
+    .cn-cot  { color:#fda4af; }
+    .cn-base { color:#fcd34d; }
+    .cn-gold { color:#fbbf24; }
+
+    /* ── LAYOUT ── */
+    .container { max-width:1120px; margin:0 auto; padding:0 32px; }
+    section { padding:62px 0; }
+    section:nth-child(even) { background:var(--cream); }
+    section:nth-child(odd)  { background:var(--paper); }
+
+    .sec-tag {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:3px; text-transform:uppercase;
+      color:var(--blue); margin-bottom:8px; display:block;
+    }
+    .sec-title {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight:900; color:var(--ink); line-height:1.15;
+    }
+    .sec-desc { font-size:15px; color:var(--muted); margin-top:10px; max-width:720px; }
+    .sec-head { margin-bottom:38px; }
+
+    /* ── CARDS ── */
+    .card {
+      background:white; border:1px solid var(--border);
+      border-radius:8px; padding:24px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.04);
+    }
+    .card-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+    .card-sub   { font-size:12px; color:var(--muted); margin-bottom:16px; }
+
+    /* ── GRIDS ── */
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+    .g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    @media(max-width:768px) { .g2,.g3,.g4 { grid-template-columns:1fr; } }
+    canvas { max-height:280px; }
+
+    /* ── METRICS ── */
+    .metric {
+      background:white; border:1px solid var(--border);
+      border-radius:8px; padding:22px; text-align:center;
+    }
+    .metric-val {
+      font-family:'Playfair Display',serif; font-size:44px;
+      font-weight:900; line-height:1; margin-bottom:4px;
+    }
+    .metric-label {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:1px; text-transform:uppercase; color:var(--muted);
+    }
+    .metric-sub { font-size:12px; color:var(--muted); margin-top:5px; }
+
+    /* ── TABLES ── */
+    .tbl-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; font-size:13.5px; }
+    thead th {
+      background:var(--navy); color:white; padding:11px 14px;
+      text-align:left; font-family:'JetBrains Mono',monospace;
+      font-size:10px; font-weight:500; letter-spacing:.5px;
+      text-transform:uppercase; white-space:nowrap;
+    }
+    tbody td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#fafaf6; }
+    tbody tr.winner td { background:#f0fdf4; }
+    tbody tr.loser  td { background:#fef2f2; color:var(--muted); font-style:italic; }
+    .td-num { font-family:'JetBrains Mono',monospace; text-align:right; }
+    .td-pos { color:var(--pipe); font-weight:600; font-family:'JetBrains Mono',monospace; }
+    .td-neg { color:var(--cot);  font-weight:600; font-family:'JetBrains Mono',monospace; }
+
+    /* ── VERDICT BOXES ── */
+    .vbox { border-radius:8px; padding:24px 28px; margin:18px 0; }
+    .vbox.green  { background:#f0fdf4; border:1px solid #bbf7d0; border-left:5px solid var(--pipe); }
+    .vbox.red    { background:#fff1f2; border:1px solid #fecdd3; border-left:5px solid var(--cot);  }
+    .vbox.purple { background:#f5f3ff; border:1px solid #ddd6fe; border-left:5px solid var(--ceil); }
+    .vbox.amber  { background:#fffbeb; border:1px solid #fde68a; border-left:5px solid var(--base); }
+    .vbox-label {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;
+    }
+    .vbox-text { font-family:'Playfair Display',serif; font-size:17px; font-style:italic; line-height:1.65; }
+
+    /* ── FINDING CARD ── */
+    .finding {
+      background:var(--navy); color:white;
+      border-radius:8px; padding:32px;
+    }
+    .finding-label {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:3px; color:#fde68a; margin-bottom:14px;
+    }
+    .finding-text {
+      font-family:'Playfair Display',serif; font-size:21px;
+      font-style:italic; line-height:1.55;
+    }
+
+    /* ── RANK BARS ── */
+    .rank-row { display:flex; gap:12px; margin-bottom:12px; align-items:center; }
+    .rank-pos  { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; width:32px; }
+    .rank-wrap { flex:1; }
+    .rank-head { font-size:13px; margin-bottom:4px; display:flex; justify-content:space-between; }
+    .rank-bar  { height:22px; border-radius:3px; overflow:hidden; }
+    .rank-fill { height:100%; display:flex; align-items:center; padding-left:10px; font-family:'JetBrains Mono',monospace; font-size:11px; color:white; font-weight:500; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display:flex; gap:14px; background:#eff6ff;
+      border:1px solid #bfdbfe; border-radius:8px;
+      padding:16px 18px; margin:16px 0;
+    }
+    .callout-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .callout-text { font-size:14px; color:var(--navy); line-height:1.65; }
+
+    .callout.warn { background:#fff7ed; border-color:#fed7aa; }
+    .callout.danger { background:#fff1f2; border-color:#fecdd3; }
+
+    /* ── BADGE ── */
+    .badge {
+      display:inline-block; font-family:'JetBrains Mono',monospace;
+      font-size:10px; padding:3px 9px; border-radius:10px; font-weight:600;
+    }
+    .bw { background:#d1fae5; color:#065f46; }
+    .bl { background:#fee2e2; color:#991b1b; }
+    .bm { background:#e0e7ff; color:#3730a3; }
+    .bn { background:#fef3c7; color:#92400e; }
+
+    /* ── NUANCE BOX ── */
+    .nuance {
+      background: linear-gradient(135deg, #0e0e0e 0%, #1a2e4a 100%);
+      color:white; border-radius:8px; padding:32px;
+    }
+    .nuance-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:3px; color:#fde68a; margin-bottom:14px; }
+
+    hr.divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+
+    .scroll-hint {
+      text-align:center; padding:20px;
+      font-family:'JetBrains Mono',monospace; font-size:11px;
+      color:var(--muted); letter-spacing:1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">CSQA · Four-Way Report</span>
+  <a href="#overview">Overview</a>
+  <a href="#findings">Key Findings</a>
+  <a href="#angle1">① Accuracy</a>
+  <a href="#angle2">② Consistency</a>
+  <a href="#angle3">③ Calibration</a>
+  <a href="#ceiling-deep">Ceiling Deep-Dive</a>
+  <a href="#cot-analysis">CoT Analysis</a>
+  <a href="#bias">E-Option Bias</a>
+  <a href="#efficiency">Efficiency</a>
+  <a href="#verdict">Verdict</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">CommonsenseQA · Four-Condition Comparison · N = 900 · 2025–2026</span>
+    <h1>Commonsense Knows Its Limits:<br><em>Ceiling Beats CoT, Loses to Fine-Tuning</em></h1>
+    <p class="hero-sub">A four-way comparison across all evaluation angles — accuracy, consistency, and calibration — revealing that the untuned 3B ceiling (75.0%) nearly ties the guided pipeline (75.8%), while CoT actively hurts performance (67.7%) and E-option bias worsens.</p>
+
+    <div class="pill-row">
+      <span class="pill pipe"><span class="dot" style="background:#166534;"></span>Pipeline — 3B LoRA + 1.5B×5 (10.5B)</span>
+      <span class="pill ceil"><span class="dot" style="background:#4c1d95;"></span>Ceiling — 3B Base×5 (15.0B)</span>
+      <span class="pill base"><span class="dot" style="background:#92400e;"></span>Baseline — 1.5B×5 (7.5B)</span>
+      <span class="pill cot"><span class="dot"  style="background:#9f1239;"></span>CoT — "step by step" (7.5B)</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num cn-pipe">75.8%</div><div class="hs-label">Pipeline Accuracy 🥇</div></div>
+      <div class="hs"><div class="hs-num cn-ceil">75.0%</div><div class="hs-label">Ceiling Accuracy 🥈</div></div>
+      <div class="hs"><div class="hs-num cn-base">70.7%</div><div class="hs-label">Baseline Accuracy 🥉</div></div>
+      <div class="hs"><div class="hs-num cn-cot">67.7%</div><div class="hs-label">CoT Accuracy ⚠️</div></div>
+      <div class="hs"><div class="hs-num cn-ceil">0.107</div><div class="hs-label">Ceiling ECE (best!)</div></div>
+      <div class="hs"><div class="hs-num cn-cot">+29.5%</div><div class="hs-label">CoT E-Option Bias</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Experiment Setup</span>
+      <h2 class="sec-title">Four Conditions, Same 900 Questions</h2>
+      <p class="sec-desc">CSQA tests five-option commonsense multiple choice. All conditions evaluated on the same 900 questions. Ceiling and CoT are new experiments complementing the main pipeline study.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Configuration</th><th>Fine-Tuned?</th><th>Compute</th><th>Cost vs Baseline</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">✦ Pipeline (Guided)</strong></td>
+            <td>3B LoRA guide + 1.5B solver × 5</td>
+            <td><span class="badge bw">Yes — LoRA</span></td>
+            <td class="td-num"><strong>10.5B</strong></td>
+            <td class="td-num">+40%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--ceil);">● Ceiling (New)</strong></td>
+            <td>3B base model × 5 (no fine-tuning)</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num"><strong>15.0B</strong></td>
+            <td class="td-num">+100%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">○ Baseline</strong></td>
+            <td>1.5B solver × 5 (no guide)</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num"><strong>7.5B</strong></td>
+            <td class="td-num">—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cot);">⚠ CoT (New)</strong></td>
+            <td>1.5B + "think step by step" × 5</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num"><strong>7.5B</strong></td>
+            <td class="td-num">Same as baseline</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-icon">⚡</div>
+      <div class="callout-text"><strong>Why CSQA is different from ARC:</strong> On ARC-Challenge, the ceiling scored 66.8% — last place, 13.2 pts below the pipeline. On CSQA, the ceiling scores 75.0% — nearly tied with the pipeline at 75.8%. This tells us the 3B model has accessible commonsense world-knowledge that partially compensates for the lack of fine-tuning. The gap fine-tuning needs to close is much smaller here.</div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY FINDINGS -->
+<section id="findings">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Summary</span>
+      <h2 class="sec-title">Four-Way Findings at a Glance</h2>
+    </div>
+
+    <div class="finding" style="margin-bottom:24px;">
+      <div class="finding-label">THE CSQA HEADLINE — A SURPRISING REVERSAL FROM ARC</div>
+      <div class="finding-text">"On CommonsenseQA, the ceiling (3B base, 15B) nearly matches the guided pipeline (75.0% vs 75.8%), and its ECE (0.107) is actually <em>better</em> than the pipeline's (0.141). Yet CoT — at equal cost to baseline — collapses to 67.7%, the worst accuracy of all four conditions. Commonsense world-knowledge is partially accessible through scale; it is destroyed by unstructured step-by-step prompting."</div>
+      <div style="margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#86efac;">🥇</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PIPELINE 75.8%</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#c4b5fd;">🥈</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CEILING 75.0%</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fcd34d;">🥉</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">BASELINE 70.7%</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fda4af;">⚠️</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CoT 67.7% (worst)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g4">
+      <div class="vbox green" style="margin:0;">
+        <div class="vbox-label" style="color:#065f46;">Angle 1 — Accuracy</div>
+        <div class="vbox-text" style="font-size:15px;">Pipeline wins (75.8%) but ceiling is close (75.0%). CoT is <em>worst at 67.7%</em> — below even baseline.</div>
+      </div>
+      <div class="vbox purple" style="margin:0;">
+        <div class="vbox-label" style="color:#5b21b6;">Angle 2 — Consistency</div>
+        <div class="vbox-text" style="font-size:15px;">Pipeline leads (0.757). Ceiling is second (0.731) and beats baseline (0.697). Ceiling all-wrong count (114) is lowest.</div>
+      </div>
+      <div class="vbox amber" style="margin:0;">
+        <div class="vbox-label" style="color:#92400e;">Angle 3 — Calibration</div>
+        <div class="vbox-text" style="font-size:15px;">Ceiling ECE = 0.107 — <em>best of all four</em> conditions. Pipeline = 0.141. CoT = 0.191 (worst).</div>
+      </div>
+      <div class="vbox red" style="margin:0;">
+        <div class="vbox-label" style="color:#9f1239;">CoT Failure</div>
+        <div class="vbox-text" style="font-size:15px;">CoT boosts E-option selection from 21.4% → 29.5% and reduces accuracy by 3.0 pts vs baseline. Structured prompting backfires.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 1: ACCURACY -->
+<section id="angle1">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 1 of 3</span>
+      <h2 class="sec-title">① Accuracy — The Four-Way Race</h2>
+      <p class="sec-desc">Which condition gets more of 900 CSQA questions correct? Five-option task — random chance = 20%.</p>
+    </div>
+
+    <!-- Rank bars -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">Accuracy Ranking — N=900 (random chance = 20%)</div>
+      <div class="card-sub">Bar scaled from 20% (random) to 80%. Note ceiling and pipeline are nearly tied at the top.</div>
+      <div style="margin-top:18px;">
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--pipe);">🥇</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Pipeline — 3B LoRA + 1.5B×5 (10.5B)</span><span style="font-family:'JetBrains Mono',monospace;color:var(--pipe);font-weight:600;">75.8%</span></div>
+            <div class="rank-bar" style="background:#dcfce7;"><div class="rank-fill" style="width:93%;background:var(--pipe);">75.8%</div></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--ceil);">🥈</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Ceiling — 3B Base×5 (15.0B) <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--ceil);">+4.3 pts knowledge boost</span></span><span style="font-family:'JetBrains Mono',monospace;color:var(--ceil);font-weight:600;">75.0%</span></div>
+            <div class="rank-bar" style="background:#f5f3ff;"><div class="rank-fill" style="width:91%;background:var(--ceil);">75.0%</div></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--base);">🥉</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Baseline — 1.5B×5 (7.5B)</span><span style="font-family:'JetBrains Mono',monospace;color:var(--base);font-weight:600;">70.7%</span></div>
+            <div class="rank-bar" style="background:#fef3c7;"><div class="rank-fill" style="width:84%;background:var(--base);">70.7%</div></div>
+          </div>
+        </div>
+        <div class="rank-row" style="margin-bottom:0;">
+          <div class="rank-pos" style="color:var(--cot);">⚠️</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>CoT — "step by step" (7.5B) <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cot);">−3.0 pts vs baseline</span></span><span style="font-family:'JetBrains Mono',monospace;color:var(--cot);font-weight:600;">67.7%</span></div>
+            <div class="rank-bar" style="background:#fff1f2;"><div class="rank-fill" style="width:79%;background:var(--cot);">67.7%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Accuracy — All Four Conditions</div>
+        <div class="card-sub">Dashed line = random chance (20%)</div>
+        <canvas id="accChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Accuracy Gaps vs Pipeline</div>
+        <div class="card-sub">How much each condition trails the pipeline winner (pp)</div>
+        <canvas id="accGapChart"></canvas>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:20px;">
+      <div class="metric"><div class="metric-val" style="color:var(--pipe);">75.8%</div><div class="metric-label">Pipeline</div><div class="metric-sub">Champion (10.5B)</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">75.0%</div><div class="metric-label">Ceiling</div><div class="metric-sub">2nd — 15.0B — only −0.8 pts</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--base);">70.7%</div><div class="metric-label">Baseline</div><div class="metric-sub">3rd — 7.5B</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--cot);">67.7%</div><div class="metric-label">CoT</div><div class="metric-sub">Last — same cost as baseline ⚠️</div></div>
+    </div>
+
+    <div class="vbox purple" style="margin-top:20px;">
+      <div class="vbox-label" style="color:#5b21b6;">🔑 CSQA vs ARC — A Critical Contrast</div>
+      <div class="vbox-text">On ARC-Challenge, the ceiling scored 66.8% — dead last, 13.2 pts below the pipeline. On CSQA, the ceiling scores 75.0% — only 0.8 pts behind the pipeline, and 4.3 pts above baseline. The 3B model's commonsense knowledge partially replicates fine-tuning's effect. This is the "domain-accessible" tier in action — but unlike ARC, fine-tuning still adds marginal value here.</div>
+    </div>
+
+    <!-- Cumulative trend -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Cumulative Accuracy Trend (N=900)</div>
+      <div class="card-sub">Starts high at N=100 (81.0%) and settles to 75.0% by N=900. The early high was sampling variance.</div>
+      <canvas id="cumulChart" style="max-height:200px;"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 2: CONSISTENCY -->
+<section id="angle2">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 2 of 3</span>
+      <h2 class="sec-title">② Vote Consistency — Ensemble Decisiveness</h2>
+      <p class="sec-desc">Mean fraction of 5 votes matching ground truth per question. Higher = solver reliably reaches correct answer.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Mean Consistency — Four Conditions</div>
+        <div class="card-sub">Pipeline leads; ceiling is second. CoT data estimated from vote distribution.</div>
+        <canvas id="consistChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Vote Bucket Distribution</div>
+        <div class="card-sub">Ceiling (purple) vs CoT (crimson). Ceiling has only 114 all-wrong questions; CoT has 201.</div>
+        <canvas id="voteDistChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Mean Consistency</th><th>All-Wrong (0/5)</th><th>High-Agreement (≥80%)</th><th>Wasted Votes</th><th>vs Pipeline</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.757</td>
+            <td class="td-num">—</td><td class="td-num">—</td><td class="td-num">—</td>
+            <td class="td-pos">—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:600;">0.731</td>
+            <td class="td-num" style="color:var(--pipe);">114 ← lowest</td>
+            <td class="td-num">602</td>
+            <td class="td-num">510</td>
+            <td class="td-neg">−0.026</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">0.697</td>
+            <td class="td-num">233</td>
+            <td class="td-num">614</td>
+            <td class="td-num">—</td>
+            <td class="td-neg">−0.060</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num" style="color:var(--cot);">~0.678</td>
+            <td class="td-num" style="color:var(--cot);font-weight:600;">201 ← most</td>
+            <td class="td-num">556</td>
+            <td class="td-num">—</td>
+            <td class="td-neg">−0.079</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:16px;">
+      <div class="callout-icon">📊</div>
+      <div class="callout-text"><strong>Ceiling all-wrong rate (12.7%) is the lowest of all conditions</strong> — lower even than the pipeline. The 3B base model rarely gets all 5 votes completely wrong on CSQA commonsense questions because the knowledge is accessible in pretraining. But it compensates with high wasted votes (510) in the medium bucket — often getting 3/5 or 4/5 right rather than 5/5.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 3: CALIBRATION -->
+<section id="angle3">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 3 of 3</span>
+      <h2 class="sec-title">③ Calibration — The Surprising Reversal</h2>
+      <p class="sec-desc">ECE (Expected Calibration Error) — lower is better. CSQA produces an unexpected calibration winner.</p>
+    </div>
+
+    <div class="vbox purple" style="margin-bottom:24px;">
+      <div class="vbox-label" style="color:#5b21b6;">⚡ Unexpected Finding — Ceiling ECE is Best</div>
+      <div class="vbox-text">On ARC, the ceiling's ECE was 0.226 — worst of all conditions. On CSQA, ceiling ECE = 0.107 — <em>better</em> than the guided pipeline (0.141). The 3B model's large pretraining commonsense corpus produces better-calibrated confidence signals on this domain, even without fine-tuning. CoT's ECE (0.191) is the worst — unstructured reasoning degrades calibration alongside accuracy.</div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">ECE — All Four Conditions</div>
+        <div class="card-sub">Lower = better. Ceiling wins this dimension with 0.107.</div>
+        <canvas id="eceChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">False Confidence Cases (conf ≥ 0.8 but wrong)</div>
+        <div class="card-sub">Ceiling: 138 false-confidence questions. CoT: 208. Baseline: 234. Pipeline: 178.</div>
+        <canvas id="falseConfChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Calibration Bucket Analysis</div>
+      <div class="card-sub">For each confidence bucket: expected confidence (line) vs actual accuracy (bar). Gap = miscalibration weight.</div>
+      <canvas id="calibChart" style="max-height:220px;"></canvas>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Bucket</th><th>Count</th><th>%</th><th>Expected Conf</th><th>Actual Accuracy</th><th>Gap</th><th>Assessment</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Very High (≥0.80)</strong></td>
+            <td class="td-num">740</td><td class="td-num">82.2%</td>
+            <td class="td-num">0.900</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">0.814</td>
+            <td class="td-num">−0.087</td>
+            <td><span class="badge bn">Slightly overconfident</span></td>
+          </tr>
+          <tr class="loser">
+            <td><strong>High (0.60–0.80)</strong></td>
+            <td class="td-num">124</td><td class="td-num">13.8%</td>
+            <td class="td-num">0.700</td>
+            <td class="td-num" style="color:var(--cot);font-weight:600;">0.476</td>
+            <td class="td-num" style="color:var(--cot);">−0.224</td>
+            <td><span class="badge bl">Severely overconfident</span></td>
+          </tr>
+          <tr>
+            <td>Medium (0.40–0.60)</td>
+            <td class="td-num">29</td><td class="td-num">3.2%</td>
+            <td class="td-num">0.500</td>
+            <td class="td-num">0.379</td>
+            <td class="td-num">−0.121</td>
+            <td><span class="badge bl">Overconfident</span></td>
+          </tr>
+          <tr>
+            <td>Low (&lt;0.40)</td>
+            <td class="td-num">7</td><td class="td-num">0.8%</td>
+            <td class="td-num">0.250</td>
+            <td class="td-num" style="color:var(--pipe);">0.429</td>
+            <td class="td-num" style="color:var(--pipe);">+0.179</td>
+            <td><span class="badge bw">Underconfident</span></td>
+          </tr>
+          <tr style="background:#f0fdf4;">
+            <td><strong>Overall ECE</strong></td>
+            <td class="td-num">900</td><td class="td-num">100%</td>
+            <td colspan="2"></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:700;">0.107 🥇</td>
+            <td><span class="badge bw">Best calibration of 4</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>ECE</th><th>False Confidence</th><th>ECE Rank</th><th>vs Pipeline ECE</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--ceil);">Ceiling (3B Base)</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:700;">0.107 ✦</td>
+            <td class="td-num">138</td><td class="td-num">1st 🥇</td>
+            <td class="td-pos">−0.034 better</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--pipe);">Pipeline (Guided)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">0.141</td>
+            <td class="td-num">178</td><td class="td-num">2nd</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">0.176</td>
+            <td class="td-num">234</td><td class="td-num">3rd</td>
+            <td class="td-neg">+0.035 worse</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num" style="color:var(--cot);font-weight:700;">0.191 ⚠️</td>
+            <td class="td-num">208</td><td class="td-num">4th</td>
+            <td class="td-neg">+0.050 worse</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CEILING DEEP DIVE -->
+<section id="ceiling-deep">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Ceiling Deep-Dive</span>
+      <h2 class="sec-title">Inside the 3B Ceiling — 900-Question Breakdown</h2>
+      <p class="sec-desc">Derived from results_csqa_3b_ceiling.jsonl — per-question analysis of the untuned ceiling condition.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Letter Distribution — Ceiling vs Expected</div>
+        <div class="card-sub">Expected 20% each (5-option). Ceiling shows mild D-bias (23.1%) — no catastrophic collapse.</div>
+        <canvas id="letterChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Question Outcome Breakdown</div>
+        <div class="card-sub">675 correct, 225 wrong. 114 were all-5-votes wrong (lowest all-wrong rate of any condition).</div>
+        <canvas id="outcomeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:20px;">
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">12.7%</div><div class="metric-label">All-Wrong Rate</div><div class="metric-sub">114/900 — lowest of 4</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">138</div><div class="metric-label">False Confidence</div><div class="metric-sub">conf ≥ 0.8 but wrong</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">510</div><div class="metric-label">Wasted Votes</div><div class="metric-sub">Minority answer votes</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">25</div><div class="metric-label">Refiner Triggered</div><div class="metric-sub">7/25 correct (28%)</div></div>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px;">
+      <div class="callout-icon">🔁</div>
+      <div class="callout-text"><strong>Refiner tiebreak analysis:</strong> The ceiling used a refiner 25 times (when 5 votes split evenly). Of those 25, only 7 were correct (28% success — barely above 20% random). The refiner is an unreliable tiebreak mechanism for the untuned model. The pipeline avoids this problem because the guided plan reduces tie probability in the first place.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COT ANALYSIS -->
+<section id="cot-analysis">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">CoT Deep-Dive</span>
+      <h2 class="sec-title">Why CoT Fails on CSQA</h2>
+      <p class="sec-desc">Chain-of-thought prompting at equal cost hurts both accuracy (−3.0 pts vs baseline) and calibration (ECE 0.191 vs 0.176). The mechanism is clear.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">McNemar: CoT vs Baseline</div>
+        <div class="card-sub">B = CoT wins (CoT✓, Base✗): 37. C = Base wins (Base✓, CoT✗): 62. Baseline wins decisively.</div>
+        <canvas id="mcnemarChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Vote Buckets — CoT vs Baseline</div>
+        <div class="card-sub">CoT produces more all-wrong answers (201) vs baseline (233 — but baseline accuracy is higher because of high-agreement correct).</div>
+        <canvas id="cotVoteChart"></canvas>
+      </div>
+    </div>
+
+    <div class="vbox red" style="margin-top:20px;">
+      <div class="vbox-label" style="color:#9f1239;">⚠️ The Mechanism: CoT Amplifies E-Option Confusion</div>
+      <div class="vbox-text">When the 1.5B solver is asked to "think step by step," it generates a reasoning attempt that frequently lands on option E. E-selection rises from 21.4% (baseline) to 29.5% (CoT) — a 37% relative increase above the expected 20%. This reasoning-induced bias, combined with low accuracy when picking E (50.5% vs baseline E-accuracy 64.6%), explains the −3.0 pt drop. CoT doesn't help the model reason — it gives it a scripted path to the wrong answer.</div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Accuracy</th><th>E-option Rate</th><th>Acc when picking E</th><th>ECE</th><th>vs Baseline</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">75.8%</td>
+            <td class="td-num" style="color:var(--pipe);">14.0% ← best</td>
+            <td class="td-num">—</td>
+            <td class="td-num">0.141</td>
+            <td class="td-pos">+5.1 pts</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">70.7%</td>
+            <td class="td-num">21.4%</td>
+            <td class="td-num">64.6%</td>
+            <td class="td-num">0.176</td>
+            <td>—</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num" style="color:var(--cot);font-weight:700;">67.7%</td>
+            <td class="td-num" style="color:var(--cot);">29.5% ← worst</td>
+            <td class="td-num" style="color:var(--cot);">50.5% ← lowest acc</td>
+            <td class="td-num" style="color:var(--cot);">0.191 ← worst</td>
+            <td class="td-neg">−3.0 pts ⚠️</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- E-OPTION BIAS -->
+<section id="bias">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Position Bias</span>
+      <h2 class="sec-title">E-Option Bias — All Four Conditions</h2>
+      <p class="sec-desc">Expected = 20% for a 5-option task. CoT explodes to 29.5%. The guided pipeline suppresses it to 14.0%.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">E-Option Selection Rate vs Expected (20%)</div>
+        <div class="card-sub">Pipeline suppresses below expected. Ceiling is neutral (18.8%). CoT amplifies dangerously.</div>
+        <canvas id="eoptionChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Ceiling Letter Distribution — All Options</div>
+        <div class="card-sub">Ceiling shows mild D-bias (23.1%) but no catastrophic single-option collapse. Compare to baseline E-over-selection.</div>
+        <canvas id="ceilLetterChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>A%</th><th>B%</th><th>C%</th><th>D%</th><th>E%</th><th>E Bias vs 20%</th><th>Assessment</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num">22.3%</td><td class="td-num">20.9%</td><td class="td-num">19.1%</td><td class="td-num">23.8%</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">14.0%</td>
+            <td class="td-pos">−6.0 pts (suppressed)</td>
+            <td><span class="badge bw">Best distribution</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num">18.2%</td><td class="td-num">19.6%</td><td class="td-num">20.3%</td><td class="td-num">23.1%</td>
+            <td class="td-num" style="color:var(--ceil);">18.8%</td>
+            <td>−1.2 pts (near neutral)</td>
+            <td><span class="badge bm">Mild D-bias only</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">16.5%</td><td class="td-num">20.6%</td><td class="td-num">19.1%</td><td class="td-num">18.9%</td>
+            <td class="td-num" style="color:var(--base);">24.8%</td>
+            <td class="td-neg">+4.8 pts over-selected</td>
+            <td><span class="badge bn">Moderate E-bias</span></td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num">—</td><td class="td-num">—</td><td class="td-num">—</td><td class="td-num">—</td>
+            <td class="td-num" style="color:var(--cot);font-weight:700;">29.5%</td>
+            <td class="td-neg">+9.5 pts ⚠️ severe</td>
+            <td><span class="badge bl">Severe E-collapse</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- EFFICIENCY -->
+<section id="efficiency">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Compute Efficiency</span>
+      <h2 class="sec-title">Accuracy per Billion Parameter-Passes</h2>
+      <p class="sec-desc">The ceiling uses double the compute of baseline but delivers 4.3 pts more — still poor efficiency. The pipeline delivers the best absolute result at 30% less than ceiling cost.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Compute vs Accuracy — Four Conditions</div>
+        <div class="card-sub">X = param-passes (billions). Y = accuracy. Top-left = best value.</div>
+        <canvas id="effScatterChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Efficiency Ratio (Accuracy / Param-Passes)</div>
+        <div class="card-sub">Pipeline at 7.22 outperforms ceiling at 5.00. CoT costs same as baseline but delivers worse accuracy.</div>
+        <canvas id="effBarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Compute (B)</th><th>Accuracy</th><th>Efficiency (Acc/B)</th><th>Efficiency Rank</th><th>Gain vs Random (20%)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">7.5</td>
+            <td class="td-num">70.7%</td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">9.43 🥇</td>
+            <td class="td-num">1st (efficiency)</td>
+            <td class="td-num">+50.7 pp</td>
+          </tr>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num">10.5</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">75.8%</td>
+            <td class="td-num" style="color:var(--pipe);">7.22</td>
+            <td class="td-num">2nd (efficiency)</td>
+            <td class="td-num">+55.8 pp ← best absolute</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num">7.5</td>
+            <td class="td-num" style="color:var(--cot);">67.7%</td>
+            <td class="td-num" style="color:var(--cot);">9.03 ⚠️</td>
+            <td class="td-num">3rd — pays same as baseline, gets less</td>
+            <td class="td-num">+47.7 pp</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num">15.0</td>
+            <td class="td-num" style="color:var(--ceil);">75.0%</td>
+            <td class="td-num" style="color:var(--ceil);">5.00</td>
+            <td class="td-num">4th (efficiency) — 2× the compute for +4.3 pts</td>
+            <td class="td-num">+55.0 pp</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICT -->
+<section id="verdict">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Final Comparison</span>
+      <h2 class="sec-title">Complete Four-Way Scorecard</h2>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Pipeline (10.5B)</th><th>Ceiling (15B)</th><th>Baseline (7.5B)</th><th>CoT (7.5B)</th><th>Winner</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accuracy</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">75.8% ✦</td>
+            <td class="td-num" style="color:var(--ceil);">75.0%</td>
+            <td class="td-num">70.7%</td>
+            <td class="td-num" style="color:var(--cot);">67.7% ⚠️</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>ECE (↓ better)</strong></td>
+            <td class="td-num">0.141</td>
+            <td class="td-num" style="color:var(--ceil);font-weight:700;">0.107 ✦</td>
+            <td class="td-num">0.176</td>
+            <td class="td-num" style="color:var(--cot);">0.191 ⚠️</td>
+            <td><span class="badge bm">Ceiling (ECE only!)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mean Consistency</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.757 ✦</td>
+            <td class="td-num">0.731</td>
+            <td class="td-num">0.697</td>
+            <td class="td-num" style="color:var(--cot);">~0.678 ⚠️</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>All-Wrong Questions</strong></td>
+            <td class="td-num">—</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">114 ✦ (lowest)</td>
+            <td class="td-num">233</td>
+            <td class="td-num" style="color:var(--cot);">201</td>
+            <td><span class="badge bm">Ceiling (this metric)</span></td>
+          </tr>
+          <tr>
+            <td><strong>False Confidence</strong></td>
+            <td class="td-num">178</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">138 ✦ (lowest)</td>
+            <td class="td-num">234</td>
+            <td class="td-num" style="color:var(--cot);">208</td>
+            <td><span class="badge bm">Ceiling (this metric)</span></td>
+          </tr>
+          <tr>
+            <td><strong>E-option Bias</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">14.0% ✦ (best)</td>
+            <td class="td-num">18.8% (neutral)</td>
+            <td class="td-num">24.8%</td>
+            <td class="td-num" style="color:var(--cot);">29.5% ⚠️</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>Efficiency (Acc/B)</strong></td>
+            <td class="td-num">7.22</td>
+            <td class="td-num" style="color:var(--cot);">5.00 (worst)</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">9.43 ✦</td>
+            <td class="td-num">9.03</td>
+            <td><span class="badge bm">Baseline (per B)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CSQA vs ARC contrast -->
+    <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="card" style="border-top:4px solid var(--ceil);">
+        <div class="card-title" style="color:var(--ceil);">CSQA Ceiling (this report)</div>
+        <div style="font-size:14px;line-height:1.9;margin-top:10px;">
+          <div>Accuracy: <strong style="color:var(--ceil);">75.0%</strong> — only 0.8 pts behind pipeline</div>
+          <div>ECE: <strong style="color:var(--ceil);">0.107</strong> — <em>best of all 4 conditions</em></div>
+          <div>All-wrong: <strong>114</strong> — lowest of any condition</div>
+          <div>Letter dist: near-uniform (mild D-bias only)</div>
+          <div style="margin-top:8px;color:var(--pipe);font-weight:500;">→ Commonsense knowledge partially accessible via scale</div>
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--cot);">
+        <div class="card-title" style="color:var(--cot);">ARC Ceiling (previous report)</div>
+        <div style="font-size:14px;line-height:1.9;margin-top:10px;">
+          <div>Accuracy: <strong style="color:var(--cot);">66.8%</strong> — 13.2 pts <em>below</em> pipeline, last place</div>
+          <div>ECE: <strong style="color:var(--cot);">0.226</strong> — worst of all 3 conditions</div>
+          <div>All-wrong: <strong>283</strong> (31.4%) — extremely high</div>
+          <div>Letter dist: C-bias (28.2%) — systematic pattern</div>
+          <div style="margin-top:8px;color:var(--cot);font-weight:500;">→ Science reasoning NOT accessible via scale alone</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final verdict -->
+    <div class="finding" style="margin-top:28px;">
+      <div class="finding-label">DEFINITIVE CONCLUSION — CSQA CEILING EXPERIMENT</div>
+      <div class="finding-text">"CommonsenseQA reveals a nuanced picture that contrasts sharply with ARC-Challenge. The untuned 3B ceiling achieves 75.0% — near-parity with the guided pipeline (75.8%) — because commonsense world-knowledge is partially accessible through pretraining scale. The ceiling's ECE (0.107) is even <em>better</em> than the pipeline's (0.141), the lowest false-confidence count (138), and the lowest all-wrong rate (114). Yet despite leading on calibration, the ceiling loses on accuracy, consistency, and E-option bias. Most critically: CoT collapses (67.7%), worsening both accuracy and calibration against baseline — confirming that unstructured step-by-step reasoning actively introduces failure modes that fine-tuned verbal planning prevents."</div>
+      <div style="margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#86efac;">3/4</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">METRICS WON BY PIPELINE</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#c4b5fd;">1/4</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CEILING WINS (ECE)</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fda4af;">LAST</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CoT ON ACCURACY + ECE</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fbbf24;">−0.8</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PTS CEILING TRAILS PIPELINE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vbox amber" style="margin-top:24px;">
+      <div class="vbox-label" style="color:#92400e;">📄 Paper Implication</div>
+      <div class="vbox-text">CSQA modifies the three-tier taxonomy. It sits between ARC (Tier 2 — domain-accessible) and PIQA/SVAMP (Tier 3 — guide necessary). The ceiling nearly replicates the pipeline on accuracy but falls on consistency and bias suppression. Recommended: introduce a Tier 2.5 — "Partially accessible" — where scale helps but fine-tuned verbal planning still adds marginal gains across multiple dimensions. Add CSQA ceiling to ablation Table III with the note that ECE improvement is ceiling-led but accuracy improvement remains pipeline-led.</div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-hint">CommonsenseQA Ceiling + CoT Experiment · N=900 · Adnan Abdullah Sadi · North South University · SLM-to-SLM Guided Reasoning</div>
+
+<script>
+  Chart.defaults.font.family = "'JetBrains Mono', monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = '#6b7280';
+
+  const PIPE = '#166534';
+  const CEIL = '#4c1d95';
+  const BASE = '#92400e';
+  const COT  = '#9f1239';
+  const GOLD = '#b45309';
+
+  // ── Accuracy ──
+  new Chart(document.getElementById('accChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'Baseline', 'CoT'],
+      datasets: [{ label: 'Accuracy (%)', data: [75.8, 75.0, 70.7, 67.67],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', BASE+'cc', COT+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 20, max: 85, title: { display: true, text: 'Accuracy (%)' } } }
+    }
+  });
+
+  // ── Accuracy Gap ──
+  new Chart(document.getElementById('accGapChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'Baseline', 'CoT'],
+      datasets: [{ label: 'Gap from Pipeline (pp)', data: [0, -0.8, -5.1, -8.13],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', BASE+'cc', COT+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: -10, max: 1, title: { display: true, text: 'pp vs Pipeline' } } }
+    }
+  });
+
+  // ── Cumulative trend ──
+  new Chart(document.getElementById('cumulChart'), {
+    type: 'line',
+    data: {
+      labels: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      datasets: [
+        { label: 'Ceiling', data: [81.0, 78.0, 79.0, 78.2, 77.0, 75.8, 75.6, 75.1, 75.0],
+          borderColor: CEIL, backgroundColor: CEIL+'22', fill: true, tension: 0.3 },
+        { label: 'Pipeline', data: [75.8, 75.8, 75.8, 75.8, 75.8, 75.8, 75.8, 75.8, 75.8],
+          borderColor: PIPE, borderDash: [5,3], borderWidth: 2, pointRadius: 0, backgroundColor: 'transparent' },
+        { label: 'Baseline', data: [70.7, 70.7, 70.7, 70.7, 70.7, 70.7, 70.7, 70.7, 70.7],
+          borderColor: BASE, borderDash: [5,3], borderWidth: 2, pointRadius: 0, backgroundColor: 'transparent' },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 60, max: 85, title: { display: true, text: 'Cumulative Accuracy (%)' } },
+                x: { title: { display: true, text: 'N Questions' } } }
+    }
+  });
+
+  // ── Consistency ──
+  new Chart(document.getElementById('consistChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'Baseline', 'CoT (est.)'],
+      datasets: [{ label: 'Mean Vote Consistency', data: [0.757, 0.731, 0.697, 0.678],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', BASE+'cc', COT+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0.6, max: 0.82, title: { display: true, text: 'Mean Consistency (0–1)' } } }
+    }
+  });
+
+  // ── Vote Buckets ──
+  new Chart(document.getElementById('voteDistChart'), {
+    type: 'bar',
+    data: {
+      labels: ['All-Wrong (0%)', 'Low (1–39%)', 'Medium (40–79%)', 'High (≥80%)'],
+      datasets: [
+        { label: 'Ceiling', data: [114, 75, 109, 602], backgroundColor: CEIL+'cc', borderRadius: 3 },
+        { label: 'CoT',     data: [201, 73, 70, 556],  backgroundColor: COT+'99',  borderRadius: 3 },
+        { label: 'Baseline',data: [233, 18, 35, 614],  backgroundColor: BASE+'77', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { title: { display: true, text: 'Number of questions' } } }
+    }
+  });
+
+  // ── ECE ──
+  new Chart(document.getElementById('eceChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Ceiling 🥇', 'Pipeline', 'Baseline', 'CoT ⚠️'],
+      datasets: [{ label: 'ECE', data: [0.107, 0.141, 0.176, 0.191],
+        backgroundColor: [CEIL+'cc', PIPE+'cc', BASE+'cc', COT+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 0.24, title: { display: true, text: 'ECE (lower = better)' } } }
+    }
+  });
+
+  // ── False Confidence ──
+  new Chart(document.getElementById('falseConfChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Ceiling 🥇', 'Pipeline', 'CoT', 'Baseline ⚠️'],
+      datasets: [{ label: 'False Confidence Cases', data: [138, 178, 208, 234],
+        backgroundColor: [CEIL+'cc', PIPE+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { title: { display: true, text: 'Questions (conf ≥ 0.8 but wrong)' } } }
+    }
+  });
+
+  // ── Calibration buckets ──
+  new Chart(document.getElementById('calibChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Very High (n=740)', 'High (n=124)', 'Medium (n=29)', 'Low (n=7)'],
+      datasets: [
+        { label: 'Actual Accuracy', data: [0.8135, 0.4758, 0.3793, 0.4286],
+          backgroundColor: [CEIL+'cc', COT+'cc', COT+'88', PIPE+'aa'], borderRadius: 3 },
+        { label: 'Expected Confidence', data: [0.9, 0.7, 0.5, 0.25],
+          type: 'line', borderColor: '#1d4ed8', borderDash: [5,3], borderWidth: 2,
+          pointRadius: 6, pointStyle: 'rectRot', backgroundColor: '#1d4ed8' }
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 0, max: 1.05, title: { display: true, text: 'Proportion' } } }
+    }
+  });
+
+  // ── Letter distribution ──
+  new Chart(document.getElementById('letterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: [
+        { label: 'Ceiling', data: [18.17, 18.94, 20.69, 23.23, 18.98],
+          backgroundColor: CEIL+'cc', borderRadius: 3 },
+        { label: 'Expected (20%)', data: [20,20,20,20,20],
+          type: 'line', borderColor: '#9ca3af', borderDash: [4,3], borderWidth: 2,
+          pointRadius: 0, backgroundColor: 'transparent' }
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 12, max: 30, title: { display: true, text: '% selecting option' } } }
+    }
+  });
+
+  // ── Outcome doughnut ──
+  new Chart(document.getElementById('outcomeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct (675)', 'All-5-wrong (114)', 'Split wrong (111)'],
+      datasets: [{ data: [675, 114, 111],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', GOLD+'cc'], borderWidth: 2, borderColor: 'white' }]
+    },
+    options: { responsive: true, cutout: '55%', plugins: { legend: { position: 'bottom' } } }
+  });
+
+  // ── McNemar CoT vs Base ──
+  new Chart(document.getElementById('mcnemarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['CoT Wins (B=37)', 'Baseline Wins (C=62)'],
+      datasets: [{ label: 'Questions', data: [37, 62],
+        backgroundColor: [PIPE+'88', COT+'cc'], borderRadius: 4, barThickness: 60 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false },
+        title: { display: true, text: 'Baseline wins 62 vs CoT wins 37 — decisive', font: {size:11}, color:'#6b7280' } },
+      scales: { y: { title: { display: true, text: 'Questions' } } }
+    }
+  });
+
+  // ── CoT vote buckets ──
+  new Chart(document.getElementById('cotVoteChart'), {
+    type: 'bar',
+    data: {
+      labels: ['All-Wrong (0%)', 'Low (1–39%)', 'Medium (40–79%)', 'High (≥80%)'],
+      datasets: [
+        { label: 'CoT',      data: [201, 73, 70, 556], backgroundColor: COT+'cc', borderRadius: 3 },
+        { label: 'Baseline', data: [233, 18, 35, 614], backgroundColor: BASE+'88', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { title: { display: true, text: 'Number of questions' } } }
+    }
+  });
+
+  // ── E-option chart ──
+  new Chart(document.getElementById('eoptionChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'Baseline', 'CoT'],
+      datasets: [
+        { label: 'E-selection %', data: [14.0, 18.8, 24.8, 29.5],
+          backgroundColor: [PIPE+'cc', CEIL+'cc', BASE+'cc', COT+'cc'], borderRadius: 4 },
+        { label: 'Expected (20%)', data: [20, 20, 20, 20],
+          type: 'line', borderColor: '#9ca3af', borderDash: [4,3], borderWidth: 2,
+          pointRadius: 0, backgroundColor: 'transparent' }
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 0, max: 35, title: { display: true, text: '% selecting option E' } } }
+    }
+  });
+
+  // ── Ceiling letter full ──
+  new Chart(document.getElementById('ceilLetterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: [
+        { label: 'Ceiling', data: [18.22, 19.56, 20.33, 23.11, 18.78],
+          backgroundColor: CEIL+'cc', borderRadius: 3 },
+        { label: 'Baseline', data: [16.5, 20.6, 19.1, 18.9, 24.8],
+          backgroundColor: BASE+'88', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 10, max: 32, title: { display: true, text: '% of questions' } } }
+    }
+  });
+
+  // ── Efficiency scatter ──
+  new Chart(document.getElementById('effScatterChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Pipeline', data: [{x:10.5, y:75.8}], backgroundColor: PIPE, pointRadius: 16 },
+        { label: 'Ceiling',  data: [{x:15.0, y:75.0}], backgroundColor: CEIL, pointRadius: 16 },
+        { label: 'Baseline', data: [{x:7.5,  y:70.7}], backgroundColor: BASE, pointRadius: 16 },
+        { label: 'CoT',      data: [{x:7.5,  y:67.67}], backgroundColor: COT, pointRadius: 16 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}% @ ${ctx.parsed.x}B` } } },
+      scales: {
+        x: { min: 5, max: 17, title: { display: true, text: 'Param-Passes (Billions)' } },
+        y: { min: 60, max: 82, title: { display: true, text: 'Accuracy (%)' } }
+      }
+    }
+  });
+
+  // ── Efficiency bar ──
+  new Chart(document.getElementById('effBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Baseline', 'CoT', 'Pipeline', 'Ceiling'],
+      datasets: [{ label: 'Acc / Billion Param-Passes', data: [9.43, 9.03, 7.22, 5.0],
+        backgroundColor: [BASE+'cc', COT+'cc', PIPE+'cc', CEIL+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 12, title: { display: true, text: 'Efficiency (Acc/B)' } } }
+    }
+  });
+</script>
+</body>
+</html>

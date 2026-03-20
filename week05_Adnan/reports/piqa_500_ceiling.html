@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIQA — Four-Way Comparison Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --ink:    #0a0a0f;
+      --paper:  #f4f3ee;
+      --cream:  #fdfcf8;
+      --navy:   #18243c;
+      --pipe:   #065f46;   /* pipeline — forest green */
+      --base:   #7f1d1d;   /* baseline — deep red */
+      --cot:    #78350f;   /* CoT — deep amber */
+      --ceil:   #312e81;   /* ceiling — indigo */
+      --accent: #0369a1;
+      --muted:  #6b7280;
+      --border: #e2e0d6;
+      --light:  #f3f2eb;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 300;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:sticky; top:0; z-index:100;
+      background: var(--ink);
+      padding: 0 32px;
+      display:flex; align-items:center;
+      height:48px; overflow-x:auto; gap:0;
+    }
+    .nav-brand {
+      font-family:'Space Mono',monospace;
+      font-size:11px; font-weight:700;
+      color:#fde68a; margin-right:24px; padding-right:24px;
+      border-right:1px solid #2a2a3a; white-space:nowrap;
+    }
+    nav a {
+      color:#94a3b8; text-decoration:none;
+      font-size:11px; white-space:nowrap;
+      padding:4px 10px; border-radius:3px; transition:color .15s;
+    }
+    nav a:hover { color:white; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink); color:white;
+      padding:72px 0 52px; position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 70% 80% at 80% 40%, #18243c99, transparent),
+                  radial-gradient(ellipse 40% 60% at 10% 80%, #06291888, transparent);
+    }
+    /* striped accent at bottom */
+    .hero::after {
+      content:'';
+      position:absolute; bottom:0; left:0; right:0; height:4px;
+      background: repeating-linear-gradient(90deg, var(--pipe) 0%, var(--pipe) 25%, var(--ceil) 25%, var(--ceil) 50%, var(--cot) 50%, var(--cot) 75%, var(--base) 75%, var(--base) 100%);
+    }
+    .hero-inner { max-width:1120px; margin:0 auto; padding:0 32px; position:relative; }
+    .hero-tag {
+      font-family:'Space Mono',monospace; font-size:10px;
+      letter-spacing:3px; text-transform:uppercase;
+      color:#fde68a; margin-bottom:18px; display:block;
+    }
+    .hero h1 {
+      font-family:'Cormorant Garamond',serif;
+      font-size: clamp(30px, 5vw, 60px);
+      font-weight:700; line-height:1.05;
+      max-width:840px; margin-bottom:16px;
+    }
+    .hero h1 em { font-style:italic; color:#86efac; }
+    .hero-sub { font-size:15px; color:#cbd5e1; max-width:700px; line-height:1.75; margin-bottom:42px; }
+
+    .pill-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:38px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:5px 13px; border-radius:20px;
+      font-family:'Space Mono',monospace; font-size:10px; font-weight:700;
+    }
+    .pill .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .pill.pipe { background:rgba(6,95,70,.35);  color:#6ee7b7; border:1px solid #065f46; }
+    .pill.ceil { background:rgba(49,46,129,.3); color:#c4b5fd; border:1px solid #312e81; }
+    .pill.cot  { background:rgba(127,53,15,.3); color:#fcd34d; border:1px solid #78350f; }
+    .pill.base { background:rgba(127,29,29,.3); color:#fca5a5; border:1px solid #7f1d1d; }
+
+    .hero-stats {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(152px,1fr));
+      gap:2px; background:rgba(255,255,255,.05); border-radius:6px; overflow:hidden;
+    }
+    .hs { background:rgba(255,255,255,.04); padding:20px 18px; }
+    .hs-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:42px; font-weight:700; line-height:1; margin-bottom:4px;
+    }
+    .hs-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; }
+    .cn-pipe { color:#6ee7b7; } .cn-ceil { color:#c4b5fd; }
+    .cn-cot  { color:#fcd34d; } .cn-base { color:#fca5a5; }
+    .cn-gold { color:#fbbf24; } .cn-red  { color:#f87171; }
+
+    /* ── LAYOUT ── */
+    .container { max-width:1120px; margin:0 auto; padding:0 32px; }
+    section { padding:62px 0; }
+    section:nth-child(even) { background:var(--cream); }
+    section:nth-child(odd)  { background:var(--paper); }
+    .sec-tag {
+      font-family:'Space Mono',monospace; font-size:10px;
+      letter-spacing:3px; text-transform:uppercase;
+      color:var(--accent); margin-bottom:8px; display:block;
+    }
+    .sec-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size: clamp(26px, 3vw, 42px);
+      font-weight:700; color:var(--ink); line-height:1.1;
+    }
+    .sec-desc { font-size:15px; color:var(--muted); margin-top:10px; max-width:720px; }
+    .sec-head { margin-bottom:38px; }
+
+    /* ── CARDS ── */
+    .card {
+      background:white; border:1px solid var(--border);
+      border-radius:8px; padding:24px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.04);
+    }
+    .card-title { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+    .card-sub   { font-size:12px; color:var(--muted); margin-bottom:16px; }
+
+    /* ── GRIDS ── */
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+    .g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    @media(max-width:768px) { .g2,.g3,.g4 { grid-template-columns:1fr; } }
+    canvas { max-height:280px; }
+
+    /* ── METRICS ── */
+    .metric {
+      background:white; border:1px solid var(--border);
+      border-radius:8px; padding:22px; text-align:center;
+    }
+    .metric-val { font-family:'Cormorant Garamond',serif; font-size:46px; font-weight:700; line-height:1; margin-bottom:4px; }
+    .metric-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+    .metric-sub { font-size:12px; color:var(--muted); margin-top:5px; }
+
+    /* ── TABLES ── */
+    .tbl-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; font-size:13.5px; }
+    thead th {
+      background:var(--navy); color:white; padding:11px 14px;
+      text-align:left; font-family:'Space Mono',monospace;
+      font-size:10px; font-weight:400; letter-spacing:.5px;
+      text-transform:uppercase; white-space:nowrap;
+    }
+    tbody td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#fafaf5; }
+    tbody tr.winner td { background:#f0fdf4; }
+    tbody tr.loser  td { background:#fef2f2; color:var(--muted); }
+    tbody tr.neutral td { background:#f5f3ff; }
+    .td-num { font-family:'Space Mono',monospace; text-align:right; font-size:13px; }
+    .td-pos { color:var(--pipe); font-weight:600; font-family:'Space Mono',monospace; }
+    .td-neg { color:var(--base); font-weight:600; font-family:'Space Mono',monospace; }
+
+    /* ── VERDICT BOXES ── */
+    .vbox { border-radius:8px; padding:24px 28px; margin:16px 0; }
+    .vbox.green  { background:#f0fdf4; border:1px solid #bbf7d0; border-left:5px solid var(--pipe); }
+    .vbox.red    { background:#fef2f2; border:1px solid #fecaca; border-left:5px solid var(--base); }
+    .vbox.indigo { background:#eef2ff; border:1px solid #c7d2fe; border-left:5px solid var(--ceil); }
+    .vbox.amber  { background:#fffbeb; border:1px solid #fde68a; border-left:5px solid var(--cot); }
+    .vbox-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+    .vbox-text  { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; line-height:1.65; }
+
+    /* ── FINDING ── */
+    .finding { background:var(--navy); color:white; border-radius:8px; padding:32px; }
+    .finding-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#fde68a; margin-bottom:14px; }
+    .finding-text  { font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; line-height:1.55; }
+
+    /* ── RANK BARS ── */
+    .rank-row { display:flex; gap:12px; margin-bottom:12px; align-items:center; }
+    .rank-pos  { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; width:34px; flex-shrink:0; }
+    .rank-wrap { flex:1; }
+    .rank-head { font-size:13px; margin-bottom:4px; display:flex; justify-content:space-between; }
+    .rank-bar  { height:22px; border-radius:3px; overflow:hidden; }
+    .rank-fill { height:100%; display:flex; align-items:center; padding-left:10px; font-family:'Space Mono',monospace; font-size:11px; color:white; font-weight:700; }
+
+    /* ── BIAS METER ── */
+    .bias-meter { margin-bottom:12px; }
+    .bias-head { display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; }
+    .bias-track { height:26px; background:var(--light); border-radius:4px; overflow:hidden; position:relative; }
+    .bias-fill  { height:100%; display:flex; align-items:center; padding-left:10px; font-family:'Space Mono',monospace; font-size:12px; color:white; font-weight:700; border-radius:4px; }
+    /* 50% marker */
+    .bias-track::after { content:''; position:absolute; top:0; bottom:0; left:50%; width:2px; background:rgba(0,0,0,.15); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display:flex; gap:14px; border-radius:8px;
+      padding:16px 18px; margin:16px 0;
+    }
+    .callout.blue   { background:#eff6ff; border:1px solid #bfdbfe; }
+    .callout.amber  { background:#fffbeb; border:1px solid #fde68a; }
+    .callout.red    { background:#fff1f2; border:1px solid #fecdd3; }
+    .callout.green  { background:#f0fdf4; border:1px solid #bbf7d0; }
+    .callout-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .callout-text { font-size:14px; line-height:1.65; }
+
+    .badge {
+      display:inline-block; font-family:'Space Mono',monospace;
+      font-size:10px; padding:3px 9px; border-radius:10px; font-weight:400;
+    }
+    .bw { background:#d1fae5; color:#065f46; }
+    .bl { background:#fee2e2; color:#991b1b; }
+    .bm { background:#e0e7ff; color:#3730a3; }
+    .bn { background:#fef3c7; color:#92400e; }
+
+    hr.divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+    .scroll-hint { text-align:center; padding:20px; font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">PIQA · Four-Way Report</span>
+  <a href="#overview">Overview</a>
+  <a href="#findings">Findings</a>
+  <a href="#angle1">① Accuracy</a>
+  <a href="#angle2">② Consistency</a>
+  <a href="#angle3">③ Calibration</a>
+  <a href="#bias">Position Bias</a>
+  <a href="#ceiling-deep">Ceiling Deep-Dive</a>
+  <a href="#cot">CoT Analysis</a>
+  <a href="#efficiency">Efficiency</a>
+  <a href="#verdict">Verdict</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">PIQA · Physical Reasoning · Four-Condition Comparison · N = 500 · 2025–2026</span>
+    <h1>Debiasing Is Necessary<br>But <em>Not Sufficient</em></h1>
+    <p class="hero-sub">PIQA's infamous Sol1 collapse (93.4% A-selection, 54.2% accuracy) is the sharpest demonstration of position bias in this study. All three non-baseline conditions fix it — yet only the ceiling and pipeline actually improve accuracy. CoT breaks the bias and goes nowhere.</p>
+
+    <div class="pill-row">
+      <span class="pill pipe"><span class="dot" style="background:#065f46;"></span>Pipeline — 3B LoRA + 1.5B×5 (10.5B)</span>
+      <span class="pill ceil"><span class="dot" style="background:#312e81;"></span>Ceiling — 3B Base×5 (15.0B)</span>
+      <span class="pill cot"><span class="dot" style="background:#78350f;"></span>CoT — "step by step" (7.5B)</span>
+      <span class="pill base"><span class="dot" style="background:#7f1d1d;"></span>Baseline — 1.5B×5 (7.5B)</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num cn-pipe">78.4%</div><div class="hs-label">Pipeline 🥇</div></div>
+      <div class="hs"><div class="hs-num cn-ceil">75.2%</div><div class="hs-label">Ceiling 🥈</div></div>
+      <div class="hs"><div class="hs-num cn-base">54.2%</div><div class="hs-label">Baseline 🥉</div></div>
+      <div class="hs"><div class="hs-num cn-cot">54.8%</div><div class="hs-label">CoT ≈ Baseline</div></div>
+      <div class="hs"><div class="hs-num cn-red">93.4%</div><div class="hs-label">Baseline A-Bias ⚠️</div></div>
+      <div class="hs"><div class="hs-num cn-pipe">0.110</div><div class="hs-label">Pipeline ECE (best)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Experiment Setup</span>
+      <h2 class="sec-title">Four Conditions — Binary Physical Reasoning</h2>
+      <p class="sec-desc">PIQA tests physical commonsense: each question has Sol1 and Sol2 — one physically correct or practical, one subtly wrong. Random chance = 50%. All 500 questions evaluated under all four conditions.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Configuration</th><th>Fine-Tuned?</th><th>Compute</th><th>Sol1 (A) Selection</th><th>Position Bias Score</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">✦ Pipeline (Guided)</strong></td>
+            <td>3B LoRA guide + 1.5B solver × 5</td>
+            <td><span class="badge bw">Yes — LoRA</span></td>
+            <td class="td-num">10.5B</td>
+            <td class="td-num" style="color:var(--pipe);">42.1%</td>
+            <td class="td-num" style="color:var(--pipe);">0.079 (near-neutral)</td>
+          </tr>
+          <tr class="neutral">
+            <td><strong style="color:var(--ceil);">● Ceiling (New)</strong></td>
+            <td>3B base model × 5 (no fine-tuning)</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num">15.0B</td>
+            <td class="td-num" style="color:var(--ceil);">55.0%</td>
+            <td class="td-num" style="color:var(--ceil);">0.050 (best neutral!)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cot);">⚠ CoT (New)</strong></td>
+            <td>1.5B + "think step by step" × 5</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num">7.5B</td>
+            <td class="td-num" style="color:var(--cot);">44.2%</td>
+            <td class="td-num" style="color:var(--cot);">0.058 (near-neutral)</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--base);">○ Baseline</strong></td>
+            <td>1.5B solver × 5 (no guide)</td>
+            <td><span class="badge bl">No</span></td>
+            <td class="td-num">7.5B</td>
+            <td class="td-num" style="color:var(--base);">93.4% ⚠️</td>
+            <td class="td-num" style="color:var(--base);">0.434 (severe collapse)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout blue" style="margin-top:20px;">
+      <div class="callout-icon">🎯</div>
+      <div class="callout-text"><strong>The PIQA setup is uniquely revealing:</strong> Because it is a binary task (exactly two options), position bias is immediately visible and quantifiable. The baseline's 93.4% A-selection at only 54.2% accuracy is the clearest failure mode in the entire study. All three interventions fix the bias — but they produce wildly different accuracy outcomes, allowing us to isolate exactly what debiasing alone achieves.</div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY FINDINGS -->
+<section id="findings">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Summary</span>
+      <h2 class="sec-title">Four-Way Findings at a Glance</h2>
+    </div>
+
+    <div class="finding" style="margin-bottom:24px;">
+      <div class="finding-label">THE PIQA CORE FINDING — DEBIASING IS NECESSARY BUT NOT SUFFICIENT</div>
+      <div class="finding-text">"Three conditions fix PIQA's severe Sol1 collapse — but produce entirely different results: ceiling achieves 75.2%, pipeline 78.4%, and CoT only 54.8%. All three redistribute A-selection near 50% yet their accuracy spans 23.6 percentage points. <em>Position bias correction is a prerequisite for good performance, not a cause of it.</em> The fine-tuned verbal plan provides the reasoning quality that scale alone partially replicates and CoT cannot."</div>
+      <div style="margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#6ee7b7;">78.4%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PIPELINE 🥇</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#c4b5fd;">75.2%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CEILING 🥈</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#fcd34d;">54.8%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CoT 🥉 ≈ baseline</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#fca5a5;">54.2%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">BASELINE (last)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g4">
+      <div class="vbox green" style="margin:0;">
+        <div class="vbox-label" style="color:#065f46;">① Accuracy</div>
+        <div class="vbox-text" style="font-size:15px;">Pipeline wins (78.4%). Ceiling is strong 2nd (75.2%). CoT barely beats baseline at 54.8% — debiasing alone adds nothing.</div>
+      </div>
+      <div class="vbox indigo" style="margin:0;">
+        <div class="vbox-label" style="color:#312e81;">② Consistency</div>
+        <div class="vbox-text" style="font-size:15px;">Pipeline leads (0.778). Ceiling strong 2nd (0.742). Baseline catastrophically low (0.544) due to all-wrong votes.</div>
+      </div>
+      <div class="vbox green" style="margin:0;">
+        <div class="vbox-label" style="color:#065f46;">③ Calibration</div>
+        <div class="vbox-text" style="font-size:15px;">Pipeline best ECE (0.110). Ceiling good (0.133). CoT slightly better than baseline (0.304 vs 0.337). Baseline is catastrophic.</div>
+      </div>
+      <div class="vbox red" style="margin:0;">
+        <div class="vbox-label" style="color:#7f1d1d;">Position Bias</div>
+        <div class="vbox-text" style="font-size:15px;">Baseline: 93.4% Sol1 selection. All three interventions correct to ~42–55%. Only ceiling and pipeline convert debiasing into accuracy.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 1: ACCURACY -->
+<section id="angle1">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 1 of 3</span>
+      <h2 class="sec-title">① Accuracy — The Wide Spread</h2>
+      <p class="sec-desc">Binary task — random chance = 50%. The four conditions span 24.2 percentage points (54.2% to 78.4%) despite all fixing position bias.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">Accuracy Ranking — N=500 (random chance = 50%)</div>
+      <div class="card-sub">Bar scaled from random chance (50%) to 85%. The 23.6 pt gap between CoT and pipeline — despite both fixing bias — is the central finding.</div>
+      <div style="margin-top:18px;">
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--pipe);">🥇</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Pipeline — 3B LoRA + 1.5B×5 (10.5B)</span><span style="font-family:'Space Mono',monospace;color:var(--pipe);font-weight:700;">78.4%</span></div>
+            <div class="rank-bar" style="background:#dcfce7;"><div class="rank-fill" style="width:82%;background:var(--pipe);">78.4%</div></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--ceil);">🥈</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Ceiling — 3B Base×5 (15.0B) &nbsp;<span style="font-size:11px;font-family:'Space Mono',monospace;color:var(--ceil);">+21.0 pts over baseline</span></span><span style="font-family:'Space Mono',monospace;color:var(--ceil);font-weight:700;">75.2%</span></div>
+            <div class="rank-bar" style="background:#eef2ff;"><div class="rank-fill" style="width:72%;background:var(--ceil);">75.2%</div></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-pos" style="color:var(--cot);">⚠️</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>CoT — "step by step" (7.5B) &nbsp;<span style="font-size:11px;font-family:'Space Mono',monospace;color:var(--cot);">bias fixed, accuracy unchanged</span></span><span style="font-family:'Space Mono',monospace;color:var(--cot);font-weight:700;">54.8%</span></div>
+            <div class="rank-bar" style="background:#fffbeb;"><div class="rank-fill" style="width:13%;background:var(--cot);">54.8%</div></div>
+          </div>
+        </div>
+        <div class="rank-row" style="margin-bottom:0;">
+          <div class="rank-pos" style="color:var(--base);">🥉</div>
+          <div class="rank-wrap">
+            <div class="rank-head"><span>Baseline — 1.5B×5 (7.5B) &nbsp;<span style="font-size:11px;font-family:'Space Mono',monospace;color:var(--base);">93.4% Sol1 collapse</span></span><span style="font-family:'Space Mono',monospace;color:var(--base);font-weight:700;">54.2%</span></div>
+            <div class="rank-bar" style="background:#fef2f2;"><div class="rank-fill" style="width:11%;background:var(--base);">54.2%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Accuracy — All Four Conditions</div>
+        <div class="card-sub">Dashed line = random chance (50%). Ceiling and pipeline far above; CoT barely above random.</div>
+        <canvas id="accChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Accuracy by Answer (Sol1 correct vs Sol2 correct)</div>
+        <div class="card-sub">Baseline: 98% accuracy when Sol1 is right, 13% when Sol2 is right — textbook position bias collapse.</div>
+        <canvas id="solAccChart"></canvas>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:20px;">
+      <div class="metric"><div class="metric-val" style="color:var(--pipe);">78.4%</div><div class="metric-label">Pipeline</div><div class="metric-sub">10.5B — +24.2 pts vs baseline</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">75.2%</div><div class="metric-label">Ceiling</div><div class="metric-sub">15.0B — +21.0 pts vs baseline</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--cot);">54.8%</div><div class="metric-label">CoT</div><div class="metric-sub">7.5B — +0.6 pts vs baseline ⚠️</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--base);">54.2%</div><div class="metric-label">Baseline</div><div class="metric-sub">7.5B — near random chance</div></div>
+    </div>
+
+    <div class="vbox indigo" style="margin-top:20px;">
+      <div class="vbox-label" style="color:#312e81;">🔑 The Critical Contrast</div>
+      <div class="vbox-text">CoT fixes the Sol1 bias (A-selection: 93.4% → 44.2%) <em>and achieves nothing</em>. The ceiling fixes the bias (A-selection: 93.4% → 55.0%) and gains 21.0 pts. Both improvements happen at very different compute costs. The difference is the 3B model's pretraining knowledge about physical processes — CoT prompting cannot unlock this from the 1.5B model, but scale can access it directly.</div>
+    </div>
+
+    <!-- Cumulative trend -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Cumulative Accuracy Trend (N=500)</div>
+      <div class="card-sub">Starts at 76.0% (N=100) and stabilises to 75.2% by N=500. Consistent throughout — no variance collapse.</div>
+      <canvas id="cumulChart" style="max-height:200px;"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 2: CONSISTENCY -->
+<section id="angle2">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 2 of 3</span>
+      <h2 class="sec-title">② Vote Consistency — Ensemble Quality</h2>
+      <p class="sec-desc">Fraction of 5 solver votes matching ground truth per question. Binary task: votes are either all-A or all-B, with few splits — making consistency very informative.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Mean Consistency — Four Conditions</div>
+        <div class="card-sub">Pipeline leads (0.778). Ceiling strong at 0.742. Baseline only 0.544 because most votes go to the wrong answer.</div>
+        <canvas id="consistChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Vote Bucket Distribution — Ceiling</div>
+        <div class="card-sub">354 high-agreement correct (≥80%) vs 97 all-wrong. A binary task rarely produces medium splits.</div>
+        <canvas id="voteDistChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Mean Consistency</th><th>All-Wrong (0/5)</th><th>Low (1–39%)</th><th>Medium (40–79%)</th><th>High (≥80%)</th><th>vs Pipeline</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.778</td>
+            <td class="td-num">—</td><td class="td-num">—</td><td class="td-num">—</td><td class="td-num">—</td>
+            <td class="td-pos">—</td>
+          </tr>
+          <tr class="neutral">
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:600;">0.742</td>
+            <td class="td-num">97</td><td class="td-num">12</td><td class="td-num">37</td><td class="td-num">354</td>
+            <td class="td-neg">−0.036</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num" style="color:var(--cot);">~0.558</td>
+            <td class="td-num">108</td><td class="td-num">—</td><td class="td-num">120</td><td class="td-num">222</td>
+            <td class="td-neg">−0.220</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num" style="color:var(--base);font-weight:600;">0.544</td>
+            <td class="td-num">201</td><td class="td-num">—</td><td class="td-num">22</td><td class="td-num">264</td>
+            <td class="td-neg">−0.234</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout green" style="margin-top:16px;">
+      <div class="callout-icon">📌</div>
+      <div class="callout-text"><strong>Ceiling correct-question consistency = 0.964</strong> — when the ceiling gets a question right, it gets it right with near-unanimous votes (4.82/5 average). The 3B model is very certain when it knows the answer. The remaining 97 all-wrong questions represent physics problems where the pretraining knowledge is absent or misleading — exactly what fine-tuning addresses.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE 3: CALIBRATION -->
+<section id="angle3">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Angle 3 of 3</span>
+      <h2 class="sec-title">③ Calibration — From Catastrophe to Excellence</h2>
+      <p class="sec-desc">ECE tells the full story of the baseline position bias collapse — and how each intervention recovers from it.</p>
+    </div>
+
+    <div class="vbox red" style="margin-bottom:24px;">
+      <div class="vbox-label" style="color:#7f1d1d;">⚠️ The Baseline Calibration Disaster</div>
+      <div class="vbox-text">The baseline ECE of 0.354 is the worst in the entire study. 93.4% of questions get 5/5 votes on Sol1 — absolute maximum "confidence." But those unanimous answers are only correct 54.2% of the time. ECE = |0.9 − 0.542| × 0.934 ≈ 0.334 from this single bucket alone. The baseline is maximally confident and barely above random chance.</div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">ECE — All Four Conditions</div>
+        <div class="card-sub">Lower = better. Pipeline best (0.110), baseline catastrophic (0.337). A 3× improvement.</div>
+        <canvas id="eceChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">False Confidence Cases (conf ≥ 0.8 but wrong)</div>
+        <div class="card-sub">Baseline: 214 false-confidence cases. Pipeline: 110. Ceiling: 109 (near-identical to pipeline).</div>
+        <canvas id="falseConfChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">Ceiling Calibration Bucket Analysis</div>
+      <div class="card-sub">N=500. Binary task: only two confidence levels appear — very high (≥0.8) and high (0.6–0.8). No low-confidence votes in a binary task.</div>
+      <div class="tbl-wrap" style="margin-top:12px;">
+        <table>
+          <thead>
+            <tr><th>Bucket</th><th>Count</th><th>%</th><th>Expected Conf</th><th>Actual Accuracy</th><th>Gap</th><th>Assessment</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Very High (≥0.80)</strong></td>
+              <td class="td-num">463</td><td class="td-num">92.6%</td>
+              <td class="td-num">0.900</td>
+              <td class="td-num" style="color:var(--ceil);font-weight:600;">0.765</td>
+              <td class="td-num">−0.135</td>
+              <td><span class="badge bn">Overconfident but reasonable</span></td>
+            </tr>
+            <tr>
+              <td>High (0.60–0.80)</td>
+              <td class="td-num">37</td><td class="td-num">7.4%</td>
+              <td class="td-num">0.700</td>
+              <td class="td-num">0.595</td>
+              <td class="td-num">−0.105</td>
+              <td><span class="badge bl">Overconfident</span></td>
+            </tr>
+            <tr style="background:#f0fdf4;">
+              <td><strong>Overall ECE</strong></td>
+              <td class="td-num">500</td><td class="td-num">100%</td>
+              <td colspan="2"></td>
+              <td class="td-num" style="color:var(--ceil);font-weight:700;">0.133</td>
+              <td><span class="badge bm">2nd best of 4 conditions</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>ECE</th><th>False Confidence</th><th>ECE Rank</th><th>Reduction vs Baseline</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.110 ✦</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:600;">110 (lowest)</td>
+            <td class="td-num">1st 🥇</td>
+            <td class="td-pos">−69.0% improvement</td>
+          </tr>
+          <tr class="neutral">
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num" style="color:var(--ceil);font-weight:600;">0.133</td>
+            <td class="td-num">109</td>
+            <td class="td-num">2nd</td>
+            <td class="td-pos">−62.5% improvement</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num">0.304</td>
+            <td class="td-num">158</td>
+            <td class="td-num">3rd</td>
+            <td class="td-pos">−14.3% improvement</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num" style="color:var(--base);font-weight:700;">0.337 ⚠️</td>
+            <td class="td-num">214</td>
+            <td class="td-num">4th (worst)</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout amber" style="margin-top:16px;">
+      <div class="callout-icon">💡</div>
+      <div class="callout-text"><strong>Notable:</strong> Ceiling false confidence (109) is nearly identical to pipeline (110), yet pipeline ECE is slightly better (0.110 vs 0.133). The pipeline's edge comes from better vote spread quality — not fewer false-confidence cases. The fine-tuned plan produces more tightly clustered correct votes, while the ceiling's false-confidence cases tend to be more emphatic (5/5 wrong) rather than the pipeline's softer 3/5 or 4/5 splits on uncertain questions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- POSITION BIAS — THE CENTREPIECE -->
+<section id="bias">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Special Analysis</span>
+      <h2 class="sec-title">Position Bias — The Most Dramatic Finding in the Study</h2>
+      <p class="sec-desc">PIQA is the only binary task in this study. Its Sol1 (A-option) collapse at 93.4% is the strongest position bias signal observed. All four conditions tell a clear story about what debiasing alone achieves.</p>
+    </div>
+
+    <!-- The debiasing visual -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">Sol1 (A) Selection Rate — Expected = 50%</div>
+      <div class="card-sub">Vertical line at 50% marks unbiased expected selection. Every condition except baseline reaches it.</div>
+      <div style="margin-top:20px;">
+        <div class="bias-meter">
+          <div class="bias-head">
+            <span><strong>Baseline</strong> — 1.5B×5, no guidance</span>
+            <span style="font-family:'Space Mono',monospace;color:var(--base);font-weight:700;">93.4% → acc 54.2%</span>
+          </div>
+          <div class="bias-track">
+            <div class="bias-fill" style="width:93.4%;background:var(--base);">93.4%</div>
+          </div>
+        </div>
+        <div class="bias-meter">
+          <div class="bias-head">
+            <span><strong>CoT</strong> — "think step by step"</span>
+            <span style="font-family:'Space Mono',monospace;color:var(--cot);font-weight:700;">44.2% → acc 54.8%</span>
+          </div>
+          <div class="bias-track">
+            <div class="bias-fill" style="width:44.2%;background:var(--cot);">44.2%</div>
+          </div>
+        </div>
+        <div class="bias-meter">
+          <div class="bias-head">
+            <span><strong>Pipeline</strong> — 3B LoRA + 1.5B×5</span>
+            <span style="font-family:'Space Mono',monospace;color:var(--pipe);font-weight:700;">42.1% → acc 78.4%</span>
+          </div>
+          <div class="bias-track">
+            <div class="bias-fill" style="width:42.1%;background:var(--pipe);">42.1%</div>
+          </div>
+        </div>
+        <div class="bias-meter" style="margin-bottom:0;">
+          <div class="bias-head">
+            <span><strong>Ceiling</strong> — 3B Base×5 (no fine-tuning)</span>
+            <span style="font-family:'Space Mono',monospace;color:var(--ceil);font-weight:700;">55.0% → acc 75.2%</span>
+          </div>
+          <div class="bias-track">
+            <div class="bias-fill" style="width:55.0%;background:var(--ceil);">55.0%</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);border-top:1px dashed var(--border);padding-top:10px;">
+          Expected (unbiased): 50% Sol1. All three non-baseline conditions reach near-parity. Only ceiling and pipeline also improve accuracy.
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Accuracy When Sol1 Correct vs Sol2 Correct</div>
+        <div class="card-sub">Baseline wins 98% when Sol1 is correct, 13% when Sol2 is correct — proving pure position dependency. CoT debiases but stays at ~54%.</div>
+        <canvas id="posAccChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Bias Score Comparison</div>
+        <div class="card-sub">Bias score = |A-selection − 0.5|. Ceiling achieves the most balanced distribution (0.050) — better than pipeline (0.079).</div>
+        <canvas id="biasScoreChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>A (Sol1) %</th><th>B (Sol2) %</th><th>Bias Score</th><th>Acc (Sol1 correct)</th><th>Acc (Sol2 correct)</th><th>Overall Acc</th></tr>
+        </thead>
+        <tbody>
+          <tr class="loser">
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num" style="color:var(--base);font-weight:700;">93.4%</td>
+            <td class="td-num">6.6%</td>
+            <td class="td-num" style="color:var(--base);font-weight:700;">0.434 ← severe</td>
+            <td class="td-num">~98%</td><td class="td-num">~13%</td>
+            <td class="td-num">54.2%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num">44.2%</td><td class="td-num">55.8%</td>
+            <td class="td-num" style="color:var(--cot);">0.058</td>
+            <td class="td-num">49.0%</td><td class="td-num">60.6%</td>
+            <td class="td-num" style="color:var(--cot);">54.8%</td>
+          </tr>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num">42.1%</td><td class="td-num">57.9%</td>
+            <td class="td-num" style="color:var(--pipe);">0.079</td>
+            <td class="td-num">—</td><td class="td-num">—</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">78.4%</td>
+          </tr>
+          <tr class="neutral">
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num">55.0%</td><td class="td-num">45.0%</td>
+            <td class="td-num" style="color:var(--ceil);">0.050 ← best neutral</td>
+            <td class="td-num">~76%</td><td class="td-num">~74%</td>
+            <td class="td-num" style="color:var(--ceil);">75.2%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vbox amber" style="margin-top:20px;">
+      <div class="vbox-label" style="color:#78350f;">📐 The Definitive Debiasing Proof</div>
+      <div class="vbox-text">CoT accuracy when Sol1 is correct = 49.0%. When Sol2 is correct = 60.6%. CoT has <em>flipped</em> the bias slightly toward Sol2 — it no longer has a position preference, but it still cannot determine which answer is physically correct. The ceiling has near-equal performance on both: ~76% when Sol1 correct, ~74% when Sol2 correct. This is genuine comprehension, not random redistribution.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CEILING DEEP DIVE -->
+<section id="ceiling-deep">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Ceiling Deep-Dive</span>
+      <h2 class="sec-title">Inside the 3B Ceiling — 500-Question Breakdown</h2>
+      <p class="sec-desc">Derived from results_PIQA.jsonl — per-question analysis of the untuned 3B ceiling condition.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Vote Bucket Distribution — Ceiling</div>
+        <div class="card-sub">354 high-agreement correct (≥80%). 97 all-wrong. Binary task produces minimal medium-bucket questions.</div>
+        <canvas id="ceilBucketChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Question Outcome Breakdown</div>
+        <div class="card-sub">376 correct (75.2%), 124 wrong. Of those wrong: 97 were all-5-votes wrong (false unanimity).</div>
+        <canvas id="outcomeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:20px;">
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">19.4%</div><div class="metric-label">All-Wrong Rate</div><div class="metric-sub">97 / 500 questions</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">109</div><div class="metric-label">False Confidence</div><div class="metric-sub">conf ≥ 0.8 but wrong</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--ceil);">109</div><div class="metric-label">Wasted Votes</div><div class="metric-sub">All on wrong-answer ties</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--pipe);">0.964</div><div class="metric-label">Correct-Q Consistency</div><div class="metric-sub">Near-perfect when right</div></div>
+    </div>
+
+    <div class="callout blue" style="margin-top:16px;">
+      <div class="callout-icon">📊</div>
+      <div class="callout-text"><strong>Wasted votes equals false confidence (109 = 109):</strong> In this binary task, every wasted vote represents a question where all 5 votes went to the wrong answer (100% false confidence). This perfect equality confirms the ceiling has no split-vote uncertainty — it either knows the answer unanimously (376 correct) or is unanimously wrong (97 all-wrong). The 28 remaining questions have mixed votes (medium/low bucket).</div>
+    </div>
+  </div>
+</section>
+
+<!-- COT ANALYSIS -->
+<section id="cot">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">CoT Deep-Dive</span>
+      <h2 class="sec-title">Why CoT Fails Completely on PIQA</h2>
+      <p class="sec-desc">CoT fixes the bias but delivers zero accuracy gain (+0.6 pts vs baseline). This is the clearest demonstration in the study that debiasing and reasoning are independent.</p>
+    </div>
+
+    <div class="finding" style="margin-bottom:24px;">
+      <div class="finding-label">THE CoT PIQA PARADOX</div>
+      <div class="finding-text">"CoT prompting on PIQA produces the same final accuracy as the baseline (54.8% vs 54.2%) despite completely eliminating position bias (93.4% → 44.2%). The reason: the 1.5B solver generating a 'step by step' reasoning chain for physical processes produces a reasoning attempt that is no better than guessing — it redistributes votes uniformly rather than directing them toward the correct physical answer. <em>The model doesn't have the physical knowledge to reason correctly; it only learns to spread its ignorance evenly.</em>"</div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Vote Distribution: CoT vs Baseline</div>
+        <div class="card-sub">CoT dramatically reduces all-wrong (201 → 108) but also reduces high-agreement correct (264 → 222). The votes spread out — they don't improve.</div>
+        <canvas id="cotVoteChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">ECE Comparison — Three Conditions</div>
+        <div class="card-sub">CoT improves ECE modestly (0.337 → 0.304) by breaking the unanimity pattern — but pipeline's ECE (0.110) is 3× better.</div>
+        <canvas id="eceCompChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Baseline</th><th>CoT</th><th>CoT vs Baseline</th><th>Pipeline (reference)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accuracy</strong></td>
+            <td class="td-num">55.4%</td>
+            <td class="td-num" style="color:var(--cot);">54.8%</td>
+            <td class="td-neg">−0.6 pts</td>
+            <td class="td-num" style="color:var(--pipe);">78.4%</td>
+          </tr>
+          <tr>
+            <td><strong>Sol1 (A) selection</strong></td>
+            <td class="td-num" style="color:var(--base);">93.4% (bias)</td>
+            <td class="td-num" style="color:var(--pipe);">44.2% ✓ (fixed)</td>
+            <td class="td-pos">−49.2 pts bias reduction</td>
+            <td class="td-num">42.1%</td>
+          </tr>
+          <tr>
+            <td><strong>ECE</strong></td>
+            <td class="td-num">0.337</td>
+            <td class="td-num">0.304</td>
+            <td class="td-neg">−9.8% (modest)</td>
+            <td class="td-num" style="color:var(--pipe);">0.110</td>
+          </tr>
+          <tr>
+            <td><strong>False confidence</strong></td>
+            <td class="td-num">214</td>
+            <td class="td-num">158</td>
+            <td class="td-neg">−56 cases</td>
+            <td class="td-num" style="color:var(--pipe);">110</td>
+          </tr>
+          <tr>
+            <td><strong>All-wrong (0/5)</strong></td>
+            <td class="td-num" style="color:var(--base);">201 (40.2%)</td>
+            <td class="td-num">108 (21.6%)</td>
+            <td class="td-pos">−93 questions</td>
+            <td class="td-num">—</td>
+          </tr>
+          <tr>
+            <td><strong>High correct (≥80%)</strong></td>
+            <td class="td-num">264 (52.8%)</td>
+            <td class="td-num" style="color:var(--cot);">222 (44.4%)</td>
+            <td class="td-neg">−42 questions ⚠️</td>
+            <td class="td-num">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout red" style="margin-top:16px;">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-text" style="color:#7f1d1d;"><strong>The vote redistribution trap:</strong> CoT reduces all-wrong questions from 201 to 108 — which sounds like an improvement. But it also reduces high-agreement correct questions from 264 to 222. The votes moved from "unanimously wrong" to "split medium" — spreading uncertainty rather than gaining knowledge. Final accuracy barely changes. The model redistributed its ignorance.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EFFICIENCY -->
+<section id="efficiency">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Compute Efficiency</span>
+      <h2 class="sec-title">Value for Compute</h2>
+      <p class="sec-desc">PIQA has the most interesting efficiency story: both the ceiling (15B) and the pipeline (10.5B) dramatically outperform the baseline (7.5B), while CoT at equal cost adds nothing.</p>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Compute vs Accuracy — Four Conditions</div>
+        <div class="card-sub">X = param-passes (B). Y = accuracy. CoT sits on top of baseline — same cost, same result.</div>
+        <canvas id="effScatterChart"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Efficiency Ratio (Accuracy / Param-Passes)</div>
+        <div class="card-sub">Pipeline (7.47) and baseline (7.23) are nearly tied in efficiency — but pipeline is +24.2 pts ahead in absolute accuracy.</div>
+        <canvas id="effBarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Compute (B)</th><th>Accuracy</th><th>Efficiency (Acc/B)</th><th>Abs Gain vs Random</th><th>Compute Premium vs Base</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><strong style="color:var(--pipe);">Pipeline</strong></td>
+            <td class="td-num">10.5</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">78.4%</td>
+            <td class="td-num" style="color:var(--pipe);">7.47 🥇</td>
+            <td class="td-num">+28.4 pp</td>
+            <td class="td-num">+40%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--base);">Baseline</strong></td>
+            <td class="td-num">7.5</td>
+            <td class="td-num">54.2%</td>
+            <td class="td-num">7.23</td>
+            <td class="td-num">+4.2 pp</td>
+            <td class="td-num">—</td>
+          </tr>
+          <tr class="neutral">
+            <td><strong style="color:var(--ceil);">Ceiling</strong></td>
+            <td class="td-num">15.0</td>
+            <td class="td-num" style="color:var(--ceil);">75.2%</td>
+            <td class="td-num" style="color:var(--ceil);">5.01</td>
+            <td class="td-num">+25.2 pp</td>
+            <td class="td-num">+100%</td>
+          </tr>
+          <tr class="loser">
+            <td><strong style="color:var(--cot);">CoT</strong></td>
+            <td class="td-num">7.5</td>
+            <td class="td-num" style="color:var(--cot);">54.8%</td>
+            <td class="td-num" style="color:var(--cot);">7.31 (same cost, ≈ same result)</td>
+            <td class="td-num">+4.8 pp</td>
+            <td class="td-num">0% (same)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vbox green" style="margin-top:20px;">
+      <div class="vbox-label" style="color:#065f46;">✦ Efficiency Takeaway for PIQA</div>
+      <div class="vbox-text">The pipeline delivers 78.4% at 10.5B — 30% cheaper than the ceiling (15B) and 3.2 pts more accurate. Crucially, the pipeline's efficiency ratio (7.47) nearly matches the unguided baseline (7.23) despite being 40% more expensive. Every extra param-pass in the guided pipeline pays for itself in accuracy — unlike the ceiling where the extra compute buys diminishing returns.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICT -->
+<section id="verdict">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-tag">Final Comparison</span>
+      <h2 class="sec-title">Complete Four-Way Scorecard</h2>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Pipeline (10.5B)</th><th>Ceiling (15B)</th><th>CoT (7.5B)</th><th>Baseline (7.5B)</th><th>Winner</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accuracy</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">78.4% ✦</td>
+            <td class="td-num" style="color:var(--ceil);">75.2%</td>
+            <td class="td-num" style="color:var(--cot);">54.8%</td>
+            <td class="td-num" style="color:var(--base);">54.2%</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>ECE (↓ better)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.110 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">0.133</td>
+            <td class="td-num">0.304</td>
+            <td class="td-num" style="color:var(--base);">0.337 ⚠️</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mean Consistency</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">0.778 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">0.742</td>
+            <td class="td-num">~0.558</td>
+            <td class="td-num" style="color:var(--base);">0.544</td>
+            <td><span class="badge bw">Pipeline</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sol1 Bias Score (↓ better)</strong></td>
+            <td class="td-num">0.079</td>
+            <td class="td-num" style="color:var(--ceil);font-weight:700;">0.050 ✦</td>
+            <td class="td-num">0.058</td>
+            <td class="td-num" style="color:var(--base);">0.434 ⚠️</td>
+            <td><span class="badge bm">Ceiling (most neutral)</span></td>
+          </tr>
+          <tr>
+            <td><strong>False Confidence</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">110 ✦</td>
+            <td class="td-num">109 (~tied)</td>
+            <td class="td-num">158</td>
+            <td class="td-num" style="color:var(--base);">214</td>
+            <td><span class="badge bw">Pipeline ≈ Ceiling</span></td>
+          </tr>
+          <tr>
+            <td><strong>Efficiency (Acc/B)</strong></td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">7.47 ✦</td>
+            <td class="td-num" style="color:var(--ceil);">5.01</td>
+            <td class="td-num">7.31</td>
+            <td class="td-num">7.23</td>
+            <td><span class="badge bw">Pipeline (best abs+eff)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Compute cost</strong></td>
+            <td class="td-num">10.5B (+40%)</td>
+            <td class="td-num" style="color:var(--base);">15.0B (+100%) ⚠️</td>
+            <td class="td-num" style="color:var(--pipe);font-weight:700;">7.5B ✦</td>
+            <td class="td-num" style="color:var(--pipe);">7.5B ✦</td>
+            <td><span class="badge bn">CoT/Baseline (cheapest)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cross-dataset comparison -->
+    <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+      <div class="card" style="border-top:4px solid var(--ceil);">
+        <div class="card-title" style="color:var(--ceil);">PIQA Ceiling (this report)</div>
+        <div style="font-size:14px;line-height:1.9;margin-top:10px;">
+          <div>Accuracy: <strong style="color:var(--ceil);">75.2%</strong> — 2nd place, −3.2 pts vs pipeline</div>
+          <div>ECE: <strong>0.133</strong> — 2nd best</div>
+          <div>Bias: <strong style="color:var(--ceil);">0.050</strong> — most neutral of all 4</div>
+          <div style="margin-top:8px;color:var(--pipe);font-weight:500;">→ Physical knowledge partially in pretraining</div>
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--cot);">
+        <div class="card-title" style="color:var(--cot);">CSQA CoT (previous report)</div>
+        <div style="font-size:14px;line-height:1.9;margin-top:10px;">
+          <div>CoT accuracy: <strong style="color:var(--cot);">67.7%</strong> — last place, −3.0 pts vs baseline</div>
+          <div>E-option: <strong style="color:var(--cot);">29.5%</strong> — amplifies E-bias</div>
+          <div style="margin-top:8px;color:var(--cot);font-weight:500;">→ CoT creates wrong bias (E-collapse)</div>
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--base);">
+        <div class="card-title" style="color:var(--base);">ARC Ceiling (previous report)</div>
+        <div style="font-size:14px;line-height:1.9;margin-top:10px;">
+          <div>Accuracy: <strong style="color:var(--base);">66.8%</strong> — last place, −13.2 pts vs pipeline</div>
+          <div>ECE: <strong style="color:var(--base);">0.226</strong> — worst of 3 conditions</div>
+          <div style="margin-top:8px;color:var(--cot);font-weight:500;">→ Science reasoning NOT in scale</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final verdict -->
+    <div class="finding" style="margin-top:28px;">
+      <div class="finding-label">DEFINITIVE CONCLUSION — PIQA CEILING EXPERIMENT</div>
+      <div class="finding-text">"PIQA delivers the clearest mechanistic proof in the study. The baseline's Sol1 collapse (93.4%) is corrected by all three interventions — yet accuracy outcomes span 23.6 percentage points (54.8% to 78.4%). This demonstrates the independence of bias correction and reasoning quality: CoT spreads ignorance evenly while the ceiling and pipeline both possess physical world-knowledge (the 3B model from pretraining, the fine-tuned plan from structured training). The 3.2 pt gap between ceiling and pipeline, at 30% lower compute, is precisely what fine-tuning adds — marginal but consistent across all three evaluation angles."</div>
+      <div style="margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#6ee7b7;">3/3</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">ANGLES WON BY PIPELINE</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#c4b5fd;">−3.2</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PTS CEILING TRAILS PIPELINE</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#fcd34d;">+0.6</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">PTS CoT GAINS DESPITE DEBIASING</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:14px;text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#fbbf24;">30%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:1px;margin-top:4px;">CHEAPER THAN CEILING</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vbox amber" style="margin-top:24px;">
+      <div class="vbox-label" style="color:#78350f;">📄 Paper Implication</div>
+      <div class="vbox-text">PIQA is firmly Tier 3 (guide necessary) with a clarified mechanism: the 3B base model accesses physical commonsense through scale (75.2%), but the fine-tuned verbal plan adds a further 3.2 pts of structured reasoning quality that scale alone cannot replicate. The ceiling ablation replaces the earlier two-way comparison (baseline vs pipeline) with a three-way argument: scale helps partially, fine-tuning helps further, CoT helps not at all. Recommend adding the ceiling row to ablation Table III alongside CSQA and ARC ceiling results.</div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-hint">PIQA Ceiling + CoT Experiment · N=500 · Adnan Abdullah Sadi · North South University · SLM-to-SLM Guided Reasoning</div>
+
+<script>
+  Chart.defaults.font.family = "'Space Mono', monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = '#6b7280';
+
+  const PIPE = '#065f46';
+  const CEIL = '#312e81';
+  const COT  = '#78350f';
+  const BASE = '#7f1d1d';
+  const GOLD = '#b45309';
+
+  // ── Accuracy ──
+  new Chart(document.getElementById('accChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'CoT', 'Baseline'],
+      datasets: [{ label: 'Accuracy (%)', data: [78.4, 75.2, 54.8, 54.2],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 50, max: 85, title: { display: true, text: 'Accuracy (%)' } } }
+    }
+  });
+
+  // ── Accuracy by Sol correctness ──
+  new Chart(document.getElementById('solAccChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Baseline', 'CoT'],
+      datasets: [
+        { label: 'When Sol1 is correct', data: [97.99, 49.0],
+          backgroundColor: [BASE+'cc', COT+'cc'], borderRadius: 3 },
+        { label: 'When Sol2 is correct', data: [13.15, 60.56],
+          backgroundColor: [BASE+'55', COT+'55'], borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 0, max: 110, title: { display: true, text: 'Accuracy when that sol is correct (%)' } } }
+    }
+  });
+
+  // ── Cumulative ──
+  new Chart(document.getElementById('cumulChart'), {
+    type: 'line',
+    data: {
+      labels: [100, 200, 300, 400, 500],
+      datasets: [
+        { label: 'Ceiling', data: [76.0, 71.0, 73.7, 74.5, 75.2],
+          borderColor: CEIL, backgroundColor: CEIL+'22', fill: true, tension: 0.3 },
+        { label: 'Pipeline (ref)', data: [78.4, 78.4, 78.4, 78.4, 78.4],
+          borderColor: PIPE, borderDash: [5,3], borderWidth: 2, pointRadius: 0, backgroundColor: 'transparent' },
+        { label: 'Baseline (ref)', data: [54.2, 54.2, 54.2, 54.2, 54.2],
+          borderColor: BASE, borderDash: [5,3], borderWidth: 2, pointRadius: 0, backgroundColor: 'transparent' },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 48, max: 84, title: { display: true, text: 'Cumulative Accuracy (%)' } },
+                x: { title: { display: true, text: 'N Questions' } } }
+    }
+  });
+
+  // ── Consistency ──
+  new Chart(document.getElementById('consistChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'CoT (est.)', 'Baseline'],
+      datasets: [{ label: 'Mean Consistency', data: [0.778, 0.742, 0.558, 0.544],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0.4, max: 0.85, title: { display: true, text: 'Mean Consistency' } } }
+    }
+  });
+
+  // ── Vote dist ──
+  new Chart(document.getElementById('voteDistChart'), {
+    type: 'bar',
+    data: {
+      labels: ['All-Wrong (0%)', 'Low (1–39%)', 'Medium (40–79%)', 'High (≥80%)'],
+      datasets: [{ label: 'Ceiling', data: [97, 12, 37, 354],
+        backgroundColor: [BASE, GOLD, '#60a5fa', PIPE], borderRadius: 3 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { title: { display: true, text: 'Questions' } } }
+    }
+  });
+
+  // ── ECE ──
+  new Chart(document.getElementById('eceChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline 🥇', 'Ceiling', 'CoT', 'Baseline ⚠️'],
+      datasets: [{ label: 'ECE', data: [0.110, 0.133, 0.304, 0.337],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 0.42, title: { display: true, text: 'ECE (lower = better)' } } }
+    }
+  });
+
+  // ── False confidence ──
+  new Chart(document.getElementById('falseConfChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline ≈ Ceiling', 'Ceiling ≈ Pipeline', 'CoT', 'Baseline ⚠️'],
+      datasets: [{ label: 'False Confidence', data: [110, 109, 158, 214],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { title: { display: true, text: 'Questions (conf ≥ 0.8 but wrong)' } } }
+    }
+  });
+
+  // ── Position Accuracy ──
+  new Chart(document.getElementById('posAccChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Baseline', 'CoT', 'Ceiling (est.)'],
+      datasets: [
+        { label: 'When Sol1 is correct answer', data: [97.99, 49.0, 76.0],
+          backgroundColor: [BASE+'cc', COT+'cc', CEIL+'cc'], borderRadius: 3 },
+        { label: 'When Sol2 is correct answer', data: [13.15, 60.56, 74.0],
+          backgroundColor: [BASE+'55', COT+'55', CEIL+'55'], borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 0, max: 110, title: { display: true, text: 'Accuracy (%)' } } }
+    }
+  });
+
+  // ── Bias score ──
+  new Chart(document.getElementById('biasScoreChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Ceiling 🥇', 'CoT', 'Pipeline', 'Baseline ⚠️'],
+      datasets: [{ label: 'Bias Score |A% - 50%|', data: [0.050, 0.058, 0.079, 0.434],
+        backgroundColor: [CEIL+'cc', COT+'cc', PIPE+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 0.5, title: { display: true, text: 'Bias Score (0 = unbiased)' } } }
+    }
+  });
+
+  // ── Ceiling bucket ──
+  new Chart(document.getElementById('ceilBucketChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['High correct (≥80%) — 354', 'Medium (40–79%) — 37', 'Low (1–39%) — 12', 'All-wrong — 97'],
+      datasets: [{ data: [354, 37, 12, 97],
+        backgroundColor: [PIPE+'cc', '#60a5fa', GOLD+'cc', CEIL+'cc'],
+        borderWidth: 2, borderColor: 'white' }]
+    },
+    options: { responsive: true, cutout: '55%', plugins: { legend: { position: 'bottom' } } }
+  });
+
+  // ── Outcome ──
+  new Chart(document.getElementById('outcomeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct (376)', 'All-5 wrong (97)', 'Split wrong (27)'],
+      datasets: [{ data: [376, 97, 27],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', GOLD+'cc'],
+        borderWidth: 2, borderColor: 'white' }]
+    },
+    options: { responsive: true, cutout: '55%', plugins: { legend: { position: 'bottom' } } }
+  });
+
+  // ── CoT vote comparison ──
+  new Chart(document.getElementById('cotVoteChart'), {
+    type: 'bar',
+    data: {
+      labels: ['All-Wrong (0/5)', 'Medium (40–79%)', 'High (≥80%)'],
+      datasets: [
+        { label: 'Baseline', data: [201, 22, 264], backgroundColor: BASE+'cc', borderRadius: 3 },
+        { label: 'CoT',      data: [108, 120, 222], backgroundColor: COT+'cc', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' } },
+      scales: { y: { title: { display: true, text: 'Questions' } } }
+    }
+  });
+
+  // ── ECE 3-way ──
+  new Chart(document.getElementById('eceCompChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'Ceiling', 'CoT', 'Baseline'],
+      datasets: [{ label: 'ECE', data: [0.110, 0.133, 0.304, 0.337],
+        backgroundColor: [PIPE+'cc', CEIL+'cc', COT+'cc', BASE+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 0.42, title: { display: true, text: 'ECE (lower = better)' } } }
+    }
+  });
+
+  // ── Efficiency scatter ──
+  new Chart(document.getElementById('effScatterChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Pipeline', data: [{x:10.5, y:78.4}], backgroundColor: PIPE, pointRadius: 16 },
+        { label: 'Ceiling',  data: [{x:15.0, y:75.2}], backgroundColor: CEIL, pointRadius: 16 },
+        { label: 'Baseline', data: [{x:7.5, y:54.2}],  backgroundColor: BASE, pointRadius: 16 },
+        { label: 'CoT',      data: [{x:7.5, y:54.8}],  backgroundColor: COT, pointRadius: 12 },
+      ]
+    },
+    options: {
+      responsive: true, plugins: { legend: { position: 'bottom' },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}% @ ${ctx.parsed.x}B` } } },
+      scales: {
+        x: { min: 5, max: 17, title: { display: true, text: 'Param-Passes (Billions)' } },
+        y: { min: 48, max: 85, title: { display: true, text: 'Accuracy (%)' } }
+      }
+    }
+  });
+
+  // ── Efficiency bar ──
+  new Chart(document.getElementById('effBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pipeline', 'CoT', 'Baseline', 'Ceiling'],
+      datasets: [{ label: 'Acc / Billion Param-Passes', data: [7.47, 7.31, 7.23, 5.01],
+        backgroundColor: [PIPE+'cc', COT+'cc', BASE+'cc', CEIL+'cc'], borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 10, title: { display: true, text: 'Efficiency (Acc/B)' } } }
+    }
+  });
+</script>
+</body>
+</html>
