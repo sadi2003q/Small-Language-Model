@@ -1,0 +1,39 @@
+{
+  "dataset": "ARC-Challenge",
+  "experiment": "ceiling_3b",
+  "n_questions": 900,
+  "ceiling_ece": 0.226,
+  "pipeline_ece": 0.099,
+  "baseline_ece": 0.18,
+  "ceiling_false_confidence": 272,
+  "ceiling_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 821,
+      "accuracy": 0.6687,
+      "expected": 0.9,
+      "gap": 0.2313
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 40,
+      "accuracy": 0.65,
+      "expected": 0.7,
+      "gap": 0.05
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 19,
+      "accuracy": 0.6316,
+      "expected": 0.5,
+      "gap": 0.1316
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 20,
+      "accuracy": 0.7,
+      "expected": 0.25,
+      "gap": 0.45
+    }
+  ]
+}

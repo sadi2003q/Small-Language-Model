@@ -1,0 +1,29 @@
+{
+  "dataset": "ARC-Challenge",
+  "experiment": "ceiling_3b",
+  "n_questions": 900,
+  "random_chance": 25.0,
+  "ceiling_accuracy": 66.78,
+  "pipeline_accuracy": 80.0,
+  "baseline_accuracy": 71.7,
+  "ceiling_compute_B": 15.0,
+  "pipeline_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "ceiling_efficiency": 4.4519,
+  "pipeline_efficiency": 7.619,
+  "baseline_efficiency": 9.56,
+  "ceiling_wasted_votes": 263,
+  "refiner_triggered": 1,
+  "refiner_correct": 0,
+  "strategy_breakdown": {
+    "majority": {
+      "n": 899,
+      "correct": 601
+    },
+    "refiner_tiebreak": {
+      "n": 1,
+      "correct": 0
+    }
+  },
+  "pipeline_beats_ceiling": true
+}
