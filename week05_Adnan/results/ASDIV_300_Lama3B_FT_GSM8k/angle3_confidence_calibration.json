@@ -1,0 +1,70 @@
+{
+  "dataset": "ASDiv",
+  "n_questions": 300,
+  "guided_ece": 0.1042,
+  "baseline_ece": 0.1998,
+  "ece_improvement_pct": 47.87,
+  "guided_false_confidence": 15,
+  "baseline_false_confidence": 24,
+  "false_conf_reduction": 9,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 79,
+      "accuracy": 0.8101,
+      "expected": 0.9,
+      "gap": 0.0899
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 72,
+      "accuracy": 0.6389,
+      "expected": 0.7,
+      "gap": 0.0611
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 94,
+      "accuracy": 0.3404,
+      "expected": 0.5,
+      "gap": 0.1596
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 55,
+      "accuracy": 0.1636,
+      "expected": 0.25,
+      "gap": 0.0864
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 61,
+      "accuracy": 0.6066,
+      "expected": 0.9,
+      "gap": 0.2934
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 99,
+      "accuracy": 0.404,
+      "expected": 0.7,
+      "gap": 0.296
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 71,
+      "accuracy": 0.3944,
+      "expected": 0.5,
+      "gap": 0.1056
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 69,
+      "accuracy": 0.1739,
+      "expected": 0.25,
+      "gap": 0.0761
+    }
+  ]
+}

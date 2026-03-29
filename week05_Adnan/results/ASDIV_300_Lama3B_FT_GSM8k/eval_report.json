@@ -1,0 +1,181 @@
+{
+  "dataset": "ASDiv",
+  "seed": 42,
+  "n_questions": 300,
+  "angle1": {
+    "dataset": "ASDiv",
+    "n_questions": 300,
+    "guided_compute_B": 10.5,
+    "baseline_compute_B": 7.5,
+    "upper_compute_B": 15.0,
+    "guided_accuracy": 50.33,
+    "baseline_accuracy": 39.0,
+    "accuracy_gain": 11.33,
+    "compute_savings_pct": 30.0,
+    "guided_efficiency": 4.7937,
+    "baseline_efficiency": 5.2,
+    "guided_wasted_votes": 660,
+    "baseline_wasted_votes": 665,
+    "wasted_votes_saved": 5,
+    "refiner_triggered": 81,
+    "refiner_correct": 22,
+    "strategy_breakdown": {
+      "majority": {
+        "n": 219,
+        "correct": 133
+      },
+      "coin_flip": {
+        "n": 49,
+        "correct": 5
+      },
+      "refiner_tiebreak": {
+        "n": 32,
+        "correct": 13
+      }
+    }
+  },
+  "angle2": {
+    "dataset": "ASDiv",
+    "n_questions": 300,
+    "guided_mean_consistency": 0.3865,
+    "baseline_mean_consistency": 0.3186,
+    "consistency_lift": 1.2131,
+    "guided_wins": 121,
+    "baseline_wins": 85,
+    "tied": 94,
+    "guided_distribution": {
+      "all_wrong  (0%)": 92,
+      "low       (1-39%)": 59,
+      "medium  (40-79%)": 85,
+      "high   (80-100%)": 64
+    },
+    "baseline_distribution": {
+      "all_wrong  (0%)": 94,
+      "low       (1-39%)": 86,
+      "medium  (40-79%)": 83,
+      "high   (80-100%)": 37
+    },
+    "guided_correct_q_consistency": 0.6828,
+    "baseline_correct_q_consistency": 0.6282
+  },
+  "angle3": {
+    "dataset": "ASDiv",
+    "n_questions": 300,
+    "guided_ece": 0.1042,
+    "baseline_ece": 0.1998,
+    "ece_improvement_pct": 47.87,
+    "guided_false_confidence": 15,
+    "baseline_false_confidence": 24,
+    "false_conf_reduction": 9,
+    "guided_calibration": [
+      {
+        "bucket": "Very High  (>=0.80)",
+        "count": 79,
+        "accuracy": 0.8101,
+        "expected": 0.9,
+        "gap": 0.0899
+      },
+      {
+        "bucket": "High       (0.60-0.80)",
+        "count": 72,
+        "accuracy": 0.6389,
+        "expected": 0.7,
+        "gap": 0.0611
+      },
+      {
+        "bucket": "Medium     (0.40-0.60)",
+        "count": 94,
+        "accuracy": 0.3404,
+        "expected": 0.5,
+        "gap": 0.1596
+      },
+      {
+        "bucket": "Low        (<0.40)",
+        "count": 55,
+        "accuracy": 0.1636,
+        "expected": 0.25,
+        "gap": 0.0864
+      }
+    ],
+    "baseline_calibration": [
+      {
+        "bucket": "Very High  (>=0.80)",
+        "count": 61,
+        "accuracy": 0.6066,
+        "expected": 0.9,
+        "gap": 0.2934
+      },
+      {
+        "bucket": "High       (0.60-0.80)",
+        "count": 99,
+        "accuracy": 0.404,
+        "expected": 0.7,
+        "gap": 0.296
+      },
+      {
+        "bucket": "Medium     (0.40-0.60)",
+        "count": 71,
+        "accuracy": 0.3944,
+        "expected": 0.5,
+        "gap": 0.1056
+      },
+      {
+        "bucket": "Low        (<0.40)",
+        "count": 69,
+        "accuracy": 0.1739,
+        "expected": 0.25,
+        "gap": 0.0761
+      }
+    ]
+  },
+  "angle4": {
+    "dataset": "ASDiv",
+    "by_operation_type": {
+      "Addition": {
+        "n": 61,
+        "guided_acc": 54.1,
+        "baseline_acc": 49.18,
+        "gain": 4.92,
+        "guided_consistency": 40.57,
+        "baseline_consistency": 41.23,
+        "consistency_lift": 0.9841
+      },
+      "Division": {
+        "n": 40,
+        "guided_acc": 50.0,
+        "baseline_acc": 40.0,
+        "gain": 10.0,
+        "guided_consistency": 36.83,
+        "baseline_consistency": 29.83,
+        "consistency_lift": 1.2346
+      },
+      "Multi-step": {
+        "n": 89,
+        "guided_acc": 30.34,
+        "baseline_acc": 35.96,
+        "gain": -5.62,
+        "guided_consistency": 24.63,
+        "baseline_consistency": 26.52,
+        "consistency_lift": 0.9287
+      },
+      "Multiplication": {
+        "n": 43,
+        "guided_acc": 65.12,
+        "baseline_acc": 39.53,
+        "gain": 25.58,
+        "guided_consistency": 51.94,
+        "baseline_consistency": 33.76,
+        "consistency_lift": 1.5385
+      },
+      "Subtraction": {
+        "n": 67,
+        "guided_acc": 64.18,
+        "baseline_acc": 32.84,
+        "gain": 31.34,
+        "guided_consistency": 48.08,
+        "baseline_consistency": 30.42,
+        "consistency_lift": 1.5805
+      }
+    }
+  }
+}

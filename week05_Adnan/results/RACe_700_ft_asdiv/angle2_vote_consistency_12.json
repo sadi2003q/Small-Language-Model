@@ -1,0 +1,36 @@
+{
+  "dataset": "RACE-High",
+  "guided_mean_consistency": 0.5888,
+  "baseline_mean_consistency": 0.5741,
+  "consistency_lift": 1.0255,
+  "guided_wins": 116,
+  "baseline_wins": 109,
+  "tied": 475,
+  "guided_distribution": {
+    "all_wrong  (0%)": 267,
+    "low       (1-39%)": 8,
+    "medium  (40-79%)": 24,
+    "high   (80-100%)": 401
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 259,
+    "low       (1-39%)": 21,
+    "medium  (40-79%)": 36,
+    "high   (80-100%)": 384
+  },
+  "all_wrong_guided": 267,
+  "all_wrong_baseline": 259,
+  "guided_letter_dist": {
+    "B": 19.5,
+    "C": 27.6,
+    "D": 32.2,
+    "A": 19.5,
+    "": 1.2
+  },
+  "baseline_letter_dist": {
+    "B": 25.8,
+    "C": 37.1,
+    "D": 21.7,
+    "A": 15.3
+  }
+}
