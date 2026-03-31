@@ -1,0 +1,33 @@
+{
+  "dataset": "ARC-Challenge",
+  "n_questions": 900,
+  "random_chance": 25.0,
+  "guided_accuracy": 58.1,
+  "baseline_accuracy": 47.6,
+  "accuracy_gain": 10.6,
+  "guided_above_chance": 33.1,
+  "baseline_above_chance": 22.6,
+  "guided_compute_B": 8.0,
+  "baseline_compute_B": 5.0,
+  "upper_compute_B": 15.0,
+  "compute_savings_pct": 46.7,
+  "guided_wasted_votes": 1006,
+  "baseline_wasted_votes": 914,
+  "wasted_votes_saved": -92,
+  "refiner_triggered": 101,
+  "refiner_correct": 39,
+  "strategy_stats": {
+    "majority": {
+      "n": 799,
+      "correct": 484
+    },
+    "coin_flip": {
+      "n": 37,
+      "correct": 9
+    },
+    "refiner_tiebreak": {
+      "n": 64,
+      "correct": 30
+    }
+  }
+}

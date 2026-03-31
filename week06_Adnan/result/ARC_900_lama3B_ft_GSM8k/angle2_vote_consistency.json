@@ -1,0 +1,36 @@
+{
+  "dataset": "ARC-Challenge",
+  "guided_mean_consistency": 0.5434,
+  "baseline_mean_consistency": 0.457,
+  "consistency_lift": 1.189,
+  "guided_wins": 366,
+  "baseline_wins": 243,
+  "tied": 291,
+  "guided_distribution": {
+    "all_wrong  (0%)": 197,
+    "low       (1-39%)": 146,
+    "medium  (40-79%)": 174,
+    "high   (80-100%)": 383
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 283,
+    "low       (1-39%)": 146,
+    "medium  (40-79%)": 168,
+    "high   (80-100%)": 303
+  },
+  "all_wrong_guided": 197,
+  "all_wrong_baseline": 283,
+  "guided_letter_dist": {
+    "B": 31.1,
+    "A": 24.1,
+    "C": 22.1,
+    "D": 22.7
+  },
+  "baseline_letter_dist": {
+    "A": 28.9,
+    "B": 32.3,
+    "D": 19.3,
+    "C": 18.7,
+    "": 0.8
+  }
+}

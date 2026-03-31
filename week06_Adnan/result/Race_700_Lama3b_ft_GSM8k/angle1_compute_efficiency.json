@@ -1,0 +1,33 @@
+{
+  "dataset": "RACE-High",
+  "n_questions": 700,
+  "random_chance": 25.0,
+  "guided_accuracy": 46.7,
+  "baseline_accuracy": 41.0,
+  "accuracy_gain": 5.7,
+  "guided_above_chance": 21.7,
+  "baseline_above_chance": 16.0,
+  "guided_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "upper_compute_B": 15.0,
+  "compute_savings_pct": 30.0,
+  "guided_wasted_votes": 642,
+  "baseline_wasted_votes": 672,
+  "wasted_votes_saved": 30,
+  "refiner_triggered": 66,
+  "refiner_correct": 17,
+  "strategy_stats": {
+    "majority": {
+      "n": 634,
+      "correct": 311
+    },
+    "refiner_tiebreak": {
+      "n": 48,
+      "correct": 13
+    },
+    "coin_flip": {
+      "n": 18,
+      "correct": 3
+    }
+  }
+}
