@@ -1,0 +1,29 @@
+{
+  "dataset": "PIQA",
+  "n_questions": 900,
+  "random_chance": 50.0,
+  "guided_accuracy": 56.4,
+  "baseline_accuracy": 61.9,
+  "accuracy_gain": -5.4,
+  "guided_above_chance": 6.4,
+  "baseline_above_chance": 11.9,
+  "guided_compute_B": 8.0,
+  "baseline_compute_B": 5.0,
+  "upper_compute_B": 15.0,
+  "compute_savings_pct": 46.7,
+  "guided_wasted_votes": 978,
+  "baseline_wasted_votes": 961,
+  "wasted_votes_saved": -17,
+  "refiner_triggered": 5,
+  "refiner_correct": 2,
+  "strategy_stats": {
+    "majority": {
+      "n": 895,
+      "correct": 506
+    },
+    "refiner_tiebreak": {
+      "n": 5,
+      "correct": 2
+    }
+  }
+}
