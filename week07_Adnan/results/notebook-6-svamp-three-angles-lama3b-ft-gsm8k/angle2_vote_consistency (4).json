@@ -1,0 +1,24 @@
+{
+  "dataset": "SVAMP",
+  "n_questions": 300,
+  "guided_mean_consistency": 0.3222,
+  "baseline_mean_consistency": 0.2229,
+  "consistency_lift": 1.4457,
+  "guided_wins": 136,
+  "baseline_wins": 76,
+  "tied": 88,
+  "guided_distribution": {
+    "all_wrong  (0%)": 109,
+    "low       (1-39%)": 68,
+    "medium  (40-79%)": 72,
+    "high   (80-100%)": 51
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 129,
+    "low       (1-39%)": 94,
+    "medium  (40-79%)": 56,
+    "high   (80-100%)": 21
+  },
+  "guided_correct_q_consistency": 0.6418,
+  "baseline_correct_q_consistency": 0.5957
+}

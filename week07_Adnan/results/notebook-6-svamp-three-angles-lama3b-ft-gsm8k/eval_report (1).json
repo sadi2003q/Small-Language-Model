@@ -1,0 +1,131 @@
+{
+  "dataset": "SVAMP",
+  "seed": 42,
+  "n_questions": 300,
+  "angle1": {
+    "dataset": "SVAMP",
+    "n_questions": 300,
+    "guided_compute_B": 10.5,
+    "baseline_compute_B": 7.5,
+    "upper_compute_B": 15.0,
+    "guided_accuracy": 43.33,
+    "baseline_accuracy": 26.0,
+    "accuracy_gain": 17.33,
+    "compute_savings_pct": 30.0,
+    "guided_efficiency": 4.127,
+    "baseline_efficiency": 3.4667,
+    "guided_wasted_votes": 734,
+    "baseline_wasted_votes": 757,
+    "wasted_votes_saved": 23,
+    "refiner_triggered": 76,
+    "refiner_correct": 15,
+    "strategy_breakdown": {
+      "refiner_tiebreak": {
+        "n": 37,
+        "correct": 13
+      },
+      "majority": {
+        "n": 224,
+        "correct": 110
+      },
+      "coin_flip": {
+        "n": 39,
+        "correct": 7
+      }
+    }
+  },
+  "angle2": {
+    "dataset": "SVAMP",
+    "n_questions": 300,
+    "guided_mean_consistency": 0.3222,
+    "baseline_mean_consistency": 0.2229,
+    "consistency_lift": 1.4457,
+    "guided_wins": 136,
+    "baseline_wins": 76,
+    "tied": 88,
+    "guided_distribution": {
+      "all_wrong  (0%)": 109,
+      "low       (1-39%)": 68,
+      "medium  (40-79%)": 72,
+      "high   (80-100%)": 51
+    },
+    "baseline_distribution": {
+      "all_wrong  (0%)": 129,
+      "low       (1-39%)": 94,
+      "medium  (40-79%)": 56,
+      "high   (80-100%)": 21
+    },
+    "guided_correct_q_consistency": 0.6418,
+    "baseline_correct_q_consistency": 0.5957
+  },
+  "angle3": {
+    "dataset": "SVAMP",
+    "n_questions": 300,
+    "guided_ece": 0.1673,
+    "baseline_ece": 0.3228,
+    "ece_improvement_pct": 48.17,
+    "guided_false_confidence": 25,
+    "baseline_false_confidence": 44,
+    "false_conf_reduction": 19,
+    "guided_calibration": [
+      {
+        "bucket": "Very High  (>=0.80)",
+        "count": 76,
+        "accuracy": 0.6711,
+        "expected": 0.9,
+        "gap": 0.2289
+      },
+      {
+        "bucket": "High       (0.60-0.80)",
+        "count": 79,
+        "accuracy": 0.519,
+        "expected": 0.7,
+        "gap": 0.181
+      },
+      {
+        "bucket": "Medium     (0.40-0.60)",
+        "count": 81,
+        "accuracy": 0.3086,
+        "expected": 0.5,
+        "gap": 0.1914
+      },
+      {
+        "bucket": "Low        (<0.40)",
+        "count": 64,
+        "accuracy": 0.2031,
+        "expected": 0.25,
+        "gap": 0.0469
+      }
+    ],
+    "baseline_calibration": [
+      {
+        "bucket": "Very High  (>=0.80)",
+        "count": 65,
+        "accuracy": 0.3231,
+        "expected": 0.9,
+        "gap": 0.5769
+      },
+      {
+        "bucket": "High       (0.60-0.80)",
+        "count": 73,
+        "accuracy": 0.3288,
+        "expected": 0.7,
+        "gap": 0.3712
+      },
+      {
+        "bucket": "Medium     (0.40-0.60)",
+        "count": 99,
+        "accuracy": 0.2525,
+        "expected": 0.5,
+        "gap": 0.2475
+      },
+      {
+        "bucket": "Low        (<0.40)",
+        "count": 63,
+        "accuracy": 0.127,
+        "expected": 0.25,
+        "gap": 0.123
+      }
+    ]
+  }
+}

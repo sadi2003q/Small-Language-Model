@@ -1,0 +1,33 @@
+{
+  "dataset": "CommonsenseQA",
+  "n_questions": 900,
+  "random_chance": 20.0,
+  "guided_accuracy": 57.7,
+  "baseline_accuracy": 43.3,
+  "accuracy_gain": 14.3,
+  "guided_above_chance": 37.7,
+  "baseline_above_chance": 23.3,
+  "guided_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "upper_compute_B": 15.0,
+  "compute_savings_pct": 30.0,
+  "guided_wasted_votes": 667,
+  "baseline_wasted_votes": 1094,
+  "wasted_votes_saved": 427,
+  "refiner_triggered": 37,
+  "refiner_correct": 10,
+  "strategy_stats": {
+    "majority": {
+      "n": 863,
+      "correct": 509
+    },
+    "refiner_tiebreak": {
+      "n": 17,
+      "correct": 6
+    },
+    "coin_flip": {
+      "n": 20,
+      "correct": 4
+    }
+  }
+}
