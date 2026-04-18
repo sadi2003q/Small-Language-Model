@@ -1,0 +1,32 @@
+{
+  "dataset": "ASDiv",
+  "n_questions": 300,
+  "guided_compute_B": 10.5,
+  "baseline_compute_B": 7.5,
+  "upper_compute_B": 15.0,
+  "guided_accuracy": 58.67,
+  "baseline_accuracy": 49.67,
+  "accuracy_gain": 9.0,
+  "compute_savings_pct": 30.0,
+  "guided_efficiency": 5.5873,
+  "baseline_efficiency": 6.6222,
+  "guided_wasted_votes": 290,
+  "baseline_wasted_votes": 301,
+  "wasted_votes_saved": 11,
+  "refiner_triggered": 44,
+  "refiner_correct": 13,
+  "strategy_breakdown": {
+    "coin_flip": {
+      "n": 29,
+      "correct": 8
+    },
+    "majority": {
+      "n": 256,
+      "correct": 160
+    },
+    "refiner_tiebreak": {
+      "n": 15,
+      "correct": 8
+    }
+  }
+}

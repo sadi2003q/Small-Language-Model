@@ -1,0 +1,24 @@
+{
+  "dataset": "ASDiv",
+  "n_questions": 300,
+  "guided_mean_consistency": 0.5258,
+  "baseline_mean_consistency": 0.4541,
+  "consistency_lift": 1.158,
+  "guided_wins": 123,
+  "baseline_wins": 82,
+  "tied": 95,
+  "guided_distribution": {
+    "all_wrong  (0%)": 83,
+    "low       (1-39%)": 43,
+    "medium  (40-79%)": 62,
+    "high   (80-100%)": 112
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 90,
+    "low       (1-39%)": 48,
+    "medium  (40-79%)": 88,
+    "high   (80-100%)": 74
+  },
+  "guided_correct_q_consistency": 0.8319,
+  "baseline_correct_q_consistency": 0.7847
+}
