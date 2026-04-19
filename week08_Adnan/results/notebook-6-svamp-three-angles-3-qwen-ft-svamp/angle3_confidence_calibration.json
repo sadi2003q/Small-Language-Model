@@ -1,0 +1,70 @@
+{
+  "dataset": "SVAMP",
+  "n_questions": 300,
+  "guided_ece": 0.0892,
+  "baseline_ece": 0.1753,
+  "ece_improvement_pct": 49.14,
+  "guided_false_confidence": 25,
+  "baseline_false_confidence": 19,
+  "false_conf_reduction": -6,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 107,
+      "accuracy": 0.7664,
+      "expected": 0.9,
+      "gap": 0.1336
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 86,
+      "accuracy": 0.5581,
+      "expected": 0.7,
+      "gap": 0.1419
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 74,
+      "accuracy": 0.5,
+      "expected": 0.5,
+      "gap": 0.0
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 33,
+      "accuracy": 0.2424,
+      "expected": 0.25,
+      "gap": 0.0076
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 45,
+      "accuracy": 0.5778,
+      "expected": 0.9,
+      "gap": 0.3222
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 83,
+      "accuracy": 0.3614,
+      "expected": 0.7,
+      "gap": 0.3386
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 116,
+      "accuracy": 0.4224,
+      "expected": 0.5,
+      "gap": 0.0776
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 56,
+      "accuracy": 0.2679,
+      "expected": 0.25,
+      "gap": 0.0179
+    }
+  ]
+}
