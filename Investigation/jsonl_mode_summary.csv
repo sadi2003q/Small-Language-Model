@@ -1,0 +1,43 @@
+file,combo,benchmark,total_records,bad_lines,guided_records,baseline_records,cot_records,ceiling_records,unknown_records
+week03_Adnan/result_folder/base_line/results_GSM8K_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,GSM8K,100,0,0,100,0,0,0
+week03_Adnan/result_folder/file2/results_GSM8K_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,GSM8K,200,0,100,100,0,0,0
+week03_Adnan/result_folder/guided_line/results_GSM8K_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,GSM8K,100,0,100,0,0,0,0
+week04_Adnan/results/ARC-CHALLENGE/results_ARC_CHALLENGE_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ARC_CHALLENGE,200,0,100,100,0,0,0
+week04_Adnan/results/ASDIV/SAMPLE_100/results_ASDIV_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ASDIV,200,0,100,100,0,0,0
+week04_Adnan/results/COMMONSENSE_QA/results_COMMONSENSEQA_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,COMMONSENSEQA,200,0,100,100,0,0,0
+week04_Adnan/results/PIQA/SAMPLE_100/results_PIQA_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,PIQA,200,0,100,100,0,0,0
+week04_Adnan/results/PIQA/SAMPLE_500/results_PIQA_QWEN2.5-1.5B_500.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,PIQA,1000,0,500,500,0,0,0
+week04_Adnan/results/RACE/results_RACE_QWEN2.5-1.5B_500.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,RACE,1000,0,500,500,0,0,0
+week04_Adnan/results/RACE/SAMPLE_100/results_RACE_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,RACE,200,0,100,100,0,0,0
+week04_Adnan/results/SVAMP/results_SVAMP_QWEN2.5-1.5B_100.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,SVAMP,200,0,100,100,0,0,0
+week04_Adnan/results/SVAMP/results_SVAMP_QWEN2.5-1.5B_300.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,SVAMP,600,0,300,300,0,0,0
+week05_Adnan/results/ARC_900_ceiling/results_ARC_CHALLENGE_QWEN2.5-3B_900.jsonl,Qwen/Qwen2.5-3B-Instruct (solo),ARC_CHALLENGE,900,0,0,0,0,900,0
+week05_Adnan/results/ARC_900_CoT/results_ARC_CHALLENGE_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ARC_CHALLENGE,1800,0,0,900,900,0,0
+week05_Adnan/results/ARC_900_ft_ASDIV/results_ARC_CHALLENGE_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ARC_CHALLENGE,1800,0,900,900,0,0,0
+week05_Adnan/results/ARC_900_three_angle/results_ARC_CHALLENGE_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ARC_CHALLENGE,1800,0,900,900,0,0,0
+week05_Adnan/results/ASDIv_300_ceiling/results_ASDIV_QWEN2.5-3B_300.jsonl,Qwen/Qwen2.5-3B-Instruct (solo),ASDIV,300,0,0,0,0,300,0
+week05_Adnan/results/ASDIV_300_CoT/results_ASDIV_QWEN2.5-1.5B_300.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ASDIV,600,0,0,300,300,0,0
+week05_Adnan/results/ASDIV_300_ft_ASDIV/results_ASDIV_QWEN2.5-1.5B_300.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,ASDIV,600,0,300,300,0,0,0
+week05_Adnan/results/ASDIV_300_Lama3B_FT_GSM8k/results_ASDIV_LLAMA3.2-1B_300.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,ASDIV,600,0,300,300,0,0,0
+week05_Adnan/results/CSQA_3b_ceiling_900/results_COMMONSENSEQA_QWEN2.5-3B_900.jsonl,Qwen/Qwen2.5-3B-Instruct (solo),COMMONSENSEQA,900,0,0,0,0,900,0
+week05_Adnan/results/CSQA_9000_Lama3B_Ft_GSM8k/results_COMMONSENSEQA_LLAMA3.2-1B_900.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,COMMONSENSEQA,1800,0,900,900,0,0,0
+week05_Adnan/results/CSQA_900_CoT/results_COMMONSENSEQA_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,COMMONSENSEQA,1800,0,0,900,900,0,0
+week05_Adnan/results/CSQA_900_ft_ASDIV/results_COMMONSENSEQA_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,COMMONSENSEQA,1800,0,900,900,0,0,0
+week05_Adnan/results/PIQA_3b_CoT/results_PIQA_QWEN2.5-1.5B_500.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,PIQA,1000,0,0,500,500,0,0
+week05_Adnan/results/PIQA_500_Ablation/results_PIQA_QWEN2.5-1.5B_500.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,PIQA,1000,0,500,500,0,0,0
+week05_Adnan/results/PIQA_500_ceiling/results_PIQA_QWEN2.5-3B_500.jsonl,Qwen/Qwen2.5-3B-Instruct (solo),PIQA,500,0,0,0,0,500,0
+week05_Adnan/results/PIQA_900_ft_ASDIV/results_PIQA_QWEN2.5-1.5B_900.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,PIQA,1800,0,900,900,0,0,0
+week05_Adnan/results/RACe_700_ft_asdiv/results_RACE_QWEN2.5-1.5B_700.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,RACE,1400,0,700,700,0,0,0
+week05_Adnan/results/SVAMP_300_Ablation/results_SVAMP_QWEN2.5-1.5B_300.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,SVAMP,600,0,300,300,0,0,0
+week05_Adnan/results/SVAMP_300_Ceiling/results_SVAMP_QWEN2.5-3B_300.jsonl,Qwen/Qwen2.5-3B-Instruct (solo),SVAMP,300,0,0,0,0,300,0
+week05_Adnan/results/SVAMP_300_COT/results_SVAMP_QWEN2.5-1.5B_300.jsonl,Qwen/Qwen2.5-3B-Instruct -> Qwen/Qwen2.5-1.5B-Instruct,SVAMP,0,1,0,0,0,0,0
+week05_Adnan/results/SVAMP_300_Lama_3B_FT_GSM8k/results_SVAMP_LLAMA3.2-1B_300.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,SVAMP,600,0,300,300,0,0,0
+week06_Adnan/result/PIQA_900_Lama3B_ft_GSM8k/results_PIQA_LLAMA3.2-1B_900.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,PIQA,1800,0,900,900,0,0,0
+week06_Adnan/result/Race_700_Lama3b_ft_GSM8k/results_RACE_LLAMA3.2-1B_700.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,RACE,1400,0,700,700,0,0,0
+week07_Adnan/results/notebook-10-arc-challenge-three-anfle-LAMA-ft-ASDIV/results_ARC_CHALLENGE_LLAMA3.2-1B_900.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,ARC_CHALLENGE,1800,0,900,900,0,0,0
+week07_Adnan/results/notebook-11-csqa-three-anglese-lama3b-ft-aSDIV/results_COMMONSENSEQA_LLAMA3.2-1B_900.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,COMMONSENSEQA,1800,0,900,900,0,0,0
+week07_Adnan/results/notebook-12-race-three-angle-lama3b-ft-ASDIV/results_RACE_LLAMA3.2-1B_700.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,RACE,1400,0,700,700,0,0,0
+week07_Adnan/results/notebook-12-race-three-angle-lama3b-ft-gsm8k/results_RACE_LLAMA3.2-1B_700.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,RACE,1400,0,700,700,0,0,0
+week07_Adnan/results/notebook-13-piqa-three-lama3b-ft-ASDIV/results_PIQA_LLAMA3.2-1B_900.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,PIQA,1800,0,900,900,0,0,0
+week07_Adnan/results/notebook-6-svamp-three-angles-lama3b-ft-gsm8k/results_SVAMP_LLAMA3.2-1B_297.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,SVAMP,600,0,300,300,0,0,0
+week07_Adnan/results/notebook-9-asdiv-three-angles-lama3-ft-asdiv/results_ASDIV_LLAMA3.2-1B_300.jsonl,meta-llama/Llama-3.2-3B-Instruct -> meta-llama/Llama-3.2-1B-Instruct,ASDIV,600,0,300,300,0,0,0
