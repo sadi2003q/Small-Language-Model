@@ -1,0 +1,76 @@
+{
+  "dataset": "CommonsenseQA",
+  "guided_ece": 0.2422,
+  "baseline_ece": 0.317,
+  "ece_improvement_pct": 23.6,
+  "guided_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 654,
+      "accuracy": 0.6651,
+      "expected": 0.9,
+      "gap": 0.2349
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 187,
+      "accuracy": 0.3957,
+      "expected": 0.7,
+      "gap": 0.3043
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 43,
+      "accuracy": 0.3488,
+      "expected": 0.5,
+      "gap": 0.1512
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 16,
+      "accuracy": 0.3125,
+      "expected": 0.25,
+      "gap": 0.0625
+    }
+  ],
+  "baseline_calibration": [
+    {
+      "bucket": "Very High  (>=0.80)",
+      "count": 523,
+      "accuracy": 0.543,
+      "expected": 0.9,
+      "gap": 0.357
+    },
+    {
+      "bucket": "High       (0.60-0.80)",
+      "count": 253,
+      "accuracy": 0.3794,
+      "expected": 0.7,
+      "gap": 0.3206
+    },
+    {
+      "bucket": "Medium     (0.40-0.60)",
+      "count": 102,
+      "accuracy": 0.3333,
+      "expected": 0.5,
+      "gap": 0.1667
+    },
+    {
+      "bucket": "Low        (<0.40)",
+      "count": 22,
+      "accuracy": 0.2273,
+      "expected": 0.25,
+      "gap": 0.0227
+    }
+  ],
+  "guided_false_confidence": 219,
+  "baseline_false_confidence": 239,
+  "guided_high_conf_accuracy": 66.5,
+  "baseline_high_conf_accuracy": 54.3,
+  "guided_high_conf_n": 654,
+  "baseline_high_conf_n": 523,
+  "guided_mid_conf_accuracy": 39.6,
+  "baseline_mid_conf_accuracy": 37.9,
+  "guided_mid_conf_n": 187,
+  "baseline_mid_conf_n": 253
+}

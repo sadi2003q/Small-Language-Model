@@ -1,0 +1,38 @@
+{
+  "dataset": "CommonsenseQA",
+  "guided_mean_consistency": 0.5624,
+  "baseline_mean_consistency": 0.4362,
+  "consistency_lift": 1.2894,
+  "guided_wins": 397,
+  "baseline_wins": 217,
+  "tied": 286,
+  "guided_distribution": {
+    "all_wrong  (0%)": 254,
+    "low       (1-39%)": 83,
+    "medium  (40-79%)": 128,
+    "high   (80-100%)": 435
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 282,
+    "low       (1-39%)": 161,
+    "medium  (40-79%)": 173,
+    "high   (80-100%)": 284
+  },
+  "all_wrong_guided": 254,
+  "all_wrong_baseline": 282,
+  "guided_letter_dist": {
+    "A": 22.5,
+    "B": 23.9,
+    "C": 18.0,
+    "E": 12.1,
+    "D": 23.4
+  },
+  "baseline_letter_dist": {
+    "A": 35.0,
+    "E": 13.4,
+    "B": 21.1,
+    "C": 14.4,
+    "D": 15.9,
+    "": 0.2
+  }
+}
