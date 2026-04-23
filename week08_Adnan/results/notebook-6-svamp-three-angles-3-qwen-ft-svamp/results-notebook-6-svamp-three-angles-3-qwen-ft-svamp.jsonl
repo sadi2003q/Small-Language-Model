@@ -1,9 +1,43 @@
-{"mode": "guided", "idx": 0, "question": "Winter is almost here and most animals are migrating to warmer countries. There are 41 bird families living near the mountain. If 35 bird families flew away to asia and 62 bird families flew away to africa How many more bird families flew away to africa than those that flew away to asia?", "gt_answer": "27", "final_answer": "27", "correct": true, "strategy": "majority", "confidence": 0.4, "correct_votes": 2, "total_votes": 5, "vote_consistency": 0.4, "wasted_votes": 3, "refiner_used": false, "refiner_correct": null, "vote_counts": {"27": 2, "33": 1}, "plan": "Step 1: 62 - 35 = ?"}
+{
+  "mode": "guided",
+  "idx": 0,
+  "question": "Winter is almost here and most animals are migrating to warmer countries. There are 41 bird families living near the mountain. If 35 bird families flew away to asia and 62 bird families flew away to africa How many more bird families flew away to africa than those that flew away to asia?",
+  "gt_answer": "27",
+  "final_answer": "27",
+  "correct": true,
+  "strategy": "majority",
+  "confidence": 0.4,
+  "correct_votes": 2,
+  "total_votes": 5,
+  "vote_consistency": 0.4,
+  "wasted_votes": 3,
+  "refiner_used": false,
+  "refiner_correct": null,
+  "vote_counts": {"27": 2, "33": 1},
+  "plan": "Step 1: 62 - 35 = ?"
+}
 {"mode": "guided", "idx": 1, "question": "Paige raised 7 goldfish and 12 catfish in the pond but stray cats loved eating them. Now she has 15 left How many fishes disappeared?", "gt_answer": "4", "final_answer": "15", "correct": false, "strategy": "majority", "confidence": 0.4, "correct_votes": 1, "total_votes": 5, "vote_consistency": 0.2, "wasted_votes": 3, "refiner_used": false, "refiner_correct": null, "vote_counts": {"4": 1, "15": 2}, "plan": "Step 1: Total initial fish - Remaining fish = 7 goldfish + 12 catfish - 15 = ?"}
 {"mode": "guided", "idx": 2, "question": "Marco and his dad went strawberry picking. Together they collected strawberries that weighed 22 pounds. On the way back Marco ' dad found 30 more pounds of strawberries. Marco's strawberries now weighed 36 pounds How much did his dad's strawberries weigh now?", "gt_answer": "16", "final_answer": "", "correct": false, "strategy": "refiner_tiebreak", "confidence": 0.6667, "correct_votes": 0, "total_votes": 6, "vote_consistency": 0.0, "wasted_votes": 2, "refiner_used": true, "refiner_correct": false, "vote_counts": {"": 4, "52": 1, "82": 1}, "plan": "Step 1: Collected + Found = Dad's Original Weight\n              22 + 30 = ?"}
 {"mode": "guided", "idx": 3, "question": "Debby bought 200 water bottles and 256 soda bottles when they were on sale. If she drank 312 water bottles and 4 soda bottles a day How many days would the soda bottles last?", "gt_answer": "64", "final_answer": "", "correct": false, "strategy": "refiner_tiebreak", "confidence": 0.6667, "correct_votes": 0, "total_votes": 6, "vote_consistency": 0.0, "wasted_votes": 2, "refiner_used": true, "refiner_correct": false, "vote_counts": {"-308": 1, "456": 1, "": 4}, "plan": "Step 1: 4 - 312 ="}
 {"mode": "guided", "idx": 4, "question": "There were 106 dollars in Olivia's wallet. After she visited a supermarket and a showroom there were 26 dollars left. If she spent 49 dollars at the showroom How much did she spend at the supermarket?", "gt_answer": "31", "final_answer": "80", "correct": false, "strategy": "majority", "confidence": 0.6, "correct_votes": 0, "total_votes": 5, "vote_consistency": 0.0, "wasted_votes": 2, "refiner_used": false, "refiner_correct": null, "vote_counts": {"80": 3, "26": 1}, "plan": "Step 1: Spent - Showroom = ?"}
-{"mode": "guided", "idx": 5, "question": "Faye was placing her pencils and crayons into 30 rows with 71 crayons and 24 pencils in each row How many pencils does she have?", "gt_answer": "720", "final_answer": "720", "correct": true, "strategy": "majority", "confidence": 0.6, "correct_votes": 3, "total_votes": 5, "vote_consistency": 0.6, "wasted_votes": 2, "refiner_used": false, "refiner_correct": null, "vote_counts": {"720": 3}, "plan": "Step 1: Rows * Pencils per Row = 30 * 24 = ?"}
+{
+  "mode": "guided",
+  "idx": 5,
+  "question": "Faye was placing her pencils and crayons into 30 rows with 71 crayons and 24 pencils in each row How many pencils does she have?",
+  "gt_answer": "720",
+  "final_answer": "720",
+  "correct": true,
+  "strategy": "majority",
+  "confidence": 0.6,
+  "correct_votes": 3,
+  "total_votes": 5,
+  "vote_consistency": 0.6,
+  "wasted_votes": 2,
+  "refiner_used": false,
+  "refiner_correct": null,
+  "vote_counts": {"720": 3},
+  "plan": "Step 1: Rows * Pencils per Row = 30 * 24 = ?"
+}
 {"mode": "guided", "idx": 6, "question": "Ed had 10 more marbles than Doug. Doug lost 11 of his marbles at the playground. If Ed had 45 marbles How many more marbles did Ed have than Doug then?", "gt_answer": "21", "final_answer": "35", "correct": false, "strategy": "coin_flip", "confidence": 0.3333, "correct_votes": 0, "total_votes": 6, "vote_consistency": 0.0, "wasted_votes": 4, "refiner_used": true, "refiner_correct": false, "vote_counts": {"35": 2, "": 2, "24": 1, "9": 1}, "plan": "Step 1: 10 + 11 = 21"}
 {"mode": "guided", "idx": 7, "question": "26 children were riding on the bus. At the bus stop 38 more children got on the bus How many children are on the bus now?", "gt_answer": "64", "final_answer": "64", "correct": true, "strategy": "majority", "confidence": 0.4, "correct_votes": 2, "total_votes": 5, "vote_consistency": 0.4, "wasted_votes": 3, "refiner_used": false, "refiner_correct": null, "vote_counts": {"64": 2}, "plan": "Step 1: 38 + 26 ="}
 {"mode": "guided", "idx": 8, "question": "Helen the hippo and her friends are preparing for thanksgiving at Helen's house. Helen baked 31 cookies yesterday 270 cookies this morning and 419 cookies the day before yesterday How many cookies did Helen bake till last night?", "gt_answer": "450", "final_answer": "450", "correct": true, "strategy": "majority", "confidence": 0.6, "correct_votes": 3, "total_votes": 5, "vote_consistency": 0.6, "wasted_votes": 2, "refiner_used": false, "refiner_correct": null, "vote_counts": {"450": 3, "580": 1}, "plan": "Step 1: Yesterday's cookies + Day before yesterday's cookies = ?"}
