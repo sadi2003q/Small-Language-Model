@@ -1,0 +1,33 @@
+{
+  "dataset": "PIQA",
+  "guided_mean_consistency": 0.5523,
+  "baseline_mean_consistency": 0.5159,
+  "consistency_lift": 1.0704,
+  "guided_wins": 433,
+  "baseline_wins": 365,
+  "tied": 102,
+  "guided_distribution": {
+    "all_wrong  (0%)": 103,
+    "low       (1-39%)": 149,
+    "medium  (40-79%)": 358,
+    "high   (80-100%)": 290
+  },
+  "baseline_distribution": {
+    "all_wrong  (0%)": 169,
+    "low       (1-39%)": 144,
+    "medium  (40-79%)": 272,
+    "high   (80-100%)": 315
+  },
+  "all_wrong_guided": 103,
+  "all_wrong_baseline": 169,
+  "guided_letter_dist": {
+    "A": 47.6,
+    "B": 52.1,
+    "": 0.3
+  },
+  "baseline_letter_dist": {
+    "A": 61.0,
+    "B": 38.8,
+    "": 0.2
+  }
+}
