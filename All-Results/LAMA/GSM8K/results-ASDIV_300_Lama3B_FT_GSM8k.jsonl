@@ -1,4 +1,20 @@
-{"mode": "guided", "idx": 0, "question": "He also has a section filled with short story booklets. If each booklet has 9 pages and there are 49 booklets in the short story section, how many pages will Jack need to go through if he plans to read them all?", "gt_answer": "441", "op_type": "Multiplication", "final_answer": "441", "correct": true, "strategy": "majority", "confidence": 0.8, "correct_votes": 4, "total_votes": 5, "vote_consistency": 0.8, "wasted_votes": 1, "refiner_used": false, "refiner_correct": null, "vote_counts": {"49": 1, "441": 4}, "plan": "Step 1: Booklets * Pages per booklet = Total pages\nStep 2: Total pages = 49 * 9 =?"}
+{
+    "mode": "guided", 
+    "idx": 0, 
+    "question": "He also has a section filled with short story booklets. If each booklet has 9 pages and there are 49 booklets in the short story section, how many pages will Jack need to go through if he plans to read them all?", "gt_answer": "441", "op_type": "Multiplication", 
+    "final_answer": "441", 
+    "correct": true, 
+    "strategy": "majority", 
+    "confidence": 0.8, 
+    "correct_votes": 4, 
+    "total_votes": 5, 
+    "vote_consistency": 0.8, 
+    "wasted_votes": 1, 
+    "refiner_used": false, 
+    "refiner_correct": null, 
+    "vote_counts": {"49": 1, "441": 4}, 
+    "plan": "Step 1: Booklets * Pages per booklet = Total pages\nStep 2: Total pages = 49 * 9 =?"
+}
 {"mode": "guided", "idx": 1, "question": "29 birds were sitting in a tree. Some more fly up to the tree. Then there were 42 birds in the tree How many more flew up to the tree?", "gt_answer": "13", "op_type": "Subtraction", "final_answer": "-13", "correct": false, "strategy": "majority", "confidence": 0.8, "correct_votes": 0, "total_votes": 5, "vote_consistency": 0.0, "wasted_votes": 1, "refiner_used": false, "refiner_correct": null, "vote_counts": {"-13": 4, "29": 1}, "plan": "Step 1: Initial - Final =? \n     29 - 42 =?"}
 {"mode": "guided", "idx": 2, "question": "Terry cut a rope 35 inches long into two pieces in the ratio 3:4 What is the length of the longer piece?", "gt_answer": "20", "op_type": "Multi-step", "final_answer": "20", "correct": true, "strategy": "coin_flip", "confidence": 0.3333, "correct_votes": 2, "total_votes": 6, "vote_consistency": 0.3333, "wasted_votes": 4, "refiner_used": true, "refiner_correct": false, "vote_counts": {"2000": 1, "20": 2, "7": 2, "35": 1}, "plan": "Step 1: Total parts = 3 + 4 = 7\nStep 2: Longer part = (4/7) * 35 = 20"}
 {"mode": "guided", "idx": 3, "question": "Ramon works at the supermarket. He put 26 boxes of Choco Delights on the shelf. There were already 15 boxes there. Later that day, Ramon counted 22 boxes on the shelf How many boxes of Choco Delights were missing?", "gt_answer": "19", "op_type": "Multi-step", "final_answer": "19", "correct": true, "strategy": "majority", "confidence": 0.6, "correct_votes": 3, "total_votes": 5, "vote_consistency": 0.6, "wasted_votes": 2, "refiner_used": false, "refiner_correct": null, "vote_counts": {"19": 3, "26": 1, "41": 1}, "plan": "Step 1: Total initial + Initial = 26 + 15 =\nStep 2: Subtracting what was left from total =?"}
