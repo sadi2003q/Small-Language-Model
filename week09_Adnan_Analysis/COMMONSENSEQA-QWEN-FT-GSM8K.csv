@@ -1,0 +1,1955 @@
+,mode,idx,question,concept,gt_answer,plan,votes,final_answer,correct,strategy,confidence,vote_counts,total_votes,correct_votes,vote_consistency,wasted_votes,refiner_used,refiner_correct,fineTunedOn,guideModel
+0,guided,0,"You can do knitting to get the feeling of what?
+
+Options:
+A) relaxation
+B) arthritis
+C) adrenaline
+D) your
+E) sweater may produced",knitting,A,"Step 1: Knitting typically involves repetitive motions that can induce a meditative state often associated with relaxation.
+Step 2: Among the given options, only ""relaxation"" aligns with this typical effect of knitting.
+Best answer: A because knitting typically induces a relaxed state through repetitive motion.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+1,guided,1,"If I was getting drunk, and people couldn't understand me, what might I be having?
+
+Options:
+A) a seizure
+B) slurred speech
+C) death
+D) forgetfulness
+E) pass out",getting drunk,B,"Step 1: Understanding alcohol's effects on speech clarity.
+           Alcohol consumption often leads to slurred speech due to impaired motor function in the mouth and throat.
+Step 2: Eliminating irrelevant options based on known consequences of drinking excessively.
+           Options A (seizures), C (death), and E (passing out) can occur but typically involve more severe symptoms than just being unable to communicate clearly.
+Best answer: B because slurred speech is a common effect of consuming too much alcohol, making communication difficult.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+2,guided,2,"If you turn off the music in a room with no other noise that room would be what?
+
+Options:
+A) silent
+B) opera
+C) silence
+D) television
+E) elevator",music,A,"Step 1: Understanding the scenario - When there's no other sound present in a room, turning off the music means eliminating any auditory input.
+Step 2: Applying basic physics knowledge - In an environment where all sounds have been removed (music turned off), the absence of any external sound results in complete silence.
+Best answer: A) silent because when all sources of sound are eliminated, the resulting state is absolute silence","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+3,guided,3,"By learning about the world, many poor college students gain what?
+
+Options:
+A) pleasure
+B) greater mobility
+C) desire to travel
+D) global warming
+E) increased security",learning about world,C,"Step 1: Understanding that gaining knowledge about the world typically leads to broader perspectives and experiences beyond one's immediate surroundings.
+           Many poor students often have limited exposure due to their socioeconomic status but can expand their horizons through education.
+Step 2: Considering how this increased awareness affects their future opportunities rather than providing immediate personal benefits like pleasure or security.
+           Broader understanding usually translates into better job prospects, networking possibilities, and career advancement potential.
+Best answer: B) greater mobility because learning about the world broadens one’s perspective leading to improved career opportunities and thus greater mobility.","['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+4,guided,4,"What is it called when a person tends to leave things to the last minute?
+
+Options:
+A) procrastinate
+B) complete collection
+C) headache
+D) good time management
+E) have to hold",person,A,"Step 1: Understanding the term ""procrastination"" involves knowing that it describes delaying tasks until they become urgent.
+Step 2: Among the given options, only ""procrastinate"" directly corresponds to this definition, as it specifically refers to putting off actions until later than desired.
+Best answer: A because procrastinate best fits the description of leaving tasks until the last possible moment","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+5,guided,5,"While knitting you can do what using a radio?
+
+Options:
+A) listen to music
+B) watch television
+C) making blankets
+D) eat
+E) watching tv",knitting,A,"Step 1: Knitting typically requires focus on creating patterns with yarn and needles, making it difficult to multitask like watching TV simultaneously.
+Step 2: Listening to music while knitting is common practice as it helps maintain rhythm and concentration without needing visual attention away from the craft.
+Best answer: A) listen to music because it allows you to enjoy auditory stimulation without diverting your hands away from knitting.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+6,guided,6,"What is likely to happen to someone who is learning?
+
+Options:
+A) overconfidence
+B) effectiveness
+C) knowing more
+D) head grows larger
+E) growth",learning,C,"Step 1: Learning typically involves acquiring new information and skills over time.
+       As people engage in learning activities, they generally gain knowledge and abilities.
+Step 2: Among the given options, only ""knowing more"" directly aligns with the process of learning.
+       The other choices either contradict typical outcomes (like head size) or don't accurately describe what happens during learning.
+Best answer: C because knowing more accurately reflects the outcome of engaging in learning processes.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+7,guided,7,"Where is a bird likely to make it's home?
+
+Options:
+A) forest
+B) nest
+C) roof
+D) leaves
+E) sky",bird,A,"Step 1: Birds typically build nests to lay eggs and raise their young.
+       Nests provide protection for eggs and chicks until they can fly.
+Step 2: Among the given options, only ""nest"" directly relates to where birds construct homes.
+       Forests, roofs, leaves, and the sky do not serve as permanent structures for nesting purposes.
+Best answer: B because birds typically build nests to lay eggs and raise their young.","['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+8,guided,8,"Why would you be watching tv instead of doing something else?
+
+Options:
+A) headache
+B) laughter
+C) laziness
+D) erections
+E) wasting time",watching tv,C,"Step 1: People typically watch TV as a leisure activity during free time when they have no pressing obligations or responsibilities.
+Step 2: Among the given options, 'laziness' best explains why someone might choose to watch TV rather than engage in other activities like work, studying, exercising, etc., especially if they have available leisure time without urgent tasks requiring attention.
+Best answer: C because laziness best describes choosing passive entertainment over active pursuits during downtime.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+9,guided,9,"If I did not have a rosebush, where would I get one?
+
+Options:
+A) pot
+B) museum
+C) garden center
+D) formal garden
+E) backyard",rosebush,C,"Step 1: Considering what items typically contain roses for sale.
+           Rose bushes themselves don't sell roses; they produce them.
+Step 2: Evaluating each option based on where one might purchase a living plant like a rose bush.
+           Option A (pot) contains soil but no plant capable of growing roses.
+           Option B (museum) displays art and artifacts, not plants for sale.
+           Option C (garden center) sells various plants including rose bushes.
+           Option D (formal garden) refers to an existing space rather than purchasing capability.
+           Option E (backyard) implies ownership rather than acquisition through purchase.
+Best answer: C because garden centers specialize in selling plants including rose bushes","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+10,guided,10,"He looked at the field of pumps, all slowing churning oil out of the what?
+
+Options:
+A) manual
+B) street
+C) restaurant
+D) ground
+E) service station",oil,D,"Step 1: Pumps that ""churn"" something typically work with liquids like oil rather than solids such as food items found in restaurants or services provided at service stations.
+Step 2: Oil extraction often occurs underground where it can flow freely through wells, requiring pumping mechanisms to extract it efficiently.
+Best answer: D because oil extraction usually happens beneath the surface of the ground.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+11,guided,11,"Where is a human likely to go as a result of being hungry?
+
+Options:
+A) eat in restaurant
+B) make bread
+C) have lunch
+D) cook dinner
+E) friends house",being hungry,A,"Step 1: When humans feel hungry, their primary instinctive response is to satisfy that need through food consumption.
+Step 2: Among the given options, eating directly addresses hunger without requiring additional preparation like making bread, having lunch, cooking dinner, which involve other activities beyond just satisfying hunger. Going to someone's house might also imply inviting oneself over but doesn't necessarily address immediate hunger needs alone.
+Best answer: A) eat in restaurant because it directly satisfies hunger without needing further action like preparing meals.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+12,guided,12,"Where would a computer user be using their own computer?
+
+Options:
+A) hell
+B) school
+C) indoors
+D) internet cafe
+E) house",computer user,E,"Step 1: Analyzing where people typically use personal computers.
+           Personal computers are generally used at home for everyday tasks like work, entertainment, and communication.
+Step 2: Eliminating unlikely options based on common usage patterns.
+           Options A (hell) and D (internet cafe) are highly improbable places for someone to use their own personal computer regularly.
+           Option E (house) aligns better with typical personal computer usage compared to option C (indoors), which is too broad without specifying ""house.""
+Best answer: E because houses provide privacy and space suitable for using one's own personal computer comfortably.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+13,guided,13,"The computer was difficult for he to understand at the store, so what did she sign up for to learn more?
+
+Options:
+A) classroom
+B) facebook
+C) school
+D) apartment
+E) demonstration",computer,E,"Step 1: Understanding that ""difficulty"" implies learning needs, choosing an educational setting would help overcome this challenge.
+Step 2: Among given options, only a classroom (option A) provides structured learning environments specifically designed for acquiring knowledge through instruction and practice.
+Best answer: A because a classroom offers formal education opportunities to improve understanding of complex topics like computers.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+14,guided,14,"Sage loved communicating  He liked doing what with his peers?
+
+Options:
+A) exchanging ideas
+B) confusion
+C) peer pressure
+D) response
+E) learning",communicating,A,"Step 1: Understanding the context of ""communicating"" suggests an interaction aimed at sharing information or thoughts between individuals.
+Step 2: Among the given options, exchanging ideas directly aligns with the act of communicating; it implies mutual sharing without necessarily implying negative outcomes like confusion or peer pressure.
+Best answer: A) exchanging ideas because it accurately reflects the positive aspect of communication where peers share their thoughts constructively.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+15,guided,15,"The neighborhood had a great sense of community, there was always a crowd at the landing of the what?
+
+Options:
+A) stairwell
+B) arena
+C) ocean
+D) airport
+E) apartment building",landing,E,"Step 1: Consider common gathering spots within neighborhoods that often have communal activities like watching events unfold.
+Step 2: Among the given options, stairwells typically don't serve as public viewing areas; arenas usually host large crowds but aren't found in residential areas; airports are too far removed from typical residential settings; oceans lack land-based structures where people gather; apartments buildings frequently have lobbies with landings that connect different floors. 
+Best answer: A) stairwell because it's a common feature in apartment buildings where residents congregate.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+16,guided,16,"If you have a condo in a Wisconsin city known for beer, where are you?
+
+Options:
+A) city
+B) electrical circuit
+C) residential area
+D) suburbia
+E) milwaukee",condo,E,"Step 1: Condos typically indicate residential properties rather than commercial spaces like breweries.
+Step 2: Milwaukee is famously known as ""The Brew City"" due to its rich brewing history and tradition of craft beer production.
+Best answer: E because Milwaukee is specifically associated with beer culture and has many residential areas including condos.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+17,guided,17,"Talking to the same person about the same thing over and over again is something someone can what?
+
+Options:
+A) social life
+B) friendship
+C) eye contact
+D) get tired of
+E) learn lessons from",talking to,D,"Step 1: Analyzing the given context suggests that engaging in repetitive conversations implies boredom or lack of novelty due to familiarity with the topic being discussed.
+Step 2: Among the provided options, 'getting tired of' aligns best with experiencing boredom resulting from continuous repetition without new information being introduced.
+Best answer: D because getting tired of something often occurs when one feels no change or improvement over time, fitting well with constant repetition without adding value.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+18,guided,18,"A farmer sees a weasel in the woods, where is the farmer?
+
+Options:
+A) chicken coop
+B) beach
+C) fairytale
+D) great outdoors
+E) corn fields",weasel,D,"Step 1: We need to consider where weasels typically reside based on their natural habitat characteristics.
+           Weasels are small mammals that prefer wooded areas over open spaces like beaches or farmlands.
+Step 2: Among the given options, only ""great outdoors"" encompasses wooded environments suitable for weasels.
+           The other choices (chicken coop, beach, corn fields) do not align with typical weasel habitats.
+Best answer: D because weasels naturally inhabit wooded regions which fall under the category of 'great outdoors'.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+19,guided,19,"What did the adult do before the job interview?
+
+Options:
+A) work
+B) dress himself
+C) marry
+D) dress herself
+E) drive train",adult,B,"Step 1: Analyze typical behaviors before attending an important event like a job interview.
+           Generally, people prepare themselves thoroughly for such occasions.
+Step 2: Consider gender-specific language used in some options (e.g., ""himself"" vs. ""herself"").
+           In professional settings, especially those involving women, it's common for them to dress appropriately before an interview.
+Best answer: D because dressing oneself properly is crucial before going to a formal event like a job interview.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+20,guided,20,"Where would you get a pen if you do not have one?
+
+Options:
+A) briefcase
+B) desk drawer
+C) friend's house
+D) pocket
+E) sidewalk",pen,C,"Step 1: Considering everyday scenarios where people typically keep their writing instruments.
+Step 2: Most individuals carry pens in their pockets as it's convenient for quick access during various activities like work meetings, note-taking, or personal errands.
+Best answer: D because pens are commonly kept in pockets for easy accessibility anytime needed.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+21,guided,21,"What might a person be watching if they see a man with a suitcase full of money?
+
+Options:
+A) baggage compartment
+B) movie
+C) subway
+D) airplane
+E) cargo hold",suitcase,B,"Step 1: Considering typical scenarios involving suitcases full of money, such situations often occur during high-stakes events like heists or auctions where valuables need secure transport.
+Step 2: Among the given options, only an airplane involves moving around with suitcases frequently enough to carry substantial amounts of cash safely across distances without immediate suspicion.
+Best answer: D because airplanes facilitate long-distance travel while transporting valuable items discreetly.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+22,guided,22,"James need to use a toilet but there were no public ones in sight.  Eventually he broke down and did something very expensive so that he could get a toilet.  Where might he have gone?
+
+Options:
+A) motel room
+B) apartment
+C) bathroom
+D) games
+E) house",toilet,A,"Step 1: Public restrooms typically aren't available everywhere, especially in remote areas like forests, deserts, or rural roadsides where none were found nearby.
+Step 2: Given that James needed to use a toilet urgently but couldn't find one, he likely resorted to using facilities within his immediate vicinity such as his own home, lodging (like a motel), or an apartment building if staying there temporarily.
+Best answer: A) motel room because motels often provide basic amenities including restrooms for guests.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+23,guided,23,"Jesse  enjoyed remembering the past because he helped him understand it.  And understanding the past helped him with doing what?
+
+Options:
+A) phoning
+B) nostalgia
+C) writing down
+D) active
+E) being prepared",remembering,E,"Step 1: Jesse's enjoyment of remembering the past suggests that it provides him with insight and context for current situations.
+           This aligns with the idea that understanding history can provide foresight into future actions.
+Step 2: Among the given options, only ""being prepared"" directly relates to gaining foresight through historical knowledge.
+           Options like ""phoning,"" ""nostalgia,"" ""writing down,"" and ""active"" don't necessarily imply preparation as their primary benefit.
+Best answer: E because being prepared implies using past experiences to anticipate future needs effectively","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+24,guided,24,"Where can you store you spare linens near your socks?
+
+Options:
+A) hospital
+B) chest
+C) home
+D) dresser drawers
+E) cabinet",linen,D,"Step 1: Linens like towels and sheets typically need to be stored in clean conditions away from potential contaminants such as dust and dirt.
+Best answer: D because dresser drawers provide a clean, organized space specifically designed for storing bedding items like linens.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+25,guided,25,"Aside from water and nourishment what does your dog need?
+
+Options:
+A) bone
+B) charm
+C) petted
+D) lots of attention
+E) walked",dog,D,"Step 1: Considering basic needs for dogs, similar to humans, they require more than just food and drink; they also need mental stimulation and physical activity.
+Step 2: Among the given options, only ""lots of attention"" directly relates to emotional well-being which is crucial for dogs as much as it is for humans. Bones, petting, and walking can provide physical comfort but aren't as essential as having someone interact with them frequently.
+Best answer: D because lots of attention helps maintain their emotional health and prevents boredom that could lead to destructive behaviors.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+26,guided,26,"What room would you find many bookcases and is used for contemplation?
+
+Options:
+A) study
+B) house
+C) homw
+D) kitchen
+E) den",bookcase,A,"Step 1: Consider typical uses of each given space option based on common knowledge.
+   - A) Study: This term specifically refers to an area within a home where one can read, write, or think deeply about topics without interruptions.
+   - B) House: A general term for a dwelling but doesn't specify an area meant for deep thinking.
+   - C) Homw: This appears to be a typo for ""home,"" which again lacks specificity regarding purposeful use for contemplation.
+   - D) Kitchen: Primarily associated with preparing meals; not typically used for deep thought activities.
+   - E) Den: Often used as a living room-like space in homes, usually for leisure activities rather than serious reflection.
+
+Step 2: Eliminate clearly inappropriate options based on their primary functions.
+   - Options B, C, D, and E can be immediately ruled out as they do not align with typical uses that involve contemplation.
+
+Best answer: A) study because it specifically denotes an area designed for quiet reflection and intellectual pursuits.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+27,guided,27,"The department to where vendors deliver goods for sale is called what?
+
+Options:
+A) delivered
+B) take away
+C) receiving
+D) pick up
+E) keep",deliver,C,"Step 1: Understand that ""vendors"" refer to sellers who bring products to marketplaces or stores for customers to purchase.
+Step 2: Recognize that when vendors bring their goods to these locations, they need an area designated specifically for receiving those items before they can be sold.
+Best answer: C because the term 'receiving' refers to the process of bringing in goods intended for sale in retail settings.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+28,guided,28,"What is used to grind wheat for bread?
+
+Options:
+A) farmer's field
+B) countryside
+C) cereal packets
+D) bread
+E) mill",wheat,E,"Step 1: Consider what processes convert raw materials like wheat into usable products such as bread.
+Step 2: Among the given options, only ""mill"" has machinery designed specifically for processing grains like grinding wheat. The other choices do not contain such equipment nor serve that purpose.
+Best answer: E because mills are industrial facilities equipped with grinders to process various agricultural products including wheat.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+29,guided,29,"They passed a apple tree on their way to the racetrack, the were going to watch the biggest motorsport spectacle in the world where?
+
+Options:
+A) maryland
+B) indiana
+C) on tv
+D) park
+E) new jersey",apple tree,B,"Step 1: The mention of ""the biggest motorsport spectacle"" strongly indicates Formula One racing, as it's widely considered the pinnacle of auto racing globally.
+Step 2: Most Formula One races take place in cities with large stadiums that can accommodate thousands of spectators, such as Indianapolis Motor Speedway (Indianapolis), Circuit of the Americas (Austin, Texas), and Autódromo Hermanos Rodríguez (Mexico City). None of these locations match options A, B, D, or E directly, leaving option C as the most plausible choice since watching sports events typically involves viewing them on television at home rather than attending them physically.
+Best answer: C because they were likely watching the event on TV at home.","['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+30,guided,30,"If someone found out their brother was having a daughter, they would have to add a niece limb to the what?
+
+Options:
+A) family picture book
+B) family reunion
+C) brother's house
+D) family tree
+E) baby shower",niece,D,"Step 1: Adding a niece typically involves updating records related to familial relationships.
+Step 2: The most logical place to document such additions would be in an organized structure that tracks entire families over generations.
+Best answer: D because adding a niece involves updating family lineage information which fits best with maintaining a family tree.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+31,guided,31,"John and Judy were parents.  They had two wonderful kids who weren't always well behaved.  They were light tough, though.  They felt it was a parent's job to do what?
+
+Options:
+A) control children
+B) guide children
+C) speak freely
+D) cry
+E) understand children",parents,B,"Step 1: Parents have the responsibility to raise their children properly within appropriate boundaries.
+           Being ""light tough"" suggests they balance being firm yet understanding towards their kids.
+Step 2: Among the given options, controlling children aligns best with parental duties mentioned above.
+           Guiding involves teaching and nurturing rather than merely controlling behavior.
+Best answer: A) control children because it reflects the idea of maintaining order while also being supportive","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+32,guided,32,"A gentleman is carrying equipment for golf, what is he likely to have?
+
+Options:
+A) club
+B) assembly hall
+C) meditation center
+D) meeting
+E) church",gentleman,A,"Step 1: Consider common items used during a game of golf.
+           Golf requires specific tools like clubs to hit balls on a course.
+Step 2: Eliminate options that do not align with using golf equipment.
+           Options B, C, D, and E (assembly hall, meditation center, meeting, church) are unrelated settings where one wouldn't expect to see golf equipment.
+Best answer: A because clubs are essential tools needed while playing golf","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+33,guided,33,"The man working in the attic swatted away a bee, but soon the single bee was an entire what?
+
+Options:
+A) swarm
+B) pack
+C) countryside
+D) soft drink
+E) field of flowers",bee,A,"Step 1: Understanding that bees typically form colonies and when disturbed, they often send out additional bees to defend their hive.
+Step 2: Given that one bee turned into many due to being disturbed, it logically follows that these additional bees would come from the same colony as the original one.
+Best answer: A) swarm because when a bee is disturbed in its nest, it usually triggers other bees within the same colony to leave and gather around the disturbance, forming a swarm.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+34,guided,34,"If a person with mental illness stops treatment what will likely happen?
+
+Options:
+A) managed
+B) dancing
+C) recur
+D) effectively treated
+E) cause suffering",mental illness,C,"Step 1: Understanding the consequences of stopping psychiatric medication for someone with a diagnosed mental illness.
+           - Mental illnesses often require ongoing management through medication and therapy.
+           - Stopping prescribed medications without guidance can lead to worsening symptoms.
+Step 2: Analyzing each option based on this understanding.
+           - Option A (managed) doesn't fit as it implies ongoing control over symptoms, which isn't guaranteed without continued treatment.
+           - Option B (dancing) has no logical connection to mental health issues or cessation of treatment.
+           - Option C (recur) aligns with potential outcomes like relapse due to lack of treatment.
+           - Option D (effectively treated) contradicts itself since being ""effectively treated"" means continuing successful treatment rather than stopping it.
+           - Option E (cause suffering) directly correlates with the negative effects that may occur if someone with a mental illness discontinues their prescribed treatments.
+Best answer: C because stopping treatment for a mental illness often leads to its recurrence and exacerbation of symptoms.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+35,guided,35,"The program kept getting errors, the amateur end user began to what?
+
+Options:
+A) get mad
+B) compile
+C) debug
+D) write code
+E) get frustrated",program,E,"Step 1: When software programs encounter errors, users often react emotionally due to frustration caused by technical issues they don't understand.
+Step 2: Among the given options, getting mad (Option A) and getting frustrated (Option E) are common emotional responses when dealing with malfunctioning technology that an inexperienced person might experience.
+Best answer: E because getting frustrated is a typical reaction for an amateur end user facing errors in their software program.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+36,guided,36,"Sometimes a person has a fear of water or a dislike of being wet, it is still important to make sure they are having a bath why?
+
+Options:
+A) flooding
+B) drowning
+C) wet skin
+D) get wet
+E) rash",having bath,E,"Step 1: Bathing helps maintain hygiene and cleanliness, which benefits overall health regardless of personal feelings towards water.
+Step 2: While some individuals may dislike being wet due to phobias or dislikes, maintaining hygiene prevents illnesses like infections that could lead to more severe issues such as rashes.
+Best answer: E because rash can develop if hygiene standards aren't met through regular bathing.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+37,guided,37,"Where is a great place to buy fresh fruit?
+
+Options:
+A) san francisco
+B) refrigerator
+C) big box retailer
+D) tree
+E) market",fruit,E,"Step 1: Consider where fruits naturally grow and are typically sold fresh.
+   - Fruits like apples, oranges, and bananas grow on trees outdoors.
+   - Markets often sell locally sourced produce directly from farms or suppliers.
+Step 2: Evaluate each option based on these considerations.
+   - Option A (San Francisco): While known for its food culture, it doesn't inherently provide access to fresh fruit unless one specifically goes to local markets.
+   - Option B (refrigerator): This stores food but does not offer purchasing opportunities for fresh fruit.
+   - Option C (big box retailer): Often sells packaged fruits rather than fresh ones directly harvested.
+   - Option D (tree): Trees themselves do not sell fruit; they grow it but cannot be bought as a source of purchase.
+   - Option E (market): Typically offers a variety of fresh fruits directly sourced from growers, making it an ideal choice for buying fresh fruit.
+Best answer: E because markets offer a wide range of fresh fruits directly sourced from local producers","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+38,guided,38,"Which large land mass is home to the most monkeys?
+
+Options:
+A) amazon basin
+B) friend's house
+C) lift number 3
+D) research laboratory
+E) african continent",monkey,E,"Step 1: Consider where monkeys naturally reside based on their geographical distribution.
+       Monkeys primarily inhabit tropical forests across various continents.
+Step 2: Eliminate options that clearly don't fit as habitats for monkeys.
+       Options B (friend's house), C (lift number 3), and D (research laboratory) do not provide natural habitats suitable for monkeys.
+Best answer: E because the African continent has diverse tropical forests where many monkey species naturally occur.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+39,guided,39,"Billy was reading the newspaper as he commuted to work, but once he got to his destination he balled it up and put it somewhere. Where did it put it?
+
+Options:
+A) trash
+B) floor
+C) subway
+D) ground
+E) lawn",newspaper,A,"Step 1: Considering typical actions for someone who has finished reading a newspaper during their commute.
+           People usually dispose of newspapers they've read while traveling if they don't plan to keep them.
+Step 2: Eliminating unlikely locations based on common practices:
+           Options C (subway), D (ground), and E (lawn) are impractical places for dropping off a newspaper post-commute as these areas aren't designed for such disposal.
+           This leaves us with A (trash) and B (floor).
+Step 3: Analyzing remaining possibilities considering convenience and privacy:
+           Floors can vary greatly in terms of accessibility; however, public restrooms often have designated bins for used papers.
+           Trash cans, especially those found in public spaces like offices, trains, or buses, provide an easy way to dispose of read newspapers without needing to go indoors.
+Best answer: A because trash cans are commonly placed in convenient yet discrete spots along transportation routes for this purpose.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+40,guided,40,"How does going jogging generally affect one's self esteem?
+
+Options:
+A) feel better
+B) feel pride
+C) sweating
+D) ocean
+E) arthritis",going jogging,A,"Step 1: Jogging typically involves physical activity that releases endorphins, which are chemicals in the brain that act as natural painkillers and mood elevators.
+       These endorphins contribute to feelings of happiness and well-being.
+Step 2: Regular participation in activities like jogging can lead to improved physical health, which often correlates with increased confidence and self-esteem as individuals see tangible benefits from their efforts.
+Best answer: A) feel better because jogging releases endorphins that improve mood and overall sense of well-being, leading to enhanced self-esteem.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+41,guided,41,"Minerals can be obtained in what way for a person who avoids leafy greens?
+
+Options:
+A) multivitamin
+B) farm
+C) michigan
+D) earth
+E) ore",mineral,A,"Step 1: People often rely on dietary sources like leafy greens for obtaining essential minerals such as calcium, iron, and magnesium.
+Step 2: If someone avoids leafy greens due to personal preference or dietary restrictions, they might turn to alternative food items that contain these minerals instead.
+Best answer: A) multivitamin because it provides various nutrients including minerals that could replace those lacking from avoiding leafy greens","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+42,guided,42,"If someone mean wanted to insult somebody by calling them a fruit, where is probably not the smartest place to do it?
+
+Options:
+A) gay bar
+B) market
+C) grocery store
+D) refrigerator
+E) container",fruit,A,"Step 1: Considering typical contexts for insults involving ""fruit.""
+   - Insulting someone as a ""fruit"" often implies they are perceived as foolish, simple-minded, or immature.
+   - This type of insult might be more acceptable in environments where people expect such language due to familiarity with its usage.
+
+Step 2: Evaluating each option based on likelihood of encountering this kind of insult.
+   - Option A (gay bar): While some subcultures may use derogatory terms, it's generally not considered appropriate in most mainstream bars.
+   - Option B (market): Markets can sometimes have informal language, but using an insulting term like ""fruit"" would likely draw unwanted attention and potentially offend others present.
+   - Option C (grocery store): Similar to markets, grocery stores often have casual conversations, but using an insulting term could disrupt peace among shoppers looking for groceries.
+   - Option D (refrigerator): Refrigerators themselves don't allow interaction; thus, no context exists for delivering an insult here.
+   - Option E (container): Containers like suitcases or backpacks aren’t places where direct communication occurs, making them unsuitable for delivering an insult.
+
+Best answer: D because refrigerators lack the ability to engage in conversation where an insult could be delivered.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+43,guided,43,"The extremely large cargo plane could only land at a specialized runway, these were only located at a what?
+
+Options:
+A) back yard
+B) bowling alley
+C) city
+D) military base
+E) fashion show",runway,D,"Step 1: Large cargo planes require long runways due to their size and weight.
+Step 2: Specialized runways designed for such aircraft typically exist at airports that serve major transportation hubs like military bases or commercial airlines with extensive cargo operations.
+Best answer: D because military bases often have infrastructure capable of handling large cargo planes including dedicated runways.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+44,guided,44,"If you own a cat where is the last place you'd want to find it?
+
+Options:
+A) trouble
+B) dog's mouth
+C) backyard
+D) nature
+E) home",cat,B,"Step 1: Cats typically seek familiar environments where they feel safe and comfortable.
+       Their natural instinct is to return to their home environment if lost.
+Step 2: Among the given options, 'trouble' (A) doesn't specify a location; 'dog's mouth' (B) could potentially lead to harm for the cat.
+       'Backyard' (C) aligns with cats often exploring their surroundings but returning home eventually.
+       'Nature' (D) implies an unfamiliar environment far from home, making it unlikely for a cat to stay there long-term.
+       'Home' (E) directly corresponds with what one would expect a cat to go back to if not found elsewhere.
+Best answer: E because cats naturally gravitate towards their homes for safety and comfort.","['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+45,guided,45,"John loved to paint houses.  How did he usually do it?
+
+Options:
+A) clothes get stained
+B) with brush
+C) wallpaper
+D) electrical circuit
+E) draw",paint,B,"Step 1: Analyze what painting houses entails based on common practices.
+           Painting houses typically involves applying paint to walls using tools designed for that purpose.
+Step 2: Eliminate options that don't align with painting houses as described.
+           Options A (clothes get stained), C (wallpaper), D (electrical circuit), and E (draw) do not relate to the act of painting houses.
+Best answer: B) with brush because brushes are standard tools used by painters when applying paint to surfaces like house walls.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+46,guided,46,"Ficus can be planted in a yard to make summer more bearable, what sort of areas do they create?
+
+Options:
+A) shady places
+B) screened porch
+C) pots
+D) ceramics
+E) clay pot",ficus,A,"Step 1: Ficus trees provide shade due to their large canopy that blocks sunlight.
+Best answer: A) shady places because Ficus trees create dense foliage that reduces direct sunlight exposure
+
+Step 2: Among given options, only ""shady places"" directly corresponds with creating shade provided by Ficus trees.
+Step 3: Other options like screened porches (B), pots (C), ceramics (D), and clay pots (E) don't inherently offer shade but may house Ficus plants instead.
+Best answer: A) shady places because Ficus trees create dense foliage that reduces direct sunlight exposure","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+47,guided,47,"Computers have allowed everybody to answer questions they have quickly, but still we seem to be getting duller despite access to this what?
+
+Options:
+A) economic boom
+B) advance knowledge
+C) produce sound
+D) teach
+E) follow instructions",computers,B,"Step 1: Analyzing the context suggests that while computers provide quick answers, people might not utilize these resources effectively due to other factors affecting cognitive abilities.
+Step 2: Given that advances in technology like computers should enhance rather than diminish intelligence, focusing on advancements in knowledge (option B) seems most plausible as it directly relates to potential declines in mental acuity despite technological benefits.
+Best answer: B because advances in knowledge could lead to overreliance on quick answers without fostering deeper understanding or critical thinking skills.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+48,guided,48,"Sam couldn't get back to sleep because of a dream he had.  It was a what?
+
+Options:
+A) awake
+B) horror
+C) dreamworker
+D) reality
+E) nightmare",dream,E,"Step 1: Dreams typically have emotional content that can either be pleasant or frightening depending on personal experiences and subconscious thoughts.
+Step 2: Given that Sam couldn't fall asleep due to his dream, it suggests the experience was vivid enough to remain in memory even while trying to rest, implying it wasn't just a normal recurring thought but rather something impactful like fear or anxiety.
+Best answer: E because nightmares involve disturbing dreams causing distress similar to waking up unable to go back to sleep.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+49,guided,49,"Sam was a stranger.  Even so, Mark treated him like what?
+
+Options:
+A) friend
+B) family
+C) known person
+D) park
+E) outsider",stranger,B,"Step 1: Considering human behavior towards strangers, typically people do not extend the same level of familiarity as they would with known individuals.
+Step 2: Since Sam was described as a stranger, it's unlikely that Mark would treat him as if he were someone he knew well enough to call a friend or family member.
+Best answer: C because even though Sam was a stranger, Mark still didn't show him the level of familiarity expected between close acquaintances.","['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+50,guided,50,"Where can you find a number of wind instruments together in public?
+
+Options:
+A) music store
+B) create music
+C) zoo
+D) music room
+E) symphony",wind instrument,E,"Step 1: Wind instruments typically require space for proper playing and storage, often found in environments designed for musical performances rather than casual settings like zoos or stores.
+Step 2: Among the given options, only a ""symphony"" provides an environment where various types of wind instruments can be displayed and played simultaneously in front of an audience.
+Best answer: E because a symphony is an organized ensemble that performs with different types of wind instruments together in a public setting.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+51,guided,51,"What do humans do to other humans after death?
+
+Options:
+A) celebrate
+B) burial
+C) life
+D) rebirth
+E) decomposition",death,B,"Step 1: Consider typical human reactions upon encountering a deceased individual.
+           Humans generally avoid contact with dead bodies due to health concerns.
+Step 2: Evaluate each option based on these considerations.
+           - Celebrating typically occurs before death, not afterward.
+           - Burial involves placing remains in the ground; it's an action taken during life preparation for death.
+           - Life refers to living beings, not actions performed post-mortem.
+           - Rebirth is a concept found in some religious beliefs but not universally practiced as an immediate response to death.
+           - Decomposition is an inevitable biological process that happens naturally without human intervention once death has occurred.
+Best answer: E because decomposition is an unavoidable natural process that occurs without human involvement immediately following death.","['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+52,guided,52,"The shark actually counted as evidence, so where did the legal team bring it?
+
+Options:
+A) court room
+B) shallow waters
+C) poker game
+D) sea world
+E) pond arena",shark,A,"Step 1: Legal teams often present physical evidence that supports their case during trials.
+Step 2: Courtsrooms are designated areas within buildings specifically set up for legal proceedings involving judges, lawyers, and witnesses.
+Best answer: A) court room because courts are where legal matters are heard and evidence presented","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+53,guided,53,"How can someone be let into a brownstone?
+
+Options:
+A) brooklyn
+B) ring
+C) subdivision
+D) bricks
+E) new york city",brownstone,B,"Step 1: Brownstones typically refer to row houses found in certain neighborhoods of New York City, specifically Brooklyn Heights and other affluent areas within New York City limits.
+Step 2: To gain entry into a specific brownstone, one needs either permission from the homeowner (which could involve showing identification) or having been invited by someone who lives there. Using a key is usually required for physical access control.
+Best answer: B because rings can serve as keys that grant access to homes, though they're more commonly associated with wedding bands rather than house entry.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+54,guided,54,"Where would stones not be arranged in a path?
+
+Options:
+A) quarries
+B) field
+C) park
+D) bridge
+E) made from rocks",stones,B,"Step 1: Stones are commonly used as decorative elements or pathways in various outdoor settings like parks and fields.
+Step 2: Among the given options, bridges typically have solid construction materials rather than being paved with stones due to structural integrity concerns.
+Best answer: D because bridges usually consist of metal beams and concrete rather than being paved with stones for safety reasons.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+55,guided,55,"Where do you keep extra clothing on a hike?
+
+Options:
+A) person
+B) hamper
+C) closet
+D) upstairs
+E) backpack",clothing,E,"Step 1: When going on a hike, one typically carries their belongings with them rather than leaving them behind at home.
+Step 2: Among the given options, only carrying items during a hike aligns with practicality; keeping things like extra clothing elsewhere wouldn't make sense as it defeats the purpose of having those items available during the activity.
+Best answer: E because backpacks are designed specifically for carrying personal items while hiking, including extra clothing.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+56,guided,56,"The homeowner frowned at the price of gas, what did he have to do later?
+
+Options:
+A) own home
+B) mail property tax payments
+C) board windows
+D) cut grass
+E) receive mail",homeowner,D,"Step 1: Considering the context provided, the homeowner's concern over the price of gas suggests they might need to make adjustments related to transportation costs.
+Step 2: Among the given options, mailing property taxes (Option B) typically involves driving to a post office or using public transportation, which could increase their fuel expenses if they rely on cars for these tasks.
+Best answer: B because mailing property tax payments likely requires using vehicles that consume gasoline, thus adding to the already high cost due to rising prices.","['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+57,guided,57,"What is happening while he's playing basketball for such a long time?
+
+Options:
+A) sweating
+B) pain
+C) having fun
+D) medium
+E) knee injury",playing basketball,A,"Step 1: Basketball involves physical activity that can lead to increased body temperature due to exertion.
+       Sweating occurs as part of the body's cooling mechanism during exercise.
+Step 2: Among the given options, only ""sweating"" directly relates to engaging in prolonged physical activity like playing basketball.
+Best answer: A because sweating occurs as part of the body's response to physical exertion during sports like basketball.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+58,guided,58,"Where can you buy a magazine, paper or gum?
+
+Options:
+A) bank
+B) rack
+C) bed
+D) newsstand
+E) bus depot",magazine,D,"Step 1: Consider where magazines typically exist before being purchased.
+   - Magazines usually come pre-printed on paper and may contain items like gum as part of their content.
+   - They often need to be distributed to various locations for public access.
+Step 2: Evaluate each option based on common usage patterns.
+   - Banks primarily handle financial transactions; they don't sell printed materials like magazines.
+   - Racks could potentially hold magazines but aren’t places where one buys them directly.
+   - Beds serve sleeping purposes and aren’t associated with selling goods.
+   - Newsstands specialize in selling newspapers and other printed materials including magazines.
+   - Bus depots focus on transportation services rather than retail sales.
+Best answer: D because newsstands are specifically designed to sell newspapers, magazines, and sometimes other printed items including gum.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+59,guided,59,"Where can books be read?
+
+Options:
+A) cabinet
+B) backpack
+C) table
+D) shelf
+E) sink",books,C,"Step 1: Considering where people typically store their books for easy access but also keeping them safe from damage.
+           Books need space to lay flat without being damaged by moisture or sunlight.
+Step 2: Among the given options, a cabinet (A) could potentially hold books securely out of sight, but it's not usually designed for reading directly.
+           A backpack (B) is meant for carrying items while moving, not for stationary use like reading.
+           A shelf (C) provides vertical space that allows books to lie flat, making them suitable for reading comfortably.
+           A table (D) offers horizontal surface but might not provide enough room for multiple books simultaneously.
+           A sink (E) is primarily used for washing hands and dishes; it doesn't offer suitable conditions for reading books safely.
+Best answer: C because shelves provide ample space to lay books flat for comfortable reading.","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+60,guided,60,"Where do you keep musical instrument so it doesn't get scratched?
+
+Options:
+A) bank
+B) orchestra
+C) case
+D) music room
+E) movie",musical instrument,C,"Step 1: Considering the purpose of protecting an instrument from getting scratched, keeping it in a protective cover would prevent damage.
+Step 2: Among the given options, only a ""case"" serves as a protective covering specifically designed for instruments like guitars, pianos, etc., while the others have different functions unrelated to protection against scratches.
+Best answer: C because a case provides a dedicated space to store and protect musical instruments without risking scratches.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+61,guided,61,"What can eating hamburger cause immediately after eating it?
+
+Options:
+A) tasty
+B) health problems
+C) eat cake
+D) indigestion
+E) gain weight",eating hamburger,D,"Step 1: Consider typical digestive responses to consuming food items like hamburgers.
+           Hamburgers often contain high amounts of fat, salt, and sometimes processed ingredients that can lead to immediate discomfort if not properly digested.
+Step 2: Evaluate each option based on these considerations.
+           Option A (tasty) describes an initial sensation but doesn't address potential negative effects.
+           Option B (health problems) could include various issues but isn't as specific as other options regarding immediacy.
+           Option C (eat cake) contradicts common eating patterns; people typically don't continue eating immediately after finishing one meal with another.
+           Option D (indigestion) aligns well with typical digestive reactions to certain foods, especially those rich in fats and proteins.
+           Option E (gain weight) is more long-term than immediate effects associated with eating a hamburger.
+Best answer: D because indigestion is a common immediate reaction to consuming fatty foods found in hamburgers.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+62,guided,62,"To play sports professionally you must do what very often?
+
+Options:
+A) wash your clothes
+B) get in shape
+C) practice
+D) take off uniform
+E) stretch",play sports,C,"Step 1: Professional athletes need to maintain their physical condition to perform well in their sport.
+           Regular practice helps improve skills and fitness necessary for success in professional sports.
+Step 2: Washing clothes (Option A) is not directly related to playing sports professionally; getting in shape (Option B) could help but isn't as specific as practicing (Option C).
+           Taking off uniforms (Option D) happens before games but not necessarily regularly during training sessions.
+           Stretching (Option E) can enhance flexibility but doesn't cover overall preparation as comprehensively as practicing does.
+Best answer: C because practicing covers various aspects like skill enhancement, physical conditioning, and mental preparation required for professional sports.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+63,guided,63,"Where can you buy a clock, clothing and wrenches?
+
+Options:
+A) counter
+B) train station
+C) school room
+D) desk
+E) department store",clock,E,"Step 1: Department stores typically sell various items including clocks, clothing, and tools like wrenches due to their wide range of products catering to different needs.
+Step 2: None of the other given locations (counter, train station, school room, desk) commonly stock such diverse merchandise as clocks, clothing, and wrenches.
+Best answer: E because department stores offer a variety of products including clocks, clothing, and tools like wrenches.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+64,guided,64,"What is likely to have a better school cafeteria?
+
+Options:
+A) high school
+B) canteen
+C) polytechnic
+D) large room
+E) all kinds of schools",school cafeteria,C,"Step 1: Analyzing the given options for their relevance to having a school cafeteria.
+   - High school (Option A): Typically refers to secondary education institutions where students attend grades 9 through 12.
+   - Canteen (Option B): Usually means an eating area within a building that serves food, often found in various settings including schools but not exclusively so.
+   - Polytechnic (Option C): Refers to educational institutions focused on vocational training and technical skills, typically offering higher education programs beyond secondary schooling.
+   - Large room (Option D): Describes an open space without specifying what kind of establishment it belongs to.
+   - All kinds of schools (Option E): Broadly includes various types of educational facilities ranging from primary schools to universities.
+
+Step 2: Considering typical features associated with having a dedicated cafeteria space suitable for students.
+   - Cafeterias in high schools often provide meals during breaks and lunchtimes, catering specifically to student needs.
+   - While some polytechnics might have dining areas, they usually focus more on academic spaces rather than meal provision.
+   - Canteens can exist in different types of establishments but may not necessarily serve as primary meal locations for students like those found in schools.
+   - A ""large room"" alone lacks context regarding whether it's designed for serving meals regularly.
+
+Best answer: A because high schools typically have designated spaces for providing meals to their student body, making them most likely to have a well-equipped school cafeteria.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+65,guided,65,"A traveler laments the fact that mass transit is limited in his city when his groceries get soaked by the rain as he waits where?
+
+Options:
+A) bus stop
+B) library
+C) motel
+D) airport
+E) subway",traveller,A,"Step 1: Considering typical scenarios for waiting with groceries, public transportation hubs like bus stops often have areas where people can wait during inclement weather without getting their belongings wet.
+Step 2: Among the given options, only a bus stop provides an outdoor area where someone might wait with groceries exposed to rain. The other locations listed (library, motel, airport, subway) typically do not offer such conditions for grocery-waiting passengers.
+Best answer: A because a bus stop offers an open space where one could potentially leave groceries unattended while waiting for public transport.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+66,guided,66,"Why might a person be known as a liar?
+
+Options:
+A) have no home
+B) false information
+C) hungry
+D) made fun of
+E) brain tumor",person,B,"Step 1: People generally gain reputations based on their actions and behaviors over time.
+Step 2: Being known as a liar implies consistently telling untruths, which can significantly damage someone's credibility and relationships with others.
+Best answer: B because false information leads to being seen as a liar, causing trust issues in social interactions","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+67,guided,67,"What would you be building if you designed a place for an annoying critter to stay?
+
+Options:
+A) spread disease
+B) swamp
+C) fly away
+D) cat condo
+E) bug campers",mosquitoes,E,"Step 1: Analyzing the context of ""an annoying critter"" suggests we're looking for something that could contain pests without harming them directly but still make their presence undesirable.
+Step 2: Among the given options, only ""bug campers"" (option E) directly relates to housing small creatures like insects in a controlled environment where they can't spread diseases, create messes, or otherwise cause annoyance.
+Best answer: E because bug campers provide a contained space for pests without allowing them to spread diseases or cause disturbances outside their enclosure","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+68,guided,68,"Where is a statute found on a platform?
+
+Options:
+A) below
+B) arena
+C) concert hall
+D) museum
+E) building",platform,D,"Step 1: Statutes typically refer to formal written rules that govern behavior within certain jurisdictions like cities, states, or countries. Platforms where statutes might be displayed could include public spaces meant for official announcements.
+Step 2: Among the given options, arenas, concert halls, museums, and buildings generally do not have permanent platforms specifically designated for displaying statutes. Buildings often house administrative offices where such documents may be kept but not necessarily displayed openly.
+Best answer: A) below because statutes are usually stored below ground level in archives rather than being prominently displayed on platforms above ground.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+69,guided,69,"After killing people, the murderer went to church after feeling what?
+
+Options:
+A) murder
+B) remorse
+C) religious
+D) retaliation
+E) anguish",killing people,B,"Step 1: Considering human psychology post-crime, individuals often experience intense emotional turmoil following violent acts like murder.
+           People typically feel remorseful when they harm others, especially if they realize their actions have caused suffering.
+Step 2: Among the given options, only ""remorse"" aligns with experiencing intense negative emotions due to harming another person.
+           Options A, C, D, and E do not directly relate to the psychological state that follows such an act.
+Best answer: B) remorse because people usually feel remorseful after committing acts of violence against others","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+70,guided,70,"What is a place that has large cable hanging overhead?
+
+Options:
+A) radio shack
+B) electrical device
+C) shower
+D) substation
+E) television",cable,D,"Step 1: Large cables typically hang overhead in areas where they are used for transmitting electricity efficiently over long distances.
+Step 2: Among the given options, only substations involve high-voltage transmission lines that require overhead cables for safety reasons during operation.
+Best answer: D because substations handle high-voltage power distribution and necessitate overhead cables for stability and efficiency.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+71,guided,71,"When an elderly person needs help performing daily tasks, who might they call?
+
+Options:
+A) creativity
+B) hatred
+C) caregiver
+D) own house
+E) much money",person,C,"Step 1: Elderly individuals often require assistance with their daily activities due to age-related limitations.
+           Caregivers specialize in providing support for those needing help with personal care routines.
+Step 2: Among the given options, only ""caregiver"" refers to someone specifically trained to assist elderly people with their daily needs.
+           Other choices like ""creativity,"" ""hatred,"" ""own house,"" and ""much money"" do not relate to providing such assistance.
+Best answer: C because caregivers are professionals designed to help elderly individuals with their daily tasks","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+72,guided,72,"A man wants air conditioning while we watches the game on Saturday, where will it likely be installed?
+
+Options:
+A) car
+B) house
+C) offices
+D) park
+E) movie theatre",air conditioning,B,"Step 1: Consider typical usage patterns for air conditioning systems during leisure activities like watching games.
+           People generally prefer comfortable environments when engaging in passive entertainment like watching sports.
+Step 2: Evaluate each option based on practicality for indoor activities with air conditioning.
+           Option A (car) is impractical as cars lack proper cooling infrastructure suitable for extended periods.
+           Option D (park) doesn't typically have air conditioning facilities available to individuals.
+           Options C (offices) usually have centralized HVAC systems but may not cater specifically to personal use without permission.
+           Option E (movie theatre) often provides air conditioning but isn't typically accessible for individual viewing preferences outside of screenings.
+           Option B (house) offers flexibility in setting up personal comfort zones with air conditioning units easily installed within living spaces.
+Best answer: B because houses provide homeowners with control over their own living conditions including installing necessary appliances like air conditioners.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+73,guided,73,"A patriotic guy with a camera is looking for a bald eagle, what is he likely to do with the eagle if he finds one?
+
+Options:
+A) city
+B) canada
+C) minnesota
+D) thermal
+E) photograph",bald eagle,E,"Step 1: The question specifies that the subject is looking for a bald eagle, which implies they want to observe and potentially capture an image of it.
+Step 2: Given that the person has a camera, their primary action would involve using it to document their sighting of the bird.
+Best answer: E) photograph because he wants to capture an image of the bald eagle using his camera","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+74,guided,74,"What is a person who is good at sports considered?
+
+Options:
+A) lazy
+B) own house
+C) talented
+D) affluent
+E) reproduce",person,C,"Step 1: Consider typical societal perceptions regarding athletic ability.
+       Generally, being skilled in sports is seen as an admirable trait rather than a negative one.
+Step 2: Evaluate each option based on these perceptions.
+       - ""Lazy"" contradicts being good at sports; it implies lack of effort, which goes against being athletic.
+       - ""Own house,"" ""affluent,"" and ""reproduce"" do not directly relate to sporting prowess.
+       - ""Talented"" aligns with being good at sports as it suggests having natural aptitude or skill.
+Best answer: C because being good at sports indicates having talent or natural ability","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+75,guided,75,"A creek could be located in the opposite for the city which is called what?
+
+Options:
+A) meadow
+B) stick
+C) valley
+D) forest
+E) countryside",creek,E,"Step 1: Cities often have parks where they create green spaces within urban areas to provide relief from the heat and noise of city life.
+Step 2: Parks typically include features like creeks, ponds, and other natural elements that help maintain biodiversity and aesthetic appeal. These features are usually found in less developed areas outside the immediate city center.
+Best answer: E because countryside surrounds cities and includes natural landscapes like creeks.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+76,guided,76,"The man got a pail to catch the draining motor oil, where was he likely doing this at home?
+
+Options:
+A) garage
+B) hardware store
+C) utility room
+D) wishing well
+E) laundry",pail,A,"Step 1: Motor oil is typically used in machinery like engines, which suggests it's stored in a place accessible for maintenance work.
+Step 2: Among the given options, only the garage provides an environment suitable for storing automotive fluids and performing mechanical tasks.
+Best answer: A because garages usually contain tools and equipment necessary for handling motor oil safely and efficiently.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+77,guided,77,"The tourist entered Mammoth cave, what state were they in?
+
+Options:
+A) west virginia
+B) kentucky
+C) rocky hills
+D) scotland
+E) canyon",cave,B,"Step 1: Mammoth Cave National Park is known as one of the longest known cave systems in the world, located primarily within the United States.
+Step 2: Among the given options, only Kentucky fits as the state where Mammoth Cave National Park resides.
+Best answer: B because Mammoth Cave National Park is situated in Kentucky, USA.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+78,guided,78,"When we are running what are we doing?
+
+Options:
+A) stretches
+B) running from police
+C) learn to walk
+D) go quickly
+E) get out of bed",run,D,"Step 1: Analyze the given options based on common understanding of running.
+       Running typically involves moving one's body forward using legs as primary propulsion through continuous motion.
+Step 2: Eliminate irrelevant actions like stretching, learning to walk, getting out of bed, which don't describe active movement forward.
+Best answer: D because going quickly aligns with the definition of running as an activity involving rapid movement forward.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+79,guided,79,"Copulating with the wrong partner may be ill advised, many diseases can be transferred that can cause different types of what?
+
+Options:
+A) intense pleasure
+B) ejaculation
+C) period of rest
+D) enjoyment
+E) skin irritation",copulating,E,"Step 1: Understanding the context involves recognizing that sexual activity carries risks related to disease transmission.
+Step 2: Among the given options, only ""skin irritation"" could potentially relate directly to sexually transmitted infections (STIs), as some STIs can lead to skin conditions like genital herpes causing irritation.
+Best answer: E because skin irritation is one possible symptom resulting from certain sexually transmitted infections.","['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+80,guided,80,"Where would you find an office worker gossiping with their colleagues?
+
+Options:
+A) water cooler
+B) space shuttle
+C) baby shower
+D) bus stop
+E) family",person,A,"Step 1: Office workers typically gather in informal settings during breaks to discuss work-related topics.
+Step 2: The most common place for such gatherings among coworkers is near the water cooler where they can easily chat without disturbing others.
+Best answer: A) water cooler because it's an expected gathering spot for office workers during their breaks","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+81,guided,81,"Zane doesn't like answering questions.  He's not good at it because he suffers from what?
+
+Options:
+A) panic
+B) discussion
+C) attention
+D) confusion
+E) satisfaction",answering questions,D,"Step 1: Analyzing the given context suggests that Zane finds answering questions difficult, implying there might be an underlying issue affecting his ability to engage with such tasks effectively.
+Step 2: Among the provided options, ""discussion"" (option B) doesn't fit as it’s more about engaging in conversation rather than being unable to respond to questions directly. Options A, C, D, and E could potentially explain why someone struggles with answering questions.
+Best answer: A because panic disorders often lead individuals to avoid situations where they feel anxious, including responding to questions in social settings.","['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+82,guided,82,"What is unlikely to get bugs on its windshield due to bugs' inability to reach it when it is moving?
+
+Options:
+A) airplane
+B) scooter
+C) motorboat
+D) car
+E) motor vehicle",windshield,A,"Step 1: Consider the movement speed required for bugs to attach themselves to a vehicle's windshield.
+           Generally, vehicles that travel faster have less time for bugs to land before they're out of reach.
+Step 2: Analyze each option based on their typical speeds compared to other vehicles.
+           - Airplanes fly much faster than cars, making it highly improbable for bugs to reach them.
+           - Scooters move slower than cars but still allow some chance for landing if disturbed.
+           - Motorboats can vary widely in speed depending on type, but generally slower than cars.
+           - Cars fall somewhere between scooters and motorboats in terms of speed relative to airplanes.
+           - All motor vehicles share similar characteristics regarding speed relative to airplanes.
+Best answer: A because airplanes fly significantly faster than any other listed option, giving bugs no opportunity to reach their windshields.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+83,guided,83,"He used an umbrella while tanning, where was he likely?
+
+Options:
+A) waves
+B) seattle
+C) suitcase
+D) beach
+E) jacket closet",umbrella,D,"Step 1: Umbrellas are typically used to protect oneself from sunlight or rain.
+Step 2: Tanning usually involves exposing skin to ultraviolet rays found in sunlight. Therefore, using an umbrella while tanning would contradict this activity as it blocks sunlight.
+Best answer: D because tanning involves exposure to sunlight which an umbrella prevents.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+84,guided,84,"What is the thing that is agitated in your head when kissing?
+
+Options:
+A) sexual stimulation
+B) herpes
+C) headache
+D) catch cold
+E) happiness",kissing,E,"Step 1: Kissing often triggers various physiological responses due to increased blood flow and hormonal changes.
+       Headaches can sometimes occur as a side effect of these changes, especially if one has been experiencing tension beforehand.
+Step 2: Among the given options, only option C (headache) directly relates to potential physical sensations during kissing that might arise from heightened arousal or other factors leading up to it.
+Best answer: C because headaches can sometimes develop as an unintended consequence of increased activity in the brain associated with intense emotions like passion during kissing.","['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+85,guided,85,"What are people likely to want to do with their friends?
+
+Options:
+A) own land
+B) own home
+C) talk to each other
+D) believe in god
+E) spend time",people,E,"Step 1: Considering typical behaviors among friends, communication often forms a strong bond between them.
+       Friends usually engage in conversations that allow them to share experiences, thoughts, and feelings.
+Step 2: Among the given options, talking to each other directly relates to maintaining friendships through interaction and understanding.
+Best answer: C because friends typically enjoy spending quality time together engaging in meaningful dialogue.","['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+86,guided,86,"The man took paperwork to other people to consult over it, where was he heading?
+
+Options:
+A) desk
+B) meeting
+C) office
+D) table
+E) work",paperwork,B,"Step 1: Consulting over paperwork typically involves discussing documents with others, which suggests a collaborative environment where multiple individuals can gather together.
+Step 2: Among the given options, only an ""office"" provides a space conducive to such consultations involving several people working on shared projects.
+Best answer: B because meetings often occur within offices where colleagues come together to review important documents.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+87,guided,87,"John wanted to clean all of the dust out of his place before settling down to watch his favorite shows.  What might he hardest do dust?
+
+Options:
+A) closet
+B) under the bed
+C) television
+D) attic
+E) most buildings",dust,D,"Step 1: Considering the difficulty in reaching areas while standing up, attics often require climbing ladders which can pose safety risks.
+Step 2: Option C (television) can typically be easily accessed without needing to climb, making it less challenging compared to other options like attics that may involve higher heights and potential instability.
+Best answer: D because attics usually require climbing which increases risk whereas other items like televisions can usually be reached without such challenges.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+88,guided,88,"The buildings were intended to not have residential kitchens in them, what were they designed for?
+
+Options:
+A) large city
+B) small
+C) eat cake
+D) university
+E) town",buildings,D,"Step 1: Buildings without residential kitchens typically serve specific purposes that require communal spaces rather than individual residences with full kitchens.
+Step 2: Among the given options, universities often provide dining halls where students can eat meals prepared by professionals instead of having personal kitchens in their dormitories.
+Best answer: D because universities commonly offer dining facilities rather than individual student kitchens.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+89,guided,89,"Stabbing to death of a person is what sort of way to die?
+
+Options:
+A) pool of blood
+B) gruesome
+C) charming
+D) being arrested
+E) killing",stabbing to death,B,"Step 1: Consider the definition provided in the question regarding ""stabbing to death.""
+           Stabbing involves using a sharp instrument like a knife to inflict severe injuries leading to death.
+Step 2: Evaluate each option based on this understanding:
+           - Option A mentions ""pool of blood,"" which could describe an outcome but doesn't capture the method itself.
+           - Option B describes something as ""gruesome,"" aligning well with the violent nature of stabbing.
+           - Option C uses ""charming,"" which contradicts the violent act implied by stabbing.
+           - Option D talks about being ""arrested,"" which isn't related to how someone dies from being stabbed.
+           - Option E refers to ""killing,"" which while accurate, doesn't specifically match the manner described in the question.
+Best answer: B because stabbing involves inflicting severe injuries that can lead to death, making it a gruesome way to die.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+90,guided,90,"Where can you find a place to eat in an urban area close to local nightlife?
+
+Options:
+A) city
+B) downtown
+C) mall
+D) shopping center
+E) own house",place to eat,B,"Step 1: In urban areas, downtown typically has a concentration of restaurants due to its proximity to entertainment districts and nightlife venues.
+Step 2: Among the given options, malls and shopping centers usually do not offer dining options as they focus more on retail spaces rather than eateries.
+Best answer: B because downtown is commonly known for having numerous restaurants within walking distance of nightlife spots in cities.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+91,guided,91,"What should everyone do who doesn't want to fight anymore?
+
+Options:
+A) explicate
+B) pay tribute to king
+C) hope for peace
+D) wear shoes
+E) do well",everyone,C,"Step 1: Analyzing the context of wanting to stop fighting implies seeking resolution rather than continuing conflict.
+Step 2: Among the given options, ""hope for peace"" directly aligns with this goal as it expresses an aspiration towards ending disputes through reconciliation and cooperation.
+Best answer: C because hoping for peace reflects a desire to cease conflict and seek mutual understanding.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+92,guided,92,"The lion sensed his competitor was timid, so what attitude did the lion take?
+
+Options:
+A) reckless
+B) bellicose
+C) defensive
+D) aggressive
+E) dauntless",timid,D,"Step 1: Lions are known for their territorial nature and will act aggressively towards intruders that threaten their territory.
+           When sensing an opponent as timid, lions typically respond with aggression rather than caution.
+Step 2: Given that the lion senses its competitor is weak, it would likely adopt an aggressive stance to assert dominance over the area.
+Best answer: D because lions react aggressively towards perceived threats in their territory.","['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+93,guided,93,"If someone is found to be committing murder, what did they do to someone?
+
+Options:
+A) misery
+B) kill
+C) distress
+D) tickel
+E) go to jail",committing murder,B,"Step 1: Analyze the definition of murder provided in legal terms.
+       Murder involves taking a life unlawfully and intentionally.
+Step 2: Compare each option against this definition.
+       - Misery, distress, and tickling do not involve taking a life.
+       - Going to jail typically follows as punishment but does not describe what was done initially.
+Best answer: B because killing involves unlawfully and intentionally taking a life, matching the definition of murder.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+94,guided,94,"Children's behavior is a direct reflection of their what?
+
+Options:
+A) parents
+B) old people
+C) play ball
+D) many adults
+E) grown ups",children,A,"Step 1: Understanding that children often mimic behaviors they observe around them, including those within their immediate environment like family members.
+Step 2: Realizing that parents have the most consistent influence over children due to daily interactions and setting examples through actions and words.
+Best answer: A) parents because parents spend the most time with children and provide significant guidance in terms of behavior and values.","['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+95,guided,95,"Where are horses judged on appearance?
+
+Options:
+A) race track
+B) fair
+C) raised by humans
+D) in a field
+E) countryside",horses,B,"Step 1: Horses are typically judged based on their physical attributes such as conformation, coloration, and overall appearance at competitions like beauty pageants or equine shows.
+Step 2: Among the given options, only a fair (option B) is specifically designed for showcasing animals' appearances through contests where judges award points based on these criteria.
+Best answer: B because fairs often host events where horses compete against each other based on their looks","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+96,guided,96,"What do people usually feel when falling in love?
+
+Options:
+A) getting married
+B) pain
+C) happiness
+D) getting married
+E) suffering",falling in love,C,"Step 1: Analyze common human experiences related to falling in love.
+       Typically, emotions during romantic attraction include feelings of joy, excitement, and contentment rather than physical pain or suffering.
+Step 2: Eliminate unlikely options based on typical emotional responses.
+       Options B (pain) and D (getting married) do not accurately represent typical feelings associated with falling in love; they describe actions that may occur later in relationships rather than initial feelings.
+Best answer: C because happiness aligns with common emotional responses experienced when falling in love.","['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+97,guided,97,"If a small flying animal picks up a string, where are they taking it?
+
+Options:
+A) bird's nest
+B) park
+C) guitar
+D) kite
+E) quark",string,A,"Step 1: Small flying animals like birds often carry objects that could help them build nests or protect themselves.
+Step 2: Among the given options, only a kite requires strings that need to be picked up for assembly purposes.
+Best answer: D because kites require strings that small flying animals might pick up to assemble their structures","['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+98,guided,98,"What could suddenly stop someone when he or she is running?
+
+Options:
+A) mushroom
+B) falling down
+C) sweating
+D) exhaustion
+E) getting tired",running,B,"Step 1: Analyzing common causes that might halt movement abruptly during running.
+   - Option A (mushroom) is highly unlikely as mushrooms do not pose an immediate danger while running unless they are poisonous.
+   - Option B (falling down) directly relates to losing balance due to external factors like tripping over something unexpected.
+   - Options C (sweating), D (exhaustion), and E (getting tired) describe gradual states leading to fatigue rather than sudden stops during activity.
+   
+Step 2: Considering typical scenarios where one might suddenly stop while running.
+   - Falling down due to tripping over an obstacle like a rock, branch, or even a small animal can happen unexpectedly and lead to an immediate halt in motion.
+Best answer: B because falling down can occur suddenly and without warning during running, causing one to stop immediately.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+99,guided,99,"Billy set aside a block of time for having fun after work. Why might he do this?
+
+Options:
+A) happiness
+B) stress relief
+C) pleasure
+D) ocean
+E) may laugh",having fun,B,"Step 1: Having a designated block of time for enjoyment typically helps manage stress levels effectively.
+Step 2: Among the given options, ""stress relief"" directly relates to finding ways to reduce mental strain, aligning well with setting aside time for leisure activities.
+Best answer: B because stress relief is a direct benefit of having a break from work responsibilities.","['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+100,baseline,0,"You can do knitting to get the feeling of what?
+
+Options:
+A) relaxation
+B) arthritis
+C) adrenaline
+D) your
+E) sweater may produced",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+101,baseline,1,"If I was getting drunk, and people couldn't understand me, what might I be having?
+
+Options:
+A) a seizure
+B) slurred speech
+C) death
+D) forgetfulness
+E) pass out",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+102,baseline,2,"If you turn off the music in a room with no other noise that room would be what?
+
+Options:
+A) silent
+B) opera
+C) silence
+D) television
+E) elevator",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+103,baseline,3,"By learning about the world, many poor college students gain what?
+
+Options:
+A) pleasure
+B) greater mobility
+C) desire to travel
+D) global warming
+E) increased security",,C,,"['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+104,baseline,4,"What is it called when a person tends to leave things to the last minute?
+
+Options:
+A) procrastinate
+B) complete collection
+C) headache
+D) good time management
+E) have to hold",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+105,baseline,5,"While knitting you can do what using a radio?
+
+Options:
+A) listen to music
+B) watch television
+C) making blankets
+D) eat
+E) watching tv",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+106,baseline,6,"What is likely to happen to someone who is learning?
+
+Options:
+A) overconfidence
+B) effectiveness
+C) knowing more
+D) head grows larger
+E) growth",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+107,baseline,7,"Where is a bird likely to make it's home?
+
+Options:
+A) forest
+B) nest
+C) roof
+D) leaves
+E) sky",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+108,baseline,8,"Why would you be watching tv instead of doing something else?
+
+Options:
+A) headache
+B) laughter
+C) laziness
+D) erections
+E) wasting time",,C,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+109,baseline,9,"If I did not have a rosebush, where would I get one?
+
+Options:
+A) pot
+B) museum
+C) garden center
+D) formal garden
+E) backyard",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+110,baseline,10,"He looked at the field of pumps, all slowing churning oil out of the what?
+
+Options:
+A) manual
+B) street
+C) restaurant
+D) ground
+E) service station",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+111,baseline,11,"Where is a human likely to go as a result of being hungry?
+
+Options:
+A) eat in restaurant
+B) make bread
+C) have lunch
+D) cook dinner
+E) friends house",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+112,baseline,12,"Where would a computer user be using their own computer?
+
+Options:
+A) hell
+B) school
+C) indoors
+D) internet cafe
+E) house",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+113,baseline,13,"The computer was difficult for he to understand at the store, so what did she sign up for to learn more?
+
+Options:
+A) classroom
+B) facebook
+C) school
+D) apartment
+E) demonstration",,E,,"['A', 'A', 'A', 'E', 'A']",A,False,majority,0.8,"{'A': 4, 'E': 1}",5,1,0.2,1,False,,GSM8K,QWEN
+114,baseline,14,"Sage loved communicating  He liked doing what with his peers?
+
+Options:
+A) exchanging ideas
+B) confusion
+C) peer pressure
+D) response
+E) learning",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+115,baseline,15,"The neighborhood had a great sense of community, there was always a crowd at the landing of the what?
+
+Options:
+A) stairwell
+B) arena
+C) ocean
+D) airport
+E) apartment building",,E,,"['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+116,baseline,16,"If you have a condo in a Wisconsin city known for beer, where are you?
+
+Options:
+A) city
+B) electrical circuit
+C) residential area
+D) suburbia
+E) milwaukee",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+117,baseline,17,"Talking to the same person about the same thing over and over again is something someone can what?
+
+Options:
+A) social life
+B) friendship
+C) eye contact
+D) get tired of
+E) learn lessons from",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+118,baseline,18,"A farmer sees a weasel in the woods, where is the farmer?
+
+Options:
+A) chicken coop
+B) beach
+C) fairytale
+D) great outdoors
+E) corn fields",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+119,baseline,19,"What did the adult do before the job interview?
+
+Options:
+A) work
+B) dress himself
+C) marry
+D) dress herself
+E) drive train",,B,,"['A', 'B', 'B', 'B', 'B']",B,True,majority,0.8,"{'A': 1, 'B': 4}",5,4,0.8,1,False,,GSM8K,QWEN
+120,baseline,20,"Where would you get a pen if you do not have one?
+
+Options:
+A) briefcase
+B) desk drawer
+C) friend's house
+D) pocket
+E) sidewalk",,C,,"['C', 'C', 'B', 'B', 'B']",B,False,majority,0.6,"{'C': 2, 'B': 3}",5,2,0.4,2,False,,GSM8K,QWEN
+121,baseline,21,"What might a person be watching if they see a man with a suitcase full of money?
+
+Options:
+A) baggage compartment
+B) movie
+C) subway
+D) airplane
+E) cargo hold",,B,,"['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+122,baseline,22,"James need to use a toilet but there were no public ones in sight.  Eventually he broke down and did something very expensive so that he could get a toilet.  Where might he have gone?
+
+Options:
+A) motel room
+B) apartment
+C) bathroom
+D) games
+E) house",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+123,baseline,23,"Jesse  enjoyed remembering the past because he helped him understand it.  And understanding the past helped him with doing what?
+
+Options:
+A) phoning
+B) nostalgia
+C) writing down
+D) active
+E) being prepared",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+124,baseline,24,"Where can you store you spare linens near your socks?
+
+Options:
+A) hospital
+B) chest
+C) home
+D) dresser drawers
+E) cabinet",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+125,baseline,25,"Aside from water and nourishment what does your dog need?
+
+Options:
+A) bone
+B) charm
+C) petted
+D) lots of attention
+E) walked",,D,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+126,baseline,26,"What room would you find many bookcases and is used for contemplation?
+
+Options:
+A) study
+B) house
+C) homw
+D) kitchen
+E) den",,A,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+127,baseline,27,"The department to where vendors deliver goods for sale is called what?
+
+Options:
+A) delivered
+B) take away
+C) receiving
+D) pick up
+E) keep",,C,,"['D', 'D', 'C', 'D', 'D']",D,False,majority,0.8,"{'D': 4, 'C': 1}",5,1,0.2,1,False,,GSM8K,QWEN
+128,baseline,28,"What is used to grind wheat for bread?
+
+Options:
+A) farmer's field
+B) countryside
+C) cereal packets
+D) bread
+E) mill",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+129,baseline,29,"They passed a apple tree on their way to the racetrack, the were going to watch the biggest motorsport spectacle in the world where?
+
+Options:
+A) maryland
+B) indiana
+C) on tv
+D) park
+E) new jersey",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+130,baseline,30,"If someone found out their brother was having a daughter, they would have to add a niece limb to the what?
+
+Options:
+A) family picture book
+B) family reunion
+C) brother's house
+D) family tree
+E) baby shower",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+131,baseline,31,"John and Judy were parents.  They had two wonderful kids who weren't always well behaved.  They were light tough, though.  They felt it was a parent's job to do what?
+
+Options:
+A) control children
+B) guide children
+C) speak freely
+D) cry
+E) understand children",,B,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+132,baseline,32,"A gentleman is carrying equipment for golf, what is he likely to have?
+
+Options:
+A) club
+B) assembly hall
+C) meditation center
+D) meeting
+E) church",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+133,baseline,33,"The man working in the attic swatted away a bee, but soon the single bee was an entire what?
+
+Options:
+A) swarm
+B) pack
+C) countryside
+D) soft drink
+E) field of flowers",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+134,baseline,34,"If a person with mental illness stops treatment what will likely happen?
+
+Options:
+A) managed
+B) dancing
+C) recur
+D) effectively treated
+E) cause suffering",,C,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+135,baseline,35,"The program kept getting errors, the amateur end user began to what?
+
+Options:
+A) get mad
+B) compile
+C) debug
+D) write code
+E) get frustrated",,E,,"['C', 'E', 'E', 'E', 'C']",E,True,majority,0.6,"{'C': 2, 'E': 3}",5,3,0.6,2,False,,GSM8K,QWEN
+136,baseline,36,"Sometimes a person has a fear of water or a dislike of being wet, it is still important to make sure they are having a bath why?
+
+Options:
+A) flooding
+B) drowning
+C) wet skin
+D) get wet
+E) rash",,E,,"['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+137,baseline,37,"Where is a great place to buy fresh fruit?
+
+Options:
+A) san francisco
+B) refrigerator
+C) big box retailer
+D) tree
+E) market",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+138,baseline,38,"Which large land mass is home to the most monkeys?
+
+Options:
+A) amazon basin
+B) friend's house
+C) lift number 3
+D) research laboratory
+E) african continent",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+139,baseline,39,"Billy was reading the newspaper as he commuted to work, but once he got to his destination he balled it up and put it somewhere. Where did it put it?
+
+Options:
+A) trash
+B) floor
+C) subway
+D) ground
+E) lawn",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+140,baseline,40,"How does going jogging generally affect one's self esteem?
+
+Options:
+A) feel better
+B) feel pride
+C) sweating
+D) ocean
+E) arthritis",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+141,baseline,41,"Minerals can be obtained in what way for a person who avoids leafy greens?
+
+Options:
+A) multivitamin
+B) farm
+C) michigan
+D) earth
+E) ore",,A,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+142,baseline,42,"If someone mean wanted to insult somebody by calling them a fruit, where is probably not the smartest place to do it?
+
+Options:
+A) gay bar
+B) market
+C) grocery store
+D) refrigerator
+E) container",,A,,"['A', 'D', 'D', 'D', 'D']",D,False,majority,0.8,"{'A': 1, 'D': 4}",5,1,0.2,1,False,,GSM8K,QWEN
+143,baseline,43,"The extremely large cargo plane could only land at a specialized runway, these were only located at a what?
+
+Options:
+A) back yard
+B) bowling alley
+C) city
+D) military base
+E) fashion show",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+144,baseline,44,"If you own a cat where is the last place you'd want to find it?
+
+Options:
+A) trouble
+B) dog's mouth
+C) backyard
+D) nature
+E) home",,B,,"['E', 'E', 'E', 'A', 'A']",E,False,majority,0.6,"{'E': 3, 'A': 2}",5,0,0.0,2,False,,GSM8K,QWEN
+145,baseline,45,"John loved to paint houses.  How did he usually do it?
+
+Options:
+A) clothes get stained
+B) with brush
+C) wallpaper
+D) electrical circuit
+E) draw",,B,,"['B', 'B', 'B', 'B', 'E']",B,True,majority,0.8,"{'B': 4, 'E': 1}",5,4,0.8,1,False,,GSM8K,QWEN
+146,baseline,46,"Ficus can be planted in a yard to make summer more bearable, what sort of areas do they create?
+
+Options:
+A) shady places
+B) screened porch
+C) pots
+D) ceramics
+E) clay pot",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+147,baseline,47,"Computers have allowed everybody to answer questions they have quickly, but still we seem to be getting duller despite access to this what?
+
+Options:
+A) economic boom
+B) advance knowledge
+C) produce sound
+D) teach
+E) follow instructions",,B,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+148,baseline,48,"Sam couldn't get back to sleep because of a dream he had.  It was a what?
+
+Options:
+A) awake
+B) horror
+C) dreamworker
+D) reality
+E) nightmare",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+149,baseline,49,"Sam was a stranger.  Even so, Mark treated him like what?
+
+Options:
+A) friend
+B) family
+C) known person
+D) park
+E) outsider",,B,,"['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+150,baseline,50,"Where can you find a number of wind instruments together in public?
+
+Options:
+A) music store
+B) create music
+C) zoo
+D) music room
+E) symphony",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+151,baseline,51,"What do humans do to other humans after death?
+
+Options:
+A) celebrate
+B) burial
+C) life
+D) rebirth
+E) decomposition",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+152,baseline,52,"The shark actually counted as evidence, so where did the legal team bring it?
+
+Options:
+A) court room
+B) shallow waters
+C) poker game
+D) sea world
+E) pond arena",,A,,"['D', 'A', 'A', 'A', 'A']",A,True,majority,0.8,"{'D': 1, 'A': 4}",5,4,0.8,1,False,,GSM8K,QWEN
+153,baseline,53,"How can someone be let into a brownstone?
+
+Options:
+A) brooklyn
+B) ring
+C) subdivision
+D) bricks
+E) new york city",,B,,"['E', 'E', 'A', 'E', 'E']",E,False,majority,0.8,"{'E': 4, 'A': 1}",5,0,0.0,1,False,,GSM8K,QWEN
+154,baseline,54,"Where would stones not be arranged in a path?
+
+Options:
+A) quarries
+B) field
+C) park
+D) bridge
+E) made from rocks",,B,,"['B', 'E', 'B', 'E', 'E']",E,False,majority,0.6,"{'B': 2, 'E': 3}",5,2,0.4,2,False,,GSM8K,QWEN
+155,baseline,55,"Where do you keep extra clothing on a hike?
+
+Options:
+A) person
+B) hamper
+C) closet
+D) upstairs
+E) backpack",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+156,baseline,56,"The homeowner frowned at the price of gas, what did he have to do later?
+
+Options:
+A) own home
+B) mail property tax payments
+C) board windows
+D) cut grass
+E) receive mail",,D,,"['D', 'A', 'B', 'D', 'B']",B,False,refiner_tiebreak,0.5,"{'D': 2, 'A': 1, 'B': 2}",6,2,0.3333,3,True,False,GSM8K,QWEN
+157,baseline,57,"What is happening while he's playing basketball for such a long time?
+
+Options:
+A) sweating
+B) pain
+C) having fun
+D) medium
+E) knee injury",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+158,baseline,58,"Where can you buy a magazine, paper or gum?
+
+Options:
+A) bank
+B) rack
+C) bed
+D) newsstand
+E) bus depot",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+159,baseline,59,"Where can books be read?
+
+Options:
+A) cabinet
+B) backpack
+C) table
+D) shelf
+E) sink",,C,,"['D', 'D', 'C', 'C', 'C']",C,True,majority,0.6,"{'D': 2, 'C': 3}",5,3,0.6,2,False,,GSM8K,QWEN
+160,baseline,60,"Where do you keep musical instrument so it doesn't get scratched?
+
+Options:
+A) bank
+B) orchestra
+C) case
+D) music room
+E) movie",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+161,baseline,61,"What can eating hamburger cause immediately after eating it?
+
+Options:
+A) tasty
+B) health problems
+C) eat cake
+D) indigestion
+E) gain weight",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+162,baseline,62,"To play sports professionally you must do what very often?
+
+Options:
+A) wash your clothes
+B) get in shape
+C) practice
+D) take off uniform
+E) stretch",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+163,baseline,63,"Where can you buy a clock, clothing and wrenches?
+
+Options:
+A) counter
+B) train station
+C) school room
+D) desk
+E) department store",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+164,baseline,64,"What is likely to have a better school cafeteria?
+
+Options:
+A) high school
+B) canteen
+C) polytechnic
+D) large room
+E) all kinds of schools",,C,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+165,baseline,65,"A traveler laments the fact that mass transit is limited in his city when his groceries get soaked by the rain as he waits where?
+
+Options:
+A) bus stop
+B) library
+C) motel
+D) airport
+E) subway",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+166,baseline,66,"Why might a person be known as a liar?
+
+Options:
+A) have no home
+B) false information
+C) hungry
+D) made fun of
+E) brain tumor",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+167,baseline,67,"What would you be building if you designed a place for an annoying critter to stay?
+
+Options:
+A) spread disease
+B) swamp
+C) fly away
+D) cat condo
+E) bug campers",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+168,baseline,68,"Where is a statute found on a platform?
+
+Options:
+A) below
+B) arena
+C) concert hall
+D) museum
+E) building",,D,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+169,baseline,69,"After killing people, the murderer went to church after feeling what?
+
+Options:
+A) murder
+B) remorse
+C) religious
+D) retaliation
+E) anguish",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+170,baseline,70,"What is a place that has large cable hanging overhead?
+
+Options:
+A) radio shack
+B) electrical device
+C) shower
+D) substation
+E) television",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+171,baseline,71,"When an elderly person needs help performing daily tasks, who might they call?
+
+Options:
+A) creativity
+B) hatred
+C) caregiver
+D) own house
+E) much money",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+172,baseline,72,"A man wants air conditioning while we watches the game on Saturday, where will it likely be installed?
+
+Options:
+A) car
+B) house
+C) offices
+D) park
+E) movie theatre",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+173,baseline,73,"A patriotic guy with a camera is looking for a bald eagle, what is he likely to do with the eagle if he finds one?
+
+Options:
+A) city
+B) canada
+C) minnesota
+D) thermal
+E) photograph",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+174,baseline,74,"What is a person who is good at sports considered?
+
+Options:
+A) lazy
+B) own house
+C) talented
+D) affluent
+E) reproduce",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+175,baseline,75,"A creek could be located in the opposite for the city which is called what?
+
+Options:
+A) meadow
+B) stick
+C) valley
+D) forest
+E) countryside",,E,,"['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+176,baseline,76,"The man got a pail to catch the draining motor oil, where was he likely doing this at home?
+
+Options:
+A) garage
+B) hardware store
+C) utility room
+D) wishing well
+E) laundry",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+177,baseline,77,"The tourist entered Mammoth cave, what state were they in?
+
+Options:
+A) west virginia
+B) kentucky
+C) rocky hills
+D) scotland
+E) canyon",,B,,"['B', 'B', 'B', 'A', 'B']",B,True,majority,0.8,"{'B': 4, 'A': 1}",5,4,0.8,1,False,,GSM8K,QWEN
+178,baseline,78,"When we are running what are we doing?
+
+Options:
+A) stretches
+B) running from police
+C) learn to walk
+D) go quickly
+E) get out of bed",,D,,"['D', 'D', 'D', 'D', 'D']",D,True,majority,1.0,{'D': 5},5,5,1.0,0,False,,GSM8K,QWEN
+179,baseline,79,"Copulating with the wrong partner may be ill advised, many diseases can be transferred that can cause different types of what?
+
+Options:
+A) intense pleasure
+B) ejaculation
+C) period of rest
+D) enjoyment
+E) skin irritation",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+180,baseline,80,"Where would you find an office worker gossiping with their colleagues?
+
+Options:
+A) water cooler
+B) space shuttle
+C) baby shower
+D) bus stop
+E) family",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+181,baseline,81,"Zane doesn't like answering questions.  He's not good at it because he suffers from what?
+
+Options:
+A) panic
+B) discussion
+C) attention
+D) confusion
+E) satisfaction",,D,,"['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
+182,baseline,82,"What is unlikely to get bugs on its windshield due to bugs' inability to reach it when it is moving?
+
+Options:
+A) airplane
+B) scooter
+C) motorboat
+D) car
+E) motor vehicle",,A,,"['D', 'D', 'D', 'D', 'D']",D,False,majority,1.0,{'D': 5},5,0,0.0,0,False,,GSM8K,QWEN
+183,baseline,83,"He used an umbrella while tanning, where was he likely?
+
+Options:
+A) waves
+B) seattle
+C) suitcase
+D) beach
+E) jacket closet",,D,,"['B', 'B', 'B', 'B', 'B']",B,False,majority,1.0,{'B': 5},5,0,0.0,0,False,,GSM8K,QWEN
+184,baseline,84,"What is the thing that is agitated in your head when kissing?
+
+Options:
+A) sexual stimulation
+B) herpes
+C) headache
+D) catch cold
+E) happiness",,E,,"['A', 'A', 'A', 'A', 'A']",A,False,majority,1.0,{'A': 5},5,0,0.0,0,False,,GSM8K,QWEN
+185,baseline,85,"What are people likely to want to do with their friends?
+
+Options:
+A) own land
+B) own home
+C) talk to each other
+D) believe in god
+E) spend time",,E,,"['E', 'E', 'E', 'E', 'E']",E,True,majority,1.0,{'E': 5},5,5,1.0,0,False,,GSM8K,QWEN
+186,baseline,86,"The man took paperwork to other people to consult over it, where was he heading?
+
+Options:
+A) desk
+B) meeting
+C) office
+D) table
+E) work",,B,,"['B', 'B', 'B', 'B', 'C']",B,True,majority,0.8,"{'B': 4, 'C': 1}",5,4,0.8,1,False,,GSM8K,QWEN
+187,baseline,87,"John wanted to clean all of the dust out of his place before settling down to watch his favorite shows.  What might he hardest do dust?
+
+Options:
+A) closet
+B) under the bed
+C) television
+D) attic
+E) most buildings",,D,,"['E', 'D', 'E', 'D', 'D']",D,True,majority,0.6,"{'E': 2, 'D': 3}",5,3,0.6,2,False,,GSM8K,QWEN
+188,baseline,88,"The buildings were intended to not have residential kitchens in them, what were they designed for?
+
+Options:
+A) large city
+B) small
+C) eat cake
+D) university
+E) town",,D,,"['B', 'D', 'B', 'B', 'A']",B,False,majority,0.6,"{'B': 3, 'D': 1, 'A': 1}",5,1,0.2,2,False,,GSM8K,QWEN
+189,baseline,89,"Stabbing to death of a person is what sort of way to die?
+
+Options:
+A) pool of blood
+B) gruesome
+C) charming
+D) being arrested
+E) killing",,B,,"['E', 'E', 'E', 'E', 'E']",E,False,majority,1.0,{'E': 5},5,0,0.0,0,False,,GSM8K,QWEN
+190,baseline,90,"Where can you find a place to eat in an urban area close to local nightlife?
+
+Options:
+A) city
+B) downtown
+C) mall
+D) shopping center
+E) own house",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+191,baseline,91,"What should everyone do who doesn't want to fight anymore?
+
+Options:
+A) explicate
+B) pay tribute to king
+C) hope for peace
+D) wear shoes
+E) do well",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+192,baseline,92,"The lion sensed his competitor was timid, so what attitude did the lion take?
+
+Options:
+A) reckless
+B) bellicose
+C) defensive
+D) aggressive
+E) dauntless",,D,,"['E', 'C', 'C', 'B', 'E']",C,False,refiner_tiebreak,0.5,"{'E': 2, 'C': 2, 'B': 1}",6,0,0.0,3,True,False,GSM8K,QWEN
+193,baseline,93,"If someone is found to be committing murder, what did they do to someone?
+
+Options:
+A) misery
+B) kill
+C) distress
+D) tickel
+E) go to jail",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+194,baseline,94,"Children's behavior is a direct reflection of their what?
+
+Options:
+A) parents
+B) old people
+C) play ball
+D) many adults
+E) grown ups",,A,,"['A', 'A', 'A', 'A', 'A']",A,True,majority,1.0,{'A': 5},5,5,1.0,0,False,,GSM8K,QWEN
+195,baseline,95,"Where are horses judged on appearance?
+
+Options:
+A) race track
+B) fair
+C) raised by humans
+D) in a field
+E) countryside",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+196,baseline,96,"What do people usually feel when falling in love?
+
+Options:
+A) getting married
+B) pain
+C) happiness
+D) getting married
+E) suffering",,C,,"['C', 'C', 'C', 'C', 'C']",C,True,majority,1.0,{'C': 5},5,5,1.0,0,False,,GSM8K,QWEN
+197,baseline,97,"If a small flying animal picks up a string, where are they taking it?
+
+Options:
+A) bird's nest
+B) park
+C) guitar
+D) kite
+E) quark",,A,,"['E', 'E', 'D', 'D', 'D']",D,False,majority,0.6,"{'E': 2, 'D': 3}",5,0,0.0,2,False,,GSM8K,QWEN
+198,baseline,98,"What could suddenly stop someone when he or she is running?
+
+Options:
+A) mushroom
+B) falling down
+C) sweating
+D) exhaustion
+E) getting tired",,B,,"['B', 'B', 'B', 'B', 'B']",B,True,majority,1.0,{'B': 5},5,5,1.0,0,False,,GSM8K,QWEN
+199,baseline,99,"Billy set aside a block of time for having fun after work. Why might he do this?
+
+Options:
+A) happiness
+B) stress relief
+C) pleasure
+D) ocean
+E) may laugh",,B,,"['C', 'C', 'C', 'C', 'C']",C,False,majority,1.0,{'C': 5},5,0,0.0,0,False,,GSM8K,QWEN
