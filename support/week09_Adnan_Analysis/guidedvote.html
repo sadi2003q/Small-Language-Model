@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GuidedVote — Research Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy:    #1a2744;
+    --navy2:   #243358;
+    --emerald: #127a55;
+    --em-light:#e6f4ee;
+    --amber:   #d97706;
+    --amb-light:#fef3c7;
+    --red:     #b91c1c;
+    --red-light:#fee2e2;
+    --sky:     #0369a1;
+    --sky-light:#e0f2fe;
+    --sand:    #faf8f4;
+    --warm:    #f5f0e8;
+    --border:  #e2d9cc;
+    --text:    #1c1917;
+    --sub:     #57534e;
+    --accent:  #2563eb;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Slide Container ── */
+  #deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity .45s ease, transform .45s ease;
+    transform: translateX(40px);
+    padding: 0;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: all; transform: translateX(0);
+  }
+  .slide.out { opacity: 0; transform: translateX(-40px); }
+
+  /* ── Nav Bar ── */
+  #nav {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 10px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.10);
+    z-index: 999;
+    backdrop-filter: blur(12px);
+  }
+  #nav button {
+    border: none; background: none; cursor: pointer;
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background .2s, color .2s;
+    color: var(--navy);
+  }
+  #nav button:hover { background: var(--navy); color: white; }
+  #nav .dots { display: flex; gap: 6px; }
+  #nav .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border); cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  #nav .dot.active { background: var(--navy); transform: scale(1.3); }
+  #slide-counter {
+    font-size: 12px; color: var(--sub); font-family: 'DM Mono', monospace;
+    min-width: 42px; text-align: center;
+  }
+
+  /* ── Slide Header Strip ── */
+  .slide-header {
+    background: var(--navy);
+    padding: 18px 48px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .slide-header .sec-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: rgba(255,255,255,.45);
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  .slide-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: white; letter-spacing: .01em;
+  }
+  .slide-header .tag {
+    font-size: 11px; background: rgba(255,255,255,.12);
+    color: rgba(255,255,255,.7); padding: 3px 10px;
+    border-radius: 20px; font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Slide Body ── */
+  .slide-body {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 28px 48px 80px;
+    background: var(--sand);
+  }
+
+  /* ── SLIDE 0: Title ── */
+  #slide-0 {
+    background: var(--navy);
+    justify-content: center; align-items: center;
+  }
+  #slide-0 .inner {
+    text-align: center; max-width: 780px; padding: 0 40px;
+  }
+  #slide-0 .badge {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,.25);
+    color: rgba(255,255,255,.65);
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    padding: 5px 16px; border-radius: 20px;
+    font-family: 'DM Mono', monospace; margin-bottom: 24px;
+  }
+  #slide-0 h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 46px); font-weight: 900;
+    color: white; line-height: 1.15; margin-bottom: 16px;
+  }
+  #slide-0 h1 span { color: #6ee7b7; }
+  #slide-0 .sub {
+    font-size: 16px; color: rgba(255,255,255,.55);
+    margin-bottom: 36px; line-height: 1.6;
+  }
+  #slide-0 .author-card {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 12px; padding: 14px 24px;
+    color: rgba(255,255,255,.8); font-size: 14px;
+  }
+  #slide-0 .author-card .av {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg,#6ee7b7,#3b82f6);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--navy); font-size: 15px;
+  }
+  #slide-0 .sections-row {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 8px; margin-top: 28px;
+  }
+  #slide-0 .sections-row .s {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.6); font-size: 11px;
+    padding: 4px 12px; border-radius: 6px;
+    cursor: pointer; transition: background .2s;
+    font-family: 'DM Mono', monospace;
+  }
+  #slide-0 .sections-row .s:hover { background: rgba(255,255,255,.14); }
+
+  /* ── Grid helpers ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .col { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── Cards ── */
+  .card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  .card-title {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--sub);
+    margin-bottom: 10px; font-family: 'DM Mono', monospace;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--navy); margin-bottom: 8px;
+  }
+  .card p { font-size: 14px; color: var(--sub); line-height: 1.65; }
+
+  /* ── Highlight boxes ── */
+  .hl-green { background: var(--em-light); border-left: 3px solid var(--emerald); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+  .hl-amber { background: var(--amb-light); border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+  .hl-navy  { background: #eef2ff; border-left: 3px solid var(--navy); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+  .hl-red   { background: var(--red-light); border-left: 3px solid var(--red); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+  .hl-sky   { background: var(--sky-light); border-left: 3px solid var(--sky); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+
+  .hl-green p, .hl-amber p, .hl-navy p, .hl-red p, .hl-sky p {
+    font-size: 13.5px; line-height: 1.6; color: var(--text);
+  }
+  .hl-green strong { color: var(--emerald); }
+  .hl-amber strong { color: var(--amber); }
+  .hl-navy  strong { color: var(--navy); }
+  .hl-red   strong { color: var(--red); }
+  .hl-sky   strong { color: var(--sky); }
+
+  /* ── Big stat ── */
+  .big-stat { text-align: center; }
+  .big-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900; color: var(--navy); line-height: 1;
+  }
+  .big-stat .num.green { color: var(--emerald); }
+  .big-stat .num.amber { color: var(--amber); }
+  .big-stat .label { font-size: 12px; color: var(--sub); margin-top: 4px; }
+
+  /* ── Chart containers ── */
+  .chart-wrap { position: relative; }
+  .chart-wrap canvas { max-width: 100%; }
+
+  /* ── Pipeline diagram ── */
+  .pipeline {
+    display: flex; align-items: center; gap: 0;
+    background: white; border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 20px;
+    overflow-x: auto; flex-wrap: nowrap;
+  }
+  .pip-node {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; min-width: 100px; text-align: center;
+  }
+  .pip-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .pip-arrow {
+    color: var(--border); font-size: 20px; padding: 0 4px;
+    margin-top: -8px;
+    flex-shrink: 0;
+  }
+  .pip-label { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .pip-sub   { font-size: 10px; color: var(--sub); }
+
+  /* ── Tier cards ── */
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tier-card {
+    border-radius: 12px; padding: 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .tier-badge {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+  .tier-card .tc-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .tier-card .tc-body  { font-size: 12px; color: var(--sub); line-height: 1.5; }
+  .tier-card .tc-tag   {
+    display: inline-block; font-size: 10px;
+    padding: 2px 8px; border-radius: 20px;
+    font-family: 'DM Mono', monospace; margin-bottom: 4px;
+  }
+
+  /* ── Finding cards ── */
+  .finding-row { display: flex; flex-direction: column; gap: 12px; }
+  .finding {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+  .finding-num {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--navy);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+  .finding-body .f-title { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+  .finding-body .f-desc  { font-size: 13px; color: var(--sub); line-height: 1.6; }
+
+  /* ── Section divider label ── */
+  .sec-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .sec-divider .line { flex: 1; height: 1px; background: var(--border); }
+  .sec-divider .lbl  { font-size: 11px; color: var(--sub); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+  /* ── Scrollbar ── */
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-track { background: transparent; }
+  .slide-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ── Chip ── */
+  .chip {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    font-family: 'DM Mono', monospace;
+  }
+  .chip-green { background: var(--em-light); color: var(--emerald); }
+  .chip-red   { background: var(--red-light); color: var(--red); }
+  .chip-navy  { background: #eef2ff; color: var(--navy); }
+  .chip-amber { background: var(--amb-light); color: var(--amber); }
+
+  /* ── table ── */
+  .mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .mini-table th { background: var(--warm); padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--sub); font-family: 'DM Mono', monospace; border-bottom: 1px solid var(--border); }
+  .mini-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .mini-table tr:last-child td { border-bottom: none; }
+  .mini-table tr:hover td { background: var(--warm); }
+  .pos { color: var(--emerald); font-weight: 600; }
+  .neg { color: var(--red); font-weight: 600; }
+
+  /* ── Decorative ── */
+  .ornament {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px; font-weight: 900;
+    color: rgba(26,39,68,.04); position: absolute;
+    right: 40px; top: 10px; pointer-events: none;
+    line-height: 1;
+  }
+  .body-rel { position: relative; }
+
+  /* ══ INTRO SLIDE REDESIGN ══ */
+  #slide-1 { background: var(--sand); overflow: hidden; }
+  #slide-1 .intro-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    height: 100%;
+    gap: 0;
+  }
+  /* Left panel — big visual hero */
+  .intro-left {
+    background: linear-gradient(145deg, var(--navy) 0%, #2d4a8a 55%, #1a3a6b 100%);
+    padding: 36px 36px 28px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .intro-left::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(110,231,183,.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .intro-left::after {
+    content: '';
+    position: absolute; bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(59,130,246,.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .intro-gv-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 8px; padding: 6px 14px; width: fit-content;
+    font-size: 11px; color: rgba(255,255,255,.7);
+    font-family: 'DM Mono', monospace; letter-spacing: .1em;
+    margin-bottom: 18px;
+  }
+  .intro-gv-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #6ee7b7; animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+  .intro-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px,3.2vw,38px); font-weight: 900;
+    color: white; line-height: 1.2; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .intro-hero-title .accent { color: #6ee7b7; }
+  .intro-tagline {
+    font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.65;
+    position: relative; z-index: 1; margin-bottom: 24px;
+    max-width: 380px;
+  }
+  /* Stat bubbles */
+  .intro-stats-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .intro-stat-bubble {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+    border-radius: 12px; padding: 10px 16px; text-align: center;
+  }
+  .intro-stat-bubble .sv { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; color: #6ee7b7; line-height: 1; }
+  .intro-stat-bubble .sl { font-size: 10px; color: rgba(255,255,255,.5); margin-top: 2px; }
+  /* Visual mini-diagram inside left panel */
+  .intro-mini-diagram {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 18px;
+    position: relative; z-index: 1;
+  }
+  .imd-node {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 9px; color: rgba(255,255,255,.5); text-align: center;
+  }
+  .imd-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .imd-arrow { color: rgba(255,255,255,.3); font-size: 14px; }
+
+  /* Right panel — info + team */
+  .intro-right {
+    display: flex; flex-direction: column;
+    padding: 28px 28px 80px;
+    background: var(--sand);
+    overflow-y: auto;
+  }
+  .intro-right::-webkit-scrollbar { width: 3px; }
+  .intro-right::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* Contribution cards redesign */
+  .intro-contrib-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .ic-card {
+    border-radius: 14px; padding: 14px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    border: 1px solid var(--border);
+    transition: transform .2s, box-shadow .2s;
+    cursor: default; background: white;
+  }
+  .ic-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+  .ic-icon-box {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .ic-card .ic-num { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--sub); letter-spacing: .1em; text-transform: uppercase; }
+  .ic-card .ic-title { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .ic-card .ic-desc { font-size: 11px; color: var(--sub); line-height: 1.5; }
+
+  /* Team section */
+  .team-section { margin-bottom: 0; }
+  .team-label {
+    font-size: 10px; font-family: 'DM Mono', monospace; color: var(--sub);
+    letter-spacing: .1em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .team-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .team-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 12px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; text-align: center;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .team-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.07); }
+  .team-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-weight: 700;
+    font-size: 18px; color: white;
+    border: 2px solid rgba(255,255,255,.6);
+  }
+  .team-card .t-name { font-size: 12px; font-weight: 600; color: var(--navy); line-height: 1.35; }
+  .team-card .t-id { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--sub); margin-top: 1px; }
+  .team-card .t-role { font-size: 10px; color: var(--emerald); font-weight: 500; }
+
+  /* ══ CONCLUSION SLIDE REDESIGN ══ */
+  #slide-7 { background: var(--sand); overflow: hidden; }
+  #slide-7 .concl-layout {
+    display: flex; flex-direction: column; height: 100%; overflow: hidden;
+  }
+  /* Concl top banner */
+  .concl-banner {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 50%, var(--navy) 100%);
+    padding: 22px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .concl-banner::after {
+    content: '🏆';
+    position: absolute; right: 180px; top: -20px;
+    font-size: 80px; opacity: .07;
+  }
+  .concl-banner-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900; color: white; margin-bottom: 4px;
+  }
+  .concl-banner-left p { font-size: 13px; color: rgba(255,255,255,.5); }
+  .concl-banner-stats { display: flex; gap: 20px; }
+  .cbs { text-align: center; }
+  .cbs .cv { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #6ee7b7; line-height: 1; }
+  .cbs .cl { font-size: 10px; color: rgba(255,255,255,.45); margin-top: 2px; max-width: 80px; }
+  /* Concl body */
+  .concl-body {
+    flex: 1; overflow-y: auto; padding: 20px 36px 80px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .concl-body::-webkit-scrollbar { width: 3px; }
+  .concl-body::-webkit-scrollbar-thumb { background: var(--border); }
+  /* Finding cards — visual redesign */
+  .concl-findings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cf-card {
+    border-radius: 16px; padding: 18px;
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border);
+    background: white;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .cf-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.09); }
+  .cf-card .cf-bg-num {
+    position: absolute; right: 12px; bottom: -10px;
+    font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900;
+    opacity: .05; line-height: 1; color: var(--navy);
+    pointer-events: none;
+  }
+  .cf-card .cf-icon-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .cf-card .cf-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    flex-shrink: 0;
+  }
+  .cf-card .cf-tag {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .cf-card .cf-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .cf-card .cf-desc { font-size: 12px; color: var(--sub); line-height: 1.6; }
+  /* Future work strip */
+  .concl-future {
+    background: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 100%);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .concl-future .fut-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--navy); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  /* Thank you footer */
+  .concl-thankyou {
+    background: var(--navy); border-radius: 14px;
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .concl-thankyou .ty-left {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: white;
+  }
+  .concl-thankyou .ty-left span { color: #6ee7b7; }
+  .concl-thankyou .ty-right { font-size: 12px; color: rgba(255,255,255,.45); text-align: right; }
+  .concl-team-row { display: flex; gap: 8px; }
+  .ct-pill {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; color: rgba(255,255,255,.7);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ═══════════════════════════════════ SLIDE 0: TITLE ═══ -->
+<div class="slide active" id="slide-0">
+  <div class="inner">
+    <div class="badge">Final Research Presentation · 2026</div>
+    <h1>Verbal Reasoning Richness, Not Domain Proximity, Governs <span>SLM-to-SLM</span> Guided Reasoning: A Statistically Verified Empirical Study</h1>
+    <p class="sub">A statistically verified empirical study on small language model inference-time guidance</p>
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:center;margin-bottom:8px;">
+      <div class="author-card">
+        <div class="av">A</div>
+        <div>
+          <div style="font-weight:600;color:white;">Md. Adnan Abdullah Sadi</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5);">ID: 2221345642 · North South University · ECE Department</div>
+        </div>
+      </div>
+      <div class="author-card">
+        <div class="av">M</div>
+        <div>
+          <div style="font-weight:600;color:white;">Makki Ammer Sakib</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5);">ID: 2231687642 · North South University · ECE Department</div>
+        </div>
+      </div>
+      <div class="author-card">
+        <div class="av">N</div>
+        <div>
+          <div style="font-weight:600;color:white;">Nahian Syed Ahanaf</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5);">ID: 2212705642 · North South University · ECE Department</div>
+        </div>
+      </div>
+    </div>
+    <div class="sections-row">
+      <div class="s" onclick="goTo(1)">01 Introduction</div>
+      <div class="s" onclick="goTo(2)">02 Problem Statement</div>
+      <div class="s" onclick="goTo(3)">03 Methodology</div>
+      <div class="s" onclick="goTo(4)">04 Results</div>
+      <div class="s" onclick="goTo(5)">05 Statistical Analysis</div>
+      <div class="s" onclick="goTo(6)">06 Comparison</div>
+      <div class="s" onclick="goTo(7)">07 Conclusion</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 1: INTRO ═══ -->
+<div class="slide" id="slide-1">
+  <div class="intro-layout">
+
+    <!-- LEFT: Hero panel -->
+    <div class="intro-left">
+      <div>
+        <div class="intro-gv-badge"><div class="dot"></div>SECTION 01 · INTRODUCTION</div>
+        <div class="intro-hero-title">
+          Two Small AIs,<br/>
+          <span class="accent">One Smarter</span><br/>
+          Reasoning System
+        </div>
+        <p class="intro-tagline">
+          GuidedVote pairs a fine-tuned 3B Guide model with a frozen 1.5B Solver — like a mentor briefing a student before an exam. No giant, expensive AI required.
+        </p>
+        <!-- Mini diagram -->
+        <div class="intro-mini-diagram">
+          <div class="imd-node"><div class="imd-icon" style="background:rgba(255,255,255,.12);">❓</div><div>Question</div></div>
+          <div class="imd-arrow">→</div>
+          <div class="imd-node"><div class="imd-icon" style="background:rgba(110,231,183,.2);">🧠</div><div>Guide 3B</div></div>
+          <div class="imd-arrow">→</div>
+          <div class="imd-node"><div class="imd-icon" style="background:rgba(251,191,36,.2);">📋</div><div>Plan ρ</div></div>
+          <div class="imd-arrow">→</div>
+          <div class="imd-node"><div class="imd-icon" style="background:rgba(96,165,250,.2);">🗳️</div><div>Vote ×5</div></div>
+          <div class="imd-arrow">→</div>
+          <div class="imd-node"><div class="imd-icon" style="background:rgba(110,231,183,.2);">✅</div><div>Answer</div></div>
+        </div>
+      </div>
+      <!-- Stats row -->
+      <div class="intro-stats-row">
+        <div class="intro-stat-bubble"><div class="sv">+24.2%</div><div class="sl">Best accuracy gain</div></div>
+        <div class="intro-stat-bubble"><div class="sv">+13.5pp</div><div class="sl">Average across 5 tasks</div></div>
+        <div class="intro-stat-bubble"><div class="sv">83.6%</div><div class="sl">Of 70B oracle power</div></div>
+        <div class="intro-stat-bubble"><div class="sv">6</div><div class="sl">Benchmarks tested</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Contributions + Team -->
+    <div class="intro-right">
+
+      <!-- Contributions -->
+      <div style="margin-bottom:20px;">
+        <div class="team-label">Key Contributions</div>
+        <div class="intro-contrib-grid">
+          <div class="ic-card" style="border-top:3px solid var(--emerald);">
+            <div class="ic-icon-box" style="background:var(--em-light);">💡</div>
+            <div class="ic-num">Contribution 01</div>
+            <div class="ic-title">Verbal Richness Hypothesis</div>
+            <div class="ic-desc">Quality of reasoning steps in training beats topic match — proven across 2 architectures.</div>
+          </div>
+          <div class="ic-card" style="border-top:3px solid var(--amber);">
+            <div class="ic-icon-box" style="background:var(--amb-light);">⚠️</div>
+            <div class="ic-num">Contribution 02</div>
+            <div class="ic-title">2 New Failure Modes</div>
+            <div class="ic-desc">Bias-substitution & confident misdirection — first formal description in guided SLM systems.</div>
+          </div>
+          <div class="ic-card" style="border-top:3px solid var(--sky);">
+            <div class="ic-icon-box" style="background:var(--sky-light);">🗺️</div>
+            <div class="ic-num">Contribution 03</div>
+            <div class="ic-title">4-Tier Task Taxonomy</div>
+            <div class="ic-desc">A pre-deployment checklist: know if GuidedVote helps before running a single real experiment.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The paradox visual hint -->
+      <div style="background:linear-gradient(135deg,var(--em-light),#eff6ff);border:1px solid #bfdbfe;border-radius:14px;padding:22px 20px;display:flex;align-items:center;gap:16px;flex:1;">
+        <div style="font-size:40px;flex-shrink:0;">🔄</div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);font-size:14px;margin-bottom:6px;">The Domain Proximity Paradox</div>
+          <div style="font-size:13px;color:var(--sub);line-height:1.65;">A guide trained on <em>out-of-domain</em> GSM8K math problems (+10.3pp) <strong>outperforms</strong> one trained directly on the target dataset (+3.6pp) — even on the <em>same</em> test set. Verbal reasoning richness, not topic proximity, is what drives guided inference quality.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 2: PROBLEM ═══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-header">
+    <span class="sec-num">Section 02</span>
+    <h2>Problem Statement & Motivation</h2>
+    <span class="tag">Why This Research?</span>
+  </div>
+  <div class="slide-body">
+    <div class="sec-divider"><div class="line"></div><div class="lbl">The Core Problem</div><div class="line"></div></div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="col">
+        <div class="card">
+          <div class="card-title">Traditional Approaches — Their Cost</div>
+          <h3 style="font-size:16px;margin-bottom:12px;">Expensive & Impractical</h3>
+          <div class="hl-red" style="margin-bottom:8px;"><p><strong>Scaling Up:</strong> Making AI models bigger multiplies training cost and deployment hardware needs exponentially.</p></div>
+          <div class="hl-red"><p><strong>Knowledge Distillation:</strong> Requires large annotated datasets AND repeated inference from massive teacher models like GPT-4.</p></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Our Research Question</div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);line-height:1.5;padding:10px 0;">
+            "When a fine-tuned small model replaces the large AI guide, <em>what property</em> of its training data determines how well it generalises?"
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Problem Visualised — Current vs. Proposed</div>
+        <div class="chart-wrap" style="height:240px;">
+          <canvas id="problemChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><div class="line"></div><div class="lbl">The Domain Proximity Paradox</div><div class="line"></div></div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center;">
+        <div class="big-stat">
+          <div class="num">53.7%</div>
+          <div class="label">Baseline Accuracy on ASDiv (no guide)</div>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;border:2px solid var(--red);">
+        <div class="big-stat">
+          <div class="num" style="color:var(--red);">57.3%</div>
+          <div class="label">In-Domain Guide (trained ON ASDiv)</div>
+        </div>
+        <div class="chip chip-red" style="margin-top:8px;">Only +3.6pp gain</div>
+      </div>
+      <div class="card" style="text-align:center;border:2px solid var(--emerald);">
+        <div class="big-stat">
+          <div class="num green">64.0%</div>
+          <div class="label">Out-of-Domain Guide (trained on GSM8K)</div>
+        </div>
+        <div class="chip chip-green" style="margin-top:8px;">+10.3pp gain 🏆</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 3: METHOD ═══ -->
+<div class="slide" id="slide-3">
+  <div class="slide-header">
+    <span class="sec-num">Section 03</span>
+    <h2>Methodology</h2>
+    <span class="tag">How GuidedVote Works</span>
+  </div>
+  <div class="slide-body">
+    <div class="sec-divider"><div class="line"></div><div class="lbl">The Two-Stage Pipeline</div><div class="line"></div></div>
+
+    <!-- Pipeline diagram -->
+    <div class="pipeline" style="margin-bottom:20px;">
+      <div class="pip-node">
+        <div class="pip-icon" style="background:#eef2ff;">❓</div>
+        <div class="pip-label">Input<br/>Question</div>
+        <div class="pip-sub">Any task</div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="pip-node">
+        <div class="pip-icon" style="background:var(--em-light);">🧠</div>
+        <div class="pip-label">3B Guide<br/>Model</div>
+        <div class="pip-sub">LoRA Fine-tuned</div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="pip-node">
+        <div class="pip-icon" style="background:var(--amb-light);">📋</div>
+        <div class="pip-label">Reasoning<br/>Plan ρ</div>
+        <div class="pip-sub">Step-by-step</div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="pip-node">
+        <div class="pip-icon" style="background:var(--sky-light);">🔢</div>
+        <div class="pip-label">1.5B Solver<br/>(×5 votes)</div>
+        <div class="pip-sub">Frozen model</div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="pip-node">
+        <div class="pip-icon" style="background:#fce7f3;">🗳️</div>
+        <div class="pip-label">Majority<br/>Vote</div>
+        <div class="pip-sub">Best of 5</div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="pip-node">
+        <div class="pip-icon" style="background:var(--em-light);">✅</div>
+        <div class="pip-label">Final<br/>Answer</div>
+        <div class="pip-sub">High accuracy</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">SPGFT — How We Train the Guide</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:24px;height:24px;background:var(--navy);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div>
+            <p style="font-size:13px;color:var(--sub);">The base model writes its own step-by-step decomposition plans for 3,000 math problems at very low temperature (near-deterministic).</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:24px;height:24px;background:var(--navy);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div>
+            <p style="font-size:13px;color:var(--sub);">A 5-rule quality filter keeps only good plans: correct step count, no math calculations, concise wording, proper verbs.</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:24px;height:24px;background:var(--navy);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div>
+            <p style="font-size:13px;color:var(--sub);">The model fine-tunes on its own filtered plans using LoRA adapters — only ~1.2% of parameters are updated.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Filter Acceptance Rates by Dataset</div>
+        <div class="chart-wrap" style="height:180px;">
+          <canvas id="filterChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card" style="text-align:center;">
+        <div class="big-stat"><div class="num">36M</div><div class="label">Trainable Parameters (out of 3B)</div></div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="big-stat"><div class="num green">93.9%</div><div class="label">Plans accepted for GSM8K training</div></div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="big-stat"><div class="num" style="color:var(--sky);">K=5</div><div class="label">Solver votes per question</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 4: RESULTS ═══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-header">
+    <span class="sec-num">Section 04</span>
+    <h2>Results</h2>
+    <span class="tag">Primary Accuracy Gains</span>
+  </div>
+  <div class="slide-body">
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Accuracy: Baseline vs GuidedVote (Qwen pair)</div><div class="line"></div></div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Accuracy Comparison Across 6 Benchmarks</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="mainResultChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Accuracy Gains (Δ pp) — At a Glance</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="deltaChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Detailed Breakdown</div><div class="line"></div></div>
+    <div class="card">
+      <table class="mini-table">
+        <thead>
+          <tr><th>Benchmark</th><th>Domain</th><th>Baseline</th><th>GuidedVote</th><th>Gain (Δ)</th><th>Vote Lift</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>PIQA</strong></td><td>Physical</td><td>54.2%</td><td>78.4%</td><td class="pos">+24.2pp</td><td>1.43×</td><td><span class="chip chip-green">✓ Confirmed</span></td></tr>
+          <tr><td><strong>SVAMP</strong></td><td>Arithmetic</td><td>40.3%</td><td>61.7%</td><td class="pos">+21.4pp</td><td>1.90×</td><td><span class="chip chip-green">✓ Confirmed</span></td></tr>
+          <tr><td><strong>ASDiv</strong></td><td>Arithmetic</td><td>53.7%</td><td>64.0%</td><td class="pos">+10.3pp</td><td>1.18×</td><td><span class="chip chip-green">✓ Confirmed</span></td></tr>
+          <tr><td><strong>ARC-Challenge</strong></td><td>Science</td><td>71.7%</td><td>77.0%</td><td class="pos">+5.3pp</td><td>1.11×</td><td><span class="chip chip-green">✓ Confirmed</span></td></tr>
+          <tr><td><strong>CommonsenseQA</strong></td><td>Commonsense</td><td>70.7%</td><td>77.0%</td><td class="pos">+6.3pp</td><td>1.09×</td><td><span class="chip chip-green">✓ Confirmed</span></td></tr>
+          <tr><td><strong>RACE-High</strong></td><td>Reading</td><td>58.6%</td><td>58.4%</td><td class="neg">-0.2pp</td><td>—</td><td><span class="chip chip-amber">Null Result</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 5: STATS ═══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-header">
+    <span class="sec-num">Section 05</span>
+    <h2>Statistical Analysis</h2>
+    <span class="tag">Is This Real? Proving It With Numbers</span>
+  </div>
+  <div class="slide-body">
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Calibration — How Confident & How Correct?</div><div class="line"></div></div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Calibration Error (ECE) — Lower is Better</div>
+        <div class="chart-wrap" style="height:220px;">
+          <canvas id="eceChart"></canvas>
+        </div>
+        <p style="font-size:12px;color:var(--sub);margin-top:8px;">ECE measures how well confidence matches accuracy. Guided model is better calibrated on ALL 6 datasets.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">PIQA Position Bias — Before & After Guidance</div>
+        <div class="chart-wrap" style="height:170px;">
+          <canvas id="biasChart"></canvas>
+        </div>
+        <div class="hl-red" style="margin-top:10px;">
+          <p><strong>Problem:</strong> 93.4% of answers chose option A in baseline — not because it was correct, but due to positional bias. Guidance fixed this.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Statistical Confidence (McNemar Test)</div><div class="line"></div></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Odds Ratios (Higher = Stronger Effect)</div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="orChart"></canvas>
+        </div>
+      </div>
+      <div class="col">
+        <div class="hl-green">
+          <p><strong>What is McNemar's Test?</strong><br/>It compares paired before/after results question-by-question to prove improvements are real, not random.</p>
+        </div>
+        <div class="grid-2" style="gap:10px;">
+          <div class="card" style="text-align:center;padding:14px;">
+            <div class="big-stat"><div class="num green" style="font-size:32px;">3.21×</div><div class="label">SVAMP Odds Ratio</div></div>
+          </div>
+          <div class="card" style="text-align:center;padding:14px;">
+            <div class="big-stat"><div class="num" style="font-size:32px;color:var(--sky);">2.68×</div><div class="label">PIQA Odds Ratio</div></div>
+          </div>
+        </div>
+        <div class="hl-navy">
+          <p>All 5 confirmed improvements pass the statistical test at <strong>p &lt; 0.01</strong>. RACE-High null is confirmed at <strong>p = 1.000</strong> (99%+ power).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 6: COMPARISON ═══ -->
+<div class="slide" id="slide-6">
+  <div class="slide-header">
+    <span class="sec-num">Section 06</span>
+    <h2>Comparison</h2>
+    <span class="tag">GuidedVote vs Everything Else</span>
+  </div>
+  <div class="slide-body">
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Training Data Quality Matters More Than Topic Match</div><div class="line"></div></div>
+
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="card-title">Richness Ordering — Avg Accuracy Gain</div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="richnessChart"></canvas>
+        </div>
+        <div class="hl-amber" style="margin-top:10px;">
+          <p><strong>Monotonic Richness Gradient:</strong> ASDiv FT (+7.1pp) &lt; SVAMP FT (+12.0pp) &lt; GSM8K FT (+13.5pp)</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">GuidedVote vs LLM Oracle (70B Model)</div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="oracleChart"></canvas>
+        </div>
+        <div class="hl-green" style="margin-top:10px;">
+          <p><strong>83.6% capture rate</strong> — a 3B fine-tuned model captures 83.6% of what a 70B giant achieves, at zero cloud cost!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><div class="line"></div><div class="lbl">Four-Tier Task Taxonomy</div><div class="line"></div></div>
+    <div class="tier-grid">
+      <div class="tier-card" style="background:var(--em-light);border:1px solid #86efac;">
+        <div class="tier-badge" style="background:#16a34a;color:white;">A</div>
+        <div>
+          <div class="tc-tag" style="background:#dcfce7;color:#16a34a;">Always Deploy</div>
+          <div class="tc-title">Architecture-Robust</div>
+          <div class="tc-body">SVAMP, ASDiv — +21pp replicated across BOTH model families. Pure arithmetic wins consistently.</div>
+        </div>
+      </div>
+      <div class="tier-card" style="background:#eff6ff;border:1px solid #93c5fd;">
+        <div class="tier-badge" style="background:var(--sky);color:white;">B</div>
+        <div>
+          <div class="tc-tag" style="background:#dbeafe;color:var(--sky);">Deploy with CoT check</div>
+          <div class="tc-title">Domain-Accessible</div>
+          <div class="tc-body">ARC-Challenge, CommonsenseQA — Consistent gains, but Chain-of-Thought is enough for science.</div>
+        </div>
+      </div>
+      <div class="tier-card" style="background:var(--amb-light);border:1px solid #fcd34d;">
+        <div class="tier-badge" style="background:var(--amber);color:white;">C</div>
+        <div>
+          <div class="tc-tag" style="background:#fef3c7;color:var(--amber);">Audit First</div>
+          <div class="tc-title">Solver-Bias-Dependent</div>
+          <div class="tc-body">PIQA — Results depend on whether the solver has positional bias. Check before deploying.</div>
+        </div>
+      </div>
+      <div class="tier-card" style="background:var(--red-light);border:1px solid #fca5a5;">
+        <div class="tier-badge" style="background:var(--red);color:white;">D</div>
+        <div>
+          <div class="tc-tag" style="background:#fee2e2;color:var(--red);">Use Baseline</div>
+          <div class="tc-title">Retrieval-Conditional</div>
+          <div class="tc-body">RACE-High — Reading comprehension. Guidance can't help extract answers from passages.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 7: CONCLUSION ═══ -->
+<div class="slide" id="slide-7">
+  <div class="concl-layout">
+
+    <!-- Top banner with big stats -->
+    <div class="concl-banner">
+      <div class="concl-banner-left">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;">Section 07 · Final Conclusion</div>
+        <h2>What We Proved</h2>
+        <p>GuidedVote — A complete, statistically verified study</p>
+      </div>
+      <div class="concl-banner-stats">
+        <div class="cbs"><div class="cv">+24.2pp</div><div class="cl">Peak accuracy gain (PIQA)</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12);align-self:stretch;"></div>
+        <div class="cbs"><div class="cv">+13.5pp</div><div class="cl">Average across 5 benchmarks</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12);align-self:stretch;"></div>
+        <div class="cbs"><div class="cv">83.6%</div><div class="cl">Capture rate vs 70B oracle</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12);align-self:stretch;"></div>
+        <div class="cbs"><div class="cv">2,300+</div><div class="cl">Paired statistical evaluations</div></div>
+      </div>
+    </div>
+
+    <!-- Main body -->
+    <div class="concl-body">
+
+      <!-- 4 findings in 2x2 grid -->
+      <div class="concl-findings">
+
+        <div class="cf-card">
+          <div class="cf-bg-num">1</div>
+          <div class="cf-icon-row">
+            <div class="cf-icon" style="background:var(--em-light);">💬</div>
+            <span class="cf-tag" style="background:var(--em-light);color:var(--emerald);">Finding 01</span>
+          </div>
+          <div class="cf-title">Verbal Richness Hypothesis — Confirmed ✓</div>
+          <div class="cf-desc">Rich, multi-step training data transfers better than matching the task topic. GSM8K-trained guides beat in-domain guides everywhere — even on the <em>same</em> test set they were supposed to be weaker on.</div>
+        </div>
+
+        <div class="cf-card">
+          <div class="cf-bg-num">2</div>
+          <div class="cf-icon-row">
+            <div class="cf-icon" style="background:var(--amb-light);">⚠️</div>
+            <span class="cf-tag" style="background:var(--amb-light);color:var(--amber);">Finding 02</span>
+          </div>
+          <div class="cf-title">Two New Failure Modes Discovered</div>
+          <div class="cf-desc"><strong style="color:var(--amber);">Bias-Substitution:</strong> A weak guide flips one wrong bias into another. <strong style="color:var(--red);">Confident Misdirection:</strong> Right operation, wrong numbers, unanimous wrong votes — the #1 error type at 37% of failures.</div>
+        </div>
+
+        <div class="cf-card">
+          <div class="cf-bg-num">3</div>
+          <div class="cf-icon-row">
+            <div class="cf-icon" style="background:var(--sky-light);">🗺️</div>
+            <span class="cf-tag" style="background:var(--sky-light);color:var(--sky);">Finding 03</span>
+          </div>
+          <div class="cf-title">Predictive 4-Tier Deployment Taxonomy</div>
+          <div class="cf-desc">Know in advance — with just 150 test questions — whether GuidedVote will help your task. <strong>Tier A (Arithmetic):</strong> Always deploy. <strong>Tier D (Reading):</strong> Skip it. No guesswork needed.</div>
+        </div>
+
+        <div class="cf-card" style="border:2px solid #bbf7d0;">
+          <div class="cf-bg-num">4</div>
+          <div class="cf-icon-row">
+            <div class="cf-icon" style="background:var(--em-light);">🏆</div>
+            <span class="cf-tag" style="background:var(--em-light);color:var(--emerald);">Finding 04 · Headline</span>
+          </div>
+          <div class="cf-title">83.6% of a Giant's Power — From a Tiny Model</div>
+          <div class="cf-desc">A fine-tuned 3B model captures <strong style="color:var(--emerald);font-size:15px;">83.6%</strong> of what a 70-billion parameter oracle achieves — on a single consumer GPU, at zero cloud cost, 30–47% more efficient than the brute-force ceiling.</div>
+        </div>
+
+      </div>
+
+      <!-- Future work -->
+      <div class="concl-future">
+        <div class="fut-icon">🔭</div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:5px;">Future Directions</div>
+          <div style="font-size:12px;color:var(--sub);line-height:1.6;">Multi-domain guide fine-tuning &nbsp;·&nbsp; RL-based guide refinement using solver feedback &nbsp;·&nbsp; Scaling to 7B guide models &nbsp;·&nbsp; Extending the taxonomy to instruction-tuned solver variants &nbsp;·&nbsp; FLOP-level deployment benchmarking</div>
+        </div>
+      </div>
+
+      <!-- Thank-you / team footer -->
+      <div class="concl-thankyou">
+        <div class="ty-left">Thank You <span>for Listening</span> 🎓</div>
+        <div class="ty-right">
+          <div style="color:rgba(255,255,255,.6);font-size:11px;margin-bottom:6px;">Presented by</div>
+          <div class="concl-team-row">
+            <div class="ct-pill">Sadi · 2221345642</div>
+            <div class="ct-pill">Sakib · 2231687642</div>
+            <div class="ct-pill">Nahian Syed Ahanaf · 2212705642</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div><!-- #deck -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button onclick="goTo(current-1)">&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <div id="slide-counter">1 / 8</div>
+  <button onclick="goTo(current+1)">&#8594;</button>
+</div>
+
+<script>
+const TOTAL = 8;
+let current = 0;
+let transitioning = false;
+
+const slides = document.querySelectorAll('.slide');
+const dotsEl  = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+
+// Build dots
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(d);
+}
+
+function goTo(n) {
+  if (transitioning) return;
+  n = Math.max(0, Math.min(TOTAL - 1, n));
+  if (n === current) return;
+  transitioning = true;
+
+  slides[current].classList.add('out');
+  slides[current].classList.remove('active');
+
+  setTimeout(() => {
+    slides[current].classList.remove('out');
+    current = n;
+    slides[current].classList.add('active');
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    counter.textContent = `${current + 1} / ${TOTAL}`;
+    transitioning = false;
+    initCharts();
+  }, 300);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+});
+
+// ── Charts ──
+let chartsInited = {};
+
+function initCharts() {
+  if (current === 2 && !chartsInited[2]) { chartsInited[2] = true; buildSlide2Charts(); }
+  if (current === 3 && !chartsInited[3]) { chartsInited[3] = true; buildSlide3Charts(); }
+  if (current === 4 && !chartsInited[4]) { chartsInited[4] = true; buildSlide4Charts(); }
+  if (current === 5 && !chartsInited[5]) { chartsInited[5] = true; buildSlide5Charts(); }
+  if (current === 6 && !chartsInited[6]) { chartsInited[6] = true; buildSlide6Charts(); }
+}
+
+// Shared font defaults
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#57534e';
+
+// ── Slide 2 Charts ──
+function buildSlide2Charts() {
+  new Chart(document.getElementById('problemChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Current:\nScale Up', 'Current:\nDistillation', 'Ours:\nGuidedVote'],
+      datasets: [
+        { label: 'Relative Cost', data: [100, 85, 37], backgroundColor: ['#fca5a5','#fca5a5','#86efac'], borderRadius: 8, borderSkipped: false },
+        { label: 'Accuracy Gain', data: [40, 55, 80], backgroundColor: ['#93c5fd','#93c5fd','#60a5fa'], borderRadius: 8, borderSkipped: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' }, tooltip: { mode: 'index' } },
+      scales: { y: { max: 110, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+}
+
+// ── Slide 3 Charts ──
+function buildSlide3Charts() {
+  new Chart(document.getElementById('filterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Qwen\n+GSM8K', 'Llama\n+GSM8K', 'Qwen\n+ASDiv', 'Llama\n+ASDiv', 'Qwen\n+SVAMP', 'Llama\n+SVAMP'],
+      datasets: [{
+        label: 'Acceptance Rate (%)',
+        data: [93.9, 86.4, 77.0, 91.0, 98.3, 95.9],
+        backgroundColor: ['#60a5fa','#60a5fa','#fbbf24','#fbbf24','#34d399','#34d399'],
+        borderRadius: 8, borderSkipped: false
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { min: 60, max: 100, grid: { color: '#f5f0e8' } }, y: { grid: { display: false } } }
+    }
+  });
+}
+
+// ── Slide 4 Charts ──
+function buildSlide4Charts() {
+  const labels = ['PIQA','SVAMP','ASDiv','ARC-C','CSQA','RACE-High'];
+  new Chart(document.getElementById('mainResultChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Baseline', data: [54.2, 40.3, 53.7, 71.7, 70.7, 58.6],
+          backgroundColor: 'rgba(203,213,225,.8)', borderRadius: 6, borderSkipped: false },
+        { label: 'GuidedVote', data: [78.4, 61.7, 64.0, 77.0, 77.0, 58.4],
+          backgroundColor: 'rgba(16,185,129,.75)', borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { min: 30, max: 90, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  new Chart(document.getElementById('deltaChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Accuracy Gain (pp)',
+        data: [24.2, 21.4, 10.3, 5.3, 6.3, -0.2],
+        backgroundColor: [24.2, 21.4, 10.3, 5.3, 6.3, -0.2].map(v => v > 0 ? 'rgba(5,150,105,.8)' : 'rgba(239,68,68,.8)'),
+        borderRadius: 8, borderSkipped: false
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+}
+
+// ── Slide 5 Charts ──
+function buildSlide5Charts() {
+  const labels = ['PIQA','SVAMP','ASDiv','ARC-C','CSQA','RACE-High'];
+  const base_ece = [0.354, 0.202, 0.183, 0.180, 0.176, 0.320];
+  const guided_ece = [0.110, 0.128, 0.100, 0.099, 0.141, 0.246];
+
+  new Chart(document.getElementById('eceChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Baseline ECE', data: base_ece, backgroundColor: 'rgba(252,165,165,.85)', borderRadius: 6, borderSkipped: false },
+        { label: 'Guided ECE',   data: guided_ece, backgroundColor: 'rgba(52,211,153,.85)', borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { max: 0.42, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  new Chart(document.getElementById('biasChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Option A (baseline)', 'Option B', 'Other'],
+      datasets: [{
+        data: [93.4, 4.0, 2.6],
+        backgroundColor: ['#fca5a5', '#93c5fd', '#e5e7eb'],
+        borderWidth: 2, borderColor: 'white'
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: {
+        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 11 } } },
+        title: { display: true, text: 'Baseline: Solver picks A 93.4% of time!', font: { size: 12 } }
+      }
+    }
+  });
+
+  const orData = [2.68, 3.21, 1.52, 2.15, 1.89, 0.98];
+  new Chart(document.getElementById('orChart'), {
+    type: 'bar',
+    data: {
+      labels: ['PIQA','SVAMP','ASDiv','ARC-C','CSQA','RACE-H'],
+      datasets: [{
+        label: 'Odds Ratio',
+        data: orData,
+        backgroundColor: orData.map(v => v > 1 ? 'rgba(59,130,246,.8)' : 'rgba(239,68,68,.8)'),
+        borderRadius: 8, borderSkipped: false
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        annotation: { annotations: { line1: { type: 'line', yMin: 1, yMax: 1, borderColor: '#d97706', borderWidth: 2, borderDash: [4,4] } } }
+      },
+      scales: { y: { min: 0, max: 3.6, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+}
+
+// ── Slide 6 Charts ──
+function buildSlide6Charts() {
+  new Chart(document.getElementById('richnessChart'), {
+    type: 'bar',
+    data: {
+      labels: ['ASDiv FT\n(Poorest Plans)', 'SVAMP FT\n(Intermediate)', 'GSM8K FT\n(Richest Plans)'],
+      datasets: [{
+        label: 'Avg. Accuracy Gain (pp)',
+        data: [7.1, 12.04, 13.5],
+        backgroundColor: ['rgba(252,165,165,.85)', 'rgba(251,191,36,.85)', 'rgba(52,211,153,.85)'],
+        borderRadius: 10, borderSkipped: false
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { max: 16, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  new Chart(document.getElementById('oracleChart'), {
+    type: 'bar',
+    data: {
+      labels: ['SVAMP', 'ASDiv', 'ARC-Challenge'],
+      datasets: [
+        { label: 'Baseline', data: [32.3, 37.3, 47.1], backgroundColor: 'rgba(203,213,225,.8)', borderRadius: 6, borderSkipped: false },
+        { label: 'GuidedVote (3B)', data: [49.7, 50.3, 58.1], backgroundColor: 'rgba(59,130,246,.75)', borderRadius: 6, borderSkipped: false },
+        { label: 'LLM Oracle (70B)', data: [56.7, 58.7, 75.2], backgroundColor: 'rgba(251,146,60,.8)', borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { min: 20, max: 85, grid: { color: '#f5f0e8' } }, x: { grid: { display: false } } }
+    }
+  });
+}
+
+// Init title slide (no charts needed)
+</script>
+</body>
+</html>
